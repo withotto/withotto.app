@@ -1,0 +1,106 @@
+---
+import Container from "@components/container.astro";
+import { Icon } from "astro-icon/components";
+import { Image } from "astro:assets";
+
+import kathryn from "assets/testimonials/kathryn-frimond.jpg";
+import linda from "assets/testimonials/linda-booth.jpg";
+import jenny from "assets/testimonials/jenny-bowden.jpg";
+
+const testimonials = [
+  {
+    name: "Kathryn Frimond",
+    image: kathryn,
+    title: "All I can say is that my mind is blown!",
+    quote: [
+      `I've been using Otto as part of my bookkeeping practice [since July 2024], and all I can say is that my mind is blown! Without realising, I'd been under-utilising bank rules in Xero. I now have around 10x more set up, and even better - Otto reconciles them before I even get to the office! Now the team have integrated SmartMatch, so much more of my bookkeeping can be done while I sit on the beach.`,
+    ],
+    practiceName: "Your Local Bookkeeper",
+    url: "https://www.localbookkeeper.co.uk",
+  },
+  {
+    name: "Linda Booth",
+    image: linda,
+    title: "It's another pair of hands that I didn't know was needed",
+    quote: [
+      `What can I say about Otto? As an accountant offering bookkeeping services, this nifty little bit of software has saved me time. How? Well, it's recognised all the bank rules in Xero, and just dealt with them. It's popped on each morning and just got on with it. Marvellous! It's another pair of hands that I didn't know was needed.`,
+      `It was a surprise to me to see that he worked so well for my membership client, I barely check in now. And it very nicely flags up how much time I was spending previously.`,
+    ],
+    practiceName: "We Do The Books",
+    url: "https://www.wedothebooks.co.uk",
+  },
+  {
+    name: "Jenny Bowden FCCA ACA",
+    image: jenny,
+    title: "Otto is a game-changer",
+    quote: [
+      `I can’t recommend Otto highly enough for anyone looking to streamline their bookkeeping processes! Since incorporating Otto into my workflow, reconciling my Xero bank transactions has become significantly faster and more efficient.`,
+      `If you're looking for a tool to enhance your productivity and take the stress out of bank reconciliations, Otto is a game-changer.`,
+    ],
+    practiceName: "Aivilo Digital Accountancy Ltd",
+    url: "https://aivilodigitalaccountancy.co.uk",
+  },
+];
+
+// Randomise order
+testimonials.sort(() => Math.random() - 0.5);
+---
+
+<div class="bg-primary-soft py-24">
+  <Container>
+    <div class="grid gap-16">
+      {
+        testimonials.map((testimonial) => (
+          <div class="relative mt-32 rounded-2xl bg-white/60 p-8 shadow-sm backdrop-blur-sm first:mt-20">
+            <div class="flex flex-col items-center">
+              <div class="absolute -top-20 flex w-full justify-center">
+                <Image
+                  src={testimonial.image}
+                  widths={[100, 200, 400]}
+                  sizes="(max-width: 768px) 100px, 200px"
+                  formats={["webp", "jpeg"]}
+                  quality={80}
+                  alt={`Headshot of ${testimonial.name}`}
+                  class="aspect-square size-36 rounded-full object-cover shadow-lg ring-4 ring-primary"
+                />
+              </div>
+              <div class="mt-16 text-center">
+                <h3 class="text-2xl font-bold text-primary-strong">
+                  {testimonial.title}
+                </h3>
+                <div class="relative mt-6">
+                  <Icon
+                    name="hugeicons:quote-up"
+                    size={32}
+                    class="absolute -left-2 -top-2 size-6 text-primary-medium"
+                  />
+                  {testimonial.quote.map((paragraph) => (
+                    <p class="relative mb-4 px-6 text-left text-lg leading-relaxed">
+                      {paragraph}
+                    </p>
+                  ))}
+                  <Icon
+                    name="hugeicons:quote-down"
+                    size={32}
+                    class="absolute -bottom-2 -right-2 size-6 text-primary-medium"
+                  />
+                </div>
+                <footer class="mt-6 border-t border-primary/10 pt-6">
+                  <p class="font-medium text-default-soft">
+                    {testimonial.name},
+                    <a
+                      href={testimonial.url}
+                      rel="noopener"
+                      class="hover:text-persian underline transition-colors">
+                      {testimonial.practiceName}
+                    </a>
+                  </p>
+                </footer>
+              </div>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </Container>
+</div>

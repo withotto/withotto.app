@@ -1,0 +1,61 @@
+---
+import { Icon } from "astro-icon/components";
+
+interface Stat {
+  label: string;
+  value: string;
+  subtext: string;
+  icon: string;
+}
+
+const stats: Stat[] = [
+  {
+    label: "Bank rules reconciled",
+    value: "8,371",
+    subtext: "in last 30 days",
+    icon: "hugeicons:check-list",
+  },
+  {
+    label: "SmartMatches reconciled",
+    value: "1,587",
+    subtext: "in last 30 days",
+    icon: "hugeicons:artificial-intelligence-01",
+  },
+  {
+    label: "SmartMatch error rate",
+    value: "0.65%",
+    subtext: "of matched transactions over last 60 days",
+    icon: "hugeicons:target-02",
+  },
+];
+---
+
+<div class="mb-4 mt-16 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+  {
+    stats.map((stat: Stat) => (
+      <div class="rounded-xl bg-white shadow">
+        <div class="grid h-full grid-cols-[120px,1fr]">
+          {stat.icon && (
+            <div class="flex items-center justify-center border-r border-gray-100 bg-primary-soft/10 p-4">
+              <Icon name={stat.icon} size={32} class="size-20 text-primary" />
+            </div>
+          )}
+          <div class="p-6">
+            <p class="font-medium text-default-soft">{stat.label}</p>
+            <p class="mt-2 flex flex-col">
+              <span class="text-center text-4xl font-semibold text-primary-strong md:text-6xl">
+                {stat.value}
+              </span>
+              {stat.subtext && (
+                <span class="mt-1 text-right text-sm text-default-soft">
+                  {stat.subtext}
+                </span>
+              )}
+            </p>
+          </div>
+        </div>
+      </div>
+    ))
+  }
+</div>
+<p class="mx-auto mb-16 text-sm">Last updated 8 February 2025</p>

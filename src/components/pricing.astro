@@ -1,0 +1,232 @@
+---
+import Container from "./container.astro";
+import FaqList from "@components/faq/FaqList.astro";
+import { type FaqItem } from "../types";
+import { Icon } from "astro-icon/components";
+interface Label {
+  title: string;
+  classes: string;
+}
+
+interface PricingPlan {
+  name: string;
+  label?: Label;
+  price: number;
+  credits: number;
+}
+
+const plans: PricingPlan[] = [
+  {
+    name: "Plan A",
+    label: {
+      title: "Solo",
+      classes: "bg-info text-white",
+    },
+    price: 25.0,
+    credits: 100,
+  },
+  {
+    name: "Plan B",
+    price: 52.5,
+    credits: 250,
+  },
+  {
+    name: "Plan C",
+    label: {
+      title: "Most popular",
+      classes: "bg-warning text-black",
+    },
+    price: 100.0,
+    credits: 500,
+  },
+  {
+    name: "Plan D",
+    price: 190.0,
+    credits: 1000,
+  },
+  {
+    name: "Plan E",
+    price: 297.5,
+    credits: 1750,
+  },
+  {
+    name: "Plan F",
+    price: 400.0,
+    credits: 2500,
+  },
+  {
+    name: "Plan G",
+    price: 750.0,
+    credits: 5000,
+  },
+  {
+    name: "Plan H",
+    label: {
+      title: "Enterprise",
+      classes: "bg-primary-strong text-white",
+    },
+    price: 1400.0,
+    credits: 10000,
+  },
+];
+
+const faqs: FaqItem[] = [
+  {
+    question: "What does a credit get me?",
+    answer: `
+      <p class="py-2">Each type of reconciliation uses a different number of credits:</p>
+      <ul class="list-disc pl-5">
+        <li>Bank rule matches: 1 credit per transaction</li>
+        <li>SmartMatch (ML-powered): 4 credits per transaction</li>
+        <li>GuidedMatch: Free, helping you learn as you go</li>
+      </ul>
+    `,
+  },
+  {
+    question: "Can credits be carried over?",
+    answer: `
+         <p>Absolutely! Any unused credits automatically roll over to the next month as long as your subscription is active. This gives you the flexibility to handle varying workloads throughout the year.</p>
+         `,
+  },
+  {
+    question: "What happens if I need more credits mid-month?",
+    answer: `
+      <p class="py-2">You can choose how to handle additional reconciliation needs.</p>
+      <p class="py-2"><b>Fixed Billing</b>: I'll pause reconciliation when your credits run out and resume automatically when your plan renews. This ensures you never exceed your planned budget.</p>
+      <p class="py-2"><b>Overage Billing</b>: I'll continue reconciling and charge any extra credits at your plan's standard rate at the end of the month. This keeps your workflow smooth during busy periods.</p>
+      <p class="py-2"> Both options give you complete visibility of credit usage, and you can change your preference anytime through your practice settings.</p>
+     `,
+  },
+  {
+    question: "How can I manage credit usage across different clients?",
+    answer: `
+      <p class="py-2">You have complete control over how credits are used for each client. You can enable or disable different reconciliation types per client:</p>
+      <ul class="list-disc pl-5">
+        <li>Choose whether to use bank rule matching (1 credit)</li>
+        <li>Enable or disable SmartMatch ML-powered reconciliation (4 credits)</li>
+        <li>GuidedMatch remains available at no cost as long as SmartMatch isn't disabled</li>
+      </ul>
+      <p class="py-2">This granular control helps you optimise credit usage by choosing the right level of automation for each client's needs. For example, you might use SmartMatch for clients with complex transactions and stick to bank rules for simpler accounts.</p>
+    `,
+  },
+];
+---
+
+<div class="py-24" id="pricing">
+  <Container>
+    <div>
+      <h2
+        class="text-center text-3xl font-bold text-primary-strong md:text-5xl">
+        Let me handle your reconciliation workload, whatever your practice size
+      </h2>
+      <p
+        class="mx-auto mt-6 max-w-4xl text-lg font-medium leading-snug text-primary-strong">
+        I'm here to automate your daily reconciliation tasks with machine
+        learning precision. Choose your plan based on volume—you'll get all
+        premium features, unlimited clients, and my full support from day one.
+      </p>
+    </div>
+
+    <div class="mt-12">
+      <div
+        class="relative mb-5 flex items-center rounded-md border border-primary/20 bg-primary-soft px-5 py-4 shadow-sm">
+        <Icon
+          name="hugeicons:information-circle"
+          size={32}
+          class="size-7 shrink-0 text-primary"
+        />
+        <span class="ml-3"
+          >Credits are shared across all your clients, helping smooth out those
+          monthly and seasonal variations in transaction volume.</span
+        >
+      </div>
+      <div
+        class="overflow-hidden rounded-xl border border-muted-strong bg-white shadow-lg">
+        <table class="min-w-full divide-y divide-muted-strong">
+          <thead>
+            <tr class="bg-primary font-bold text-white">
+              <th scope="col" class="px-6 py-4 text-left text-white">Plan</th>
+              <th
+                scope="col"
+                class="bg-primary px-6 py-4 text-right font-bold text-white"
+                >Price
+              </th>
+              <th
+                scope="col"
+                class="bg-primary px-6 py-4 text-right font-bold text-white"
+                >Included credits
+              </th>
+              <th
+                scope="col"
+                class="bg-primary px-6 py-4 text-right font-bold text-white"
+                >Price per credit
+              </th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-muted-strong">
+            {
+              plans.map((plan, index) => (
+                <tr
+                  class={` ${index % 2 === 0 ? "bg-white" : "bg-primary-soft"}`}>
+                  <td class="whitespace-nowrap px-6 py-4">
+                    <div class="flex items-center gap-3">
+                      <span class="font-medium text-default">{plan.name}</span>
+                      {plan.label && (
+                        <span
+                          class={`inline-flex rounded-full px-3 py-1 text-sm font-medium ${plan.label.classes}`}>
+                          {plan.label.title}
+                        </span>
+                      )}
+                    </div>
+                  </td>
+                  <td class="whitespace-nowrap px-6 py-4 text-right">
+                    <div class="font-bold text-default">
+                      £{plan.price.toFixed(2).toLocaleString()}
+                    </div>
+                  </td>
+                  <td class="whitespace-nowrap px-6 py-4 text-right">
+                    <div class="text-default">
+                      {plan.credits.toLocaleString()}
+                    </div>
+                  </td>
+                  <td class="whitespace-nowrap px-6 py-4 text-right">
+                    <div class="text-default">
+                      £{(plan.price / plan.credits).toFixed(2)}
+                    </div>
+                  </td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="mt-8 space-y-8 text-default-soft">
+      <p class="text-sm">All prices exclude VAT</p>
+      <div
+        class="relative mx-auto mb-16 flex max-w-4xl items-center rounded-md border border-primary/20 bg-primary-soft px-5 py-4 shadow-sm">
+        <Icon
+          name="hugeicons:calculator-01"
+          size={32}
+          class="size-7 shrink-0 text-primary"
+        />
+        <span class="ml-3"
+          >Want to calculate your monthly costs? <a
+            href="/files/With%20Otto%20pricing%20calculator.xlsx"
+            class="text-primary hover:underline hover:underline-offset-2"
+            download
+            class="">Download our pricing spreadsheet</a
+          > to see exactly how much Otto will cost to work with your clients.</span
+        >
+      </div>
+
+      <h3 class="text-center text-2xl font-bold text-primary-strong">
+        Frequently asked questions
+      </h3>
+      <div class="mx-auto mt-10 flex max-w-3xl items-center justify-center">
+        <FaqList items={faqs} />
+      </div>
+    </div>
+  </Container>
+</div>

@@ -1,0 +1,296 @@
+---
+const basicPlanFeatures = [
+  "Access to core features",
+  "5GB Storage",
+  "Unlimited Public Projects",
+  "Community Support",
+];
+
+const proPlanFeatures = [
+  "Everything from Basic",
+  "100GB Storage",
+  "Custom Branding",
+  "Analytics and reporting",
+  "Priority support",
+];
+
+const enterprisePlanFeatures = [
+  "Everything from Pro",
+  "Unlimited Storage",
+  "Dedicated account manager",
+  "Onboarding & API Access",
+  "White-labeling",
+  "99% Uptime SLA",
+];
+
+const enterpriseFeaturesTwo = [
+  "Unlimited Storage",
+  "Dedicated account manager",
+  "White-labeling",
+  "99% Uptime SLA",
+];
+---
+
+<div class="flex justify-center py-14">
+  <div class="flex cursor-pointer items-center">
+    <div class="flex flex-wrap">
+      <span class="text-md mr-4 font-semibold text-primary-strong">
+        Monthly
+      </span>
+      <input
+        type="checkbox"
+        value=""
+        class="peer sr-only"
+        checked
+        id="toggle"
+      />
+      <label for="toggle" class="sr-only">Monthly Yearly Toggle</label>
+      <div
+        class="peer relative h-6 w-11 rounded-full bg-primary-accent after:absolute after:start-[2px] after:top-0.5 after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-primary peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-4 peer-focus:ring-primary-medium rtl:peer-checked:after:-translate-x-full">
+      </div>
+      <span class="text-md ml-4 font-semibold text-primary-strong">Yearly</span>
+      <span class="ml-4 rounded-full bg-yellow-300 px-4 py-1 text-xs">
+        20% Discount
+      </span>
+    </div>
+  </div>
+</div>
+<div class="mb-16 flex flex-col gap-10">
+  <div
+    class="grid grid-cols-1 gap-10 rounded-xl border p-10 sm:grid-cols-2 md:p-14 lg:grid-cols-3">
+    <div>
+      <div class="">
+        <h3 class="text-xl font-semibold">Basic</h3>
+        <p class="mt-2 text-5xl font-bold text-primary">
+          $59.00<span class="text-xl font-semibold text-primary-strong">
+            /Month
+          </span>
+        </p>
+      </div>
+      <div class="mt-10 font-medium">
+        <a
+          href="#"
+          class="inline-block w-full rounded-md bg-primary p-5 px-10 text-center text-lg font-semibold text-white transition hover:bg-primary-strong md:w-auto md:px-16">
+          Get started
+        </a>
+      </div>
+    </div>
+    <div class="self-center">
+      <ul class="leading-10">
+        {
+          basicPlanFeatures.map((plan) => (
+            <li class="flex items-center font-medium">
+              <div class="flex h-5 w-5 items-center justify-center rounded-full bg-primary-soft/80 text-primary/80">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  version="1.1"
+                  xmlns:xlink="http://www.w3.org/1999/xlink"
+                  width="14"
+                  height="14"
+                  x="0"
+                  y="0"
+                  viewBox="0 0 24 24"
+                  style="enable-background:new 0 0 512 512"
+                  xml:space="preserve"
+                  class="">
+                  <g>
+                    <path
+                      d="M9.707 19.121a.997.997 0 0 1-1.414 0l-5.646-5.647a1.5 1.5 0 0 1 0-2.121l.707-.707a1.5 1.5 0 0 1 2.121 0L9 14.171l9.525-9.525a1.5 1.5 0 0 1 2.121 0l.707.707a1.5 1.5 0 0 1 0 2.121z"
+                      fill="currentColor"
+                      opacity="1"
+                      data-original="#000000"
+                      class=""
+                    />
+                  </g>
+                </svg>
+              </div>
+              <p class="ml-3 text-default">{plan}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+
+  <div
+    class="grid grid-cols-1 gap-10 rounded-xl bg-primary p-10 text-white sm:grid-cols-2 md:p-14 lg:grid-cols-3">
+    <div>
+      <div class="">
+        <h3 class="text-xl font-semibold">Professional</h3>
+        <p class="mt-2 text-5xl font-bold text-white">
+          $99.00<span class="text-xl font-semibold text-primary-soft">
+            /Month
+          </span>
+        </p>
+      </div>
+      <div class="mt-10 font-medium">
+        <a
+          href="#"
+          class="inline-block w-full rounded-md bg-white p-5 px-10 text-center text-lg font-semibold text-primary-strong transition hover:bg-primary-soft md:w-auto md:px-16">
+          Get started
+        </a>
+      </div>
+    </div>
+    <div class="self-start">
+      <ul class="leading-10">
+        {
+          proPlanFeatures.map((plan) => (
+            <li class="flex items-center font-medium">
+              <div class="flex h-5 w-5 items-center justify-center rounded-full bg-primary-strong/30 text-white">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  version="1.1"
+                  xmlns:xlink="http://www.w3.org/1999/xlink"
+                  width="14"
+                  height="14"
+                  x="0"
+                  y="0"
+                  viewBox="0 0 24 24"
+                  style="enable-background:new 0 0 512 512"
+                  xml:space="preserve"
+                  class="">
+                  <g>
+                    <path
+                      d="M9.707 19.121a.997.997 0 0 1-1.414 0l-5.646-5.647a1.5 1.5 0 0 1 0-2.121l.707-.707a1.5 1.5 0 0 1 2.121 0L9 14.171l9.525-9.525a1.5 1.5 0 0 1 2.121 0l.707.707a1.5 1.5 0 0 1 0 2.121z"
+                      fill="currentColor"
+                      opacity="1"
+                      data-original="#000000"
+                      class=""
+                    />
+                  </g>
+                </svg>
+              </div>
+              <p class="ml-3 text-white">{plan}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+    <div class="self-start">
+      <ul class="leading-10">
+        {
+          proPlanFeatures.map((plan) => (
+            <li class="flex items-center font-medium">
+              <div class="flex h-5 w-5 items-center justify-center rounded-full bg-primary-strong/30 text-white">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  version="1.1"
+                  xmlns:xlink="http://www.w3.org/1999/xlink"
+                  width="14"
+                  height="14"
+                  x="0"
+                  y="0"
+                  viewBox="0 0 24 24"
+                  style="enable-background:new 0 0 512 512"
+                  xml:space="preserve"
+                  class="">
+                  <g>
+                    <path
+                      d="M9.707 19.121a.997.997 0 0 1-1.414 0l-5.646-5.647a1.5 1.5 0 0 1 0-2.121l.707-.707a1.5 1.5 0 0 1 2.121 0L9 14.171l9.525-9.525a1.5 1.5 0 0 1 2.121 0l.707.707a1.5 1.5 0 0 1 0 2.121z"
+                      fill="currentColor"
+                      opacity="1"
+                      data-original="#000000"
+                      class=""
+                    />
+                  </g>
+                </svg>
+              </div>
+              <p class="ml-3 text-white">{plan}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+
+  <div
+    class="grid grid-cols-1 gap-10 rounded-xl border p-10 sm:grid-cols-2 md:p-14 lg:grid-cols-3">
+    <div>
+      <div class="">
+        <h3 class="text-xl font-semibold">Enterprise</h3>
+        <p class="mt-2 text-5xl font-bold text-primary">
+          $130.00<span class="text-xl font-semibold text-primary-strong">
+            /Month
+          </span>
+        </p>
+      </div>
+      <div class="mt-10 font-medium">
+        <a
+          href="#"
+          class="inline-block w-full rounded-md bg-primary p-5 px-10 text-center text-lg font-semibold text-white transition hover:bg-primary-strong md:w-auto md:px-16">
+          Get started
+        </a>
+      </div>
+    </div>
+    <div class="self-start">
+      <ul class="leading-10">
+        {
+          enterprisePlanFeatures.map((plan) => (
+            <li class="flex items-center font-medium">
+              <div class="flex h-5 w-5 items-center justify-center rounded-full bg-primary-soft/80 text-primary/80">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  version="1.1"
+                  xmlns:xlink="http://www.w3.org/1999/xlink"
+                  width="14"
+                  height="14"
+                  x="0"
+                  y="0"
+                  viewBox="0 0 24 24"
+                  style="enable-background:new 0 0 512 512"
+                  xml:space="preserve"
+                  class="">
+                  <g>
+                    <path
+                      d="M9.707 19.121a.997.997 0 0 1-1.414 0l-5.646-5.647a1.5 1.5 0 0 1 0-2.121l.707-.707a1.5 1.5 0 0 1 2.121 0L9 14.171l9.525-9.525a1.5 1.5 0 0 1 2.121 0l.707.707a1.5 1.5 0 0 1 0 2.121z"
+                      fill="currentColor"
+                      opacity="1"
+                      data-original="#000000"
+                      class=""
+                    />
+                  </g>
+                </svg>
+              </div>
+              <p class="ml-3 text-default">{plan}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+    <div class="self-start">
+      <ul class="leading-10">
+        {
+          enterpriseFeaturesTwo.map((plan) => (
+            <li class="flex items-center font-medium">
+              <div class="flex h-5 w-5 items-center justify-center rounded-full bg-primary-soft/80 text-primary/80">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  version="1.1"
+                  xmlns:xlink="http://www.w3.org/1999/xlink"
+                  width="14"
+                  height="14"
+                  x="0"
+                  y="0"
+                  viewBox="0 0 24 24"
+                  style="enable-background:new 0 0 512 512"
+                  xml:space="preserve"
+                  class="">
+                  <g>
+                    <path
+                      d="M9.707 19.121a.997.997 0 0 1-1.414 0l-5.646-5.647a1.5 1.5 0 0 1 0-2.121l.707-.707a1.5 1.5 0 0 1 2.121 0L9 14.171l9.525-9.525a1.5 1.5 0 0 1 2.121 0l.707.707a1.5 1.5 0 0 1 0 2.121z"
+                      fill="currentColor"
+                      opacity="1"
+                      data-original="#000000"
+                      class=""
+                    />
+                  </g>
+                </svg>
+              </div>
+              <p class="ml-3 text-default">{plan}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</div>

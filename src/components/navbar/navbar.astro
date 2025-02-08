@@ -1,0 +1,130 @@
+---
+import Container from "@components/container.astro";
+import Dropdown from "./dropdown.astro";
+import Link from "@components/ui/link.astro";
+import Logo from "@assets/logo-dark.svg";
+import { Astronav, MenuItems, MenuIcon } from "astro-navbar";
+import { Image } from "astro:assets";
+import { Icon } from "astro-icon/components";
+
+const menuItems = [
+  {
+    title: "Features",
+    path: "/#features",
+  },
+  {
+    title: "Pricing",
+    path: "/#pricing",
+  },
+  // {
+  //   title: "About",
+  //   path: "/about",
+  // },
+  // {
+  //   title: "Blog",
+  //   path: "/blog",
+  // },
+  {
+    title: "Security",
+    path: "/security-and-privacy/",
+  },
+  {
+    title: "Support",
+    path: "https://support.withotto.app",
+  },
+  // {
+  //   title: "Contact",
+  //   path: "/contact",
+  // },
+  {
+    title: "FAQs",
+    path: "/faqs/",
+  },
+  // {
+  //   title: "Pages",
+  //   path: "#",
+  //   children: [
+  //     {
+  //       title: "Blog Single",
+  //       path: "/blog/blog-slug-1",
+  //     },
+  //     {
+  //       title: "Login",
+  //       path: "/auth/login",
+  //     },
+  //     {
+  //       title: "Signup",
+  //       path: "/auth/signup",
+  //     },
+  //   ],
+  // },
+];
+---
+
+<div class="bg-primary-soft">
+  <Container>
+    <header class="flex flex-col items-center justify-between py-5 lg:flex-row">
+      <Astronav>
+        <div class="flex w-full items-center justify-between lg:w-auto">
+          <a href="/" class="w-40 xl:w-52">
+            <Image src={Logo} alt="With Otto logo" />
+          </a>
+          <div class="block lg:hidden">
+            <MenuIcon class="h-6 w-6 text-primary-strong" />
+          </div>
+        </div>
+        <MenuItems class="mt-2 hidden w-full lg:mt-0 lg:flex lg:w-auto">
+          <ul class="flex flex-col lg:flex-row lg:gap-3">
+            {
+              menuItems.map((item, index) => {
+                const isExternalLink = item.path?.startsWith("http");
+
+                return (
+                  <>
+                    {item.children && (
+                      <Dropdown
+                        title={item.title}
+                        children={item.children}
+                        lastItem={index === menuItems.length - 1}
+                      />
+                    )}
+
+                    {!item.children && (
+                      <li>
+                        <a
+                          href={item.path}
+                          class="flex items-center py-2 font-medium text-primary-strong hover:text-primary lg:px-3"
+                          target={isExternalLink ? "_blank" : ""}>
+                          <span>{item.title}</span>
+                          {isExternalLink && (
+                            <Icon
+                              name="hugeicons:link-square-01"
+                              size={32}
+                              class="ml-1 size-4"
+                            />
+                          )}
+                        </a>
+                      </li>
+                    )}
+                  </>
+                );
+              })
+            }
+          </ul>
+          <div class="mt-3 flex items-center gap-4 lg:hidden">
+            <Link href="/trial/" size="md" block>Try Otto for free</Link>
+          </div>
+        </MenuItems>
+      </Astronav>
+      <div>
+        <div class="hidden items-center gap-4 lg:flex">
+          <a
+            href="/trial/"
+            class="text-primary-strong-strong rounded-lg bg-white px-6 py-3 font-medium shadow transition hover:bg-primary hover:text-white">
+            Try Otto for free
+          </a>
+        </div>
+      </div>
+    </header>
+  </Container>
+</div>

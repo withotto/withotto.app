@@ -1,0 +1,62 @@
+---
+import { Icon } from "astro-icon/components";
+
+const features = [
+  {
+    icon: "hugeicons:ai-brain-05",
+    title: "Intelligent Matching",
+    description:
+      "Otto learns each client's unique reconciliation patterns through advanced machine learning, consistently achieving over 98% accuracy in transaction matching.",
+  },
+  {
+    icon: "hugeicons:checkmark-circle-02",
+    title: "Accuracy Assured",
+    description:
+      "Otto only processes transactions when highly confident, flagging uncertain matches for your review while handling routine reconciliations automatically.",
+  },
+  {
+    icon: "hugeicons:mentoring",
+    title: "Guided Learning",
+    description:
+      "Your expertise helps Otto grow smarter. When you guide Otto on an uncertain transaction, he automatically applies that knowledge to similar future matches.",
+  },
+  {
+    icon: "hugeicons:dashboard-browsing",
+    title: "Real-Time Monitoring",
+    description:
+      "Track Otto's performance across your client base through our intuitive portal, with detailed analytics showing reconciliation progress and accuracy.\"",
+  },
+  {
+    icon: "hugeicons:snow",
+    title: "Unique to Each Client",
+    description:
+      "Otto creates a unique reconciliation model for each client, adapting to their specific clients, suppliers, and bank transactions.",
+  },
+  {
+    icon: "hugeicons:square-lock-02",
+    title: "Secure Access",
+    description:
+      "Add Otto to your practice through Xero HQ using the same secure access management you use for staff members, maintaining full control over client access.",
+  },
+];
+---
+
+<div class="grid grid-cols-1 gap-16 md:grid-cols-2">
+  {
+    features.map((feature) => (
+      <div class="flex flex-wrap justify-center gap-4 sm:flex-nowrap sm:justify-start sm:gap-8">
+        <div>
+          <div class="flex h-28 w-28 items-center justify-center rounded-full bg-primary-soft text-primary">
+            <Icon name={feature.icon} size={32} class="size-7/12" />
+          </div>
+        </div>
+        <div class="text-center sm:text-start">
+          <h3 class="text-2xl font-semibold text-primary-strong">
+            {feature.title}
+          </h3>
+          <p class="pt-2 text-default">{feature.description}</p>
+        </div>
+      </div>
+    ))
+  }
+</div>

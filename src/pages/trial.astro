@@ -1,0 +1,67 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Container from "@components/container.astro";
+---
+
+<Layout title="Book Your Personal Onboarding Session">
+  <div class="py-24">
+    <Container>
+      <div class="z-10 mb-14">
+        <h2
+          class="text-center text-3xl font-bold text-primary-strong md:text-5xl">
+          Book Your Personal Onboarding Session
+        </h2>
+        <p class="mx-auto max-w-3xl pt-8 text-lg">
+          A proper introduction makes all the difference. Join us for an hour of
+          guided setup that will transform how you handle reconciliation.
+        </p>
+        <p class="mx-auto mt-4 max-w-3xl">
+          Your onboarding session is more than a product demo—it's a
+          collaborative consultation where we understand your practice's needs
+          and offer specific advice about getting the most out of Otto. We will
+          walk you through every aspect of the system, from initial setup to
+          daily operation, ensuring you get the most value from your trial.
+        </p>
+        <p class="mx-auto mt-4 max-w-3xl">During your session, we will:</p>
+        <ul class="mx-auto max-w-3xl list-disc pl-5">
+          <li>
+            Find out what you're hoping to achieve by bringing Otto into your
+            practice
+          </li>
+          <li>Explain how Otto's machine learning adapts to your workflow</li>
+          <li>
+            Guide you through the With Otto portal, showing you how to monitor
+            and manage reconciliation
+          </li>
+          <li>
+            Help you invite Otto to your practice and assign the first group of
+            trial clients
+          </li>
+          <li>
+            Answer any questions about security, compliance, and best practices
+          </li>
+        </ul>
+        <p class="mx-auto mt-4 max-w-3xl">
+          Why do we prefer personal onboarding? Because every practice is
+          unique. This dedicated time ensures Otto you have all the information
+          you need to get Otto working to his maximum potential, leading to
+          better results from day one.
+        </p>
+        <div
+          class="embedded-booking mx-auto max-w-3xl"
+          data-url="https://bookings.withotto.app"
+          data-query="&t=s&uuid=9efe86c2-31c3-4038-ac5c-94e6a62b9350"
+          data-lang="en"
+          data-autoresize="1"
+          data-showsidebar="1"
+          style="min-width: 320px; height: 768px;">
+        </div>
+        <script
+          is:inline
+          type="text/javascript"
+          src="https://bookings.withotto.app/embed.js"
+          async></script>
+      </div>
+    </Container>
+  </div>
+</Layout>

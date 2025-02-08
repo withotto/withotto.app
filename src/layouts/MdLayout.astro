@@ -1,0 +1,58 @@
+---
+import Container from "@components/container.astro";
+import Layout from "./Layout.astro";
+import { Icon } from "astro-icon/components";
+
+const { frontmatter } = Astro.props;
+---
+
+<Layout title={frontmatter.title}>
+  <Container>
+    <div class="prose mx-auto mt-16 pb-24 md:prose-lg prose-li:mt-0">
+      <h1
+        class="text-4xl font-bold text-primary-strong lg:text-5xl lg:leading-tight lg:tracking-tight">
+        {frontmatter.title}
+      </h1>
+
+      {
+        frontmatter.lastUpdated && (
+          <div class="my-0 flex items-center gap-2 text-default">
+            <Icon
+              name="hugeicons:calendar-03"
+              size={32}
+              class="size-5 text-primary"
+            />
+            <span>
+              Last updated:{" "}
+              {new Date(frontmatter.lastUpdated).toLocaleDateString("en-GB", {
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+              })}
+            </span>
+          </div>
+        )
+      }
+      {
+        frontmatter.pdfFilename && (
+          <div class="my-0 flex items-center gap-2 text-default">
+            <Icon
+              name="hugeicons:download-04"
+              size={32}
+              class="size-5 text-primary"
+            />
+            <span>
+              <a
+                href={`/files/${encodeURIComponent(frontmatter.pdfFilename)}`}
+                class="undertext-primary-strong hover:text-primary"
+                download>
+                Download this page as a PDF
+              </a>
+            </span>
+          </div>
+        )
+      }
+      <slot />
+    </div>
+  </Container>
+</Layout>

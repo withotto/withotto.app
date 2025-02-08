@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://withotto.app/sitemap-index.xml

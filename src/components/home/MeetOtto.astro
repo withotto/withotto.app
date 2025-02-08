@@ -1,0 +1,42 @@
+---
+import Container from "@components/container.astro";
+import Avatar from "assets/avatar.svg";
+import { Image } from "astro:assets";
+---
+
+<div class="bg-white pt-24">
+  <Container>
+    <div class="mx-auto grid max-w-4xl gap-8 lg:grid-cols-3 lg:gap-16">
+      <div class="col-span-1 flex items-center justify-center">
+        <div class="relative size-64">
+          <div
+            class="relative aspect-square h-full overflow-hidden rounded-full bg-primary-soft shadow-lg ring-4 ring-primary lg:absolute lg:inset-0">
+            <div class="absolute inset-0">
+              <Image
+                src={Avatar}
+                alt="Otto: A friendly gentleman with a round face, bushy eyebrows and moustache, and rosy cheeks"
+                class="mt-10 h-[90%] w-full"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-span-2 flex flex-col justify-center">
+        <h2 class="text-5xl font-bold text-primary-strong">
+          Meet Otto, your reconciliation partner
+        </h2>
+
+        <div class="mt-8">
+          <p class="text-left text-lg leading-relaxed text-default">
+            I understand the satisfaction of perfectly balanced books—and the
+            frustration when things don't quite add up. That's why I use my
+            machine learning capabilities to handle the tedious matching while
+            you focus on what matters most: growing your practice and supporting
+            your clients.
+          </p>
+        </div>
+      </div>
+    </div>
+  </Container>
+</div>

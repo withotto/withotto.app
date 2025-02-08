@@ -1,0 +1,251 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Container from "@components/container.astro";
+import { Image } from "astro:assets";
+import Newsletter from "assets/newsletter.svg";
+import { type FaqItem } from "../types";
+import FaqList from "../components/faq/FaqList.astro";
+
+enum Category {
+  BILLING = "Billing",
+  FEATURES = "Features",
+  GETTING_STARTED = "Getting started",
+  GUIDED_MATCH = "GuidedMatch",
+  SECURITY = "Security",
+  SMART_MATCH = "SmartMatch",
+  SUPPORT = "Support",
+}
+
+const categories: Category[] = [
+  Category.GETTING_STARTED,
+  Category.SECURITY,
+  Category.BILLING,
+  Category.FEATURES,
+  Category.SMART_MATCH,
+  Category.GUIDED_MATCH,
+  Category.SUPPORT,
+];
+
+type CategorisedFaqItem = FaqItem & {
+  categories: Category[];
+};
+
+const faqs: CategorisedFaqItem[] = [
+  {
+    categories: [Category.GETTING_STARTED],
+    question: "What do I need to get started with Otto?",
+    answer: `
+      <p class="py-2">You'll need to:</p>
+        <ul class="list-disc pl-5">
+          <li>Create bank rules/make sure you're happy with your existing ones. We've made a <a href="/files/Bank%20rules%20quick%20guide.pdf" class="text-primary hover:underline hover:underline-offset-2">quick guide</a> to help you with this.</li>
+          <li>Invite Otto to your Xero practice.</li>
+          <li>Give him access to your chosen clients. We'll help you with this on the onboarding call.</li>
+        </ul>
+    `,
+  },
+  {
+    categories: [Category.FEATURES, Category.SMART_MATCH],
+    question: "What's SmartMatch?",
+    answer: `
+        <p class="py-2">SmartMatch is our secret sauce. Rather than trying to work out whether a payment on the bank statement relates to an invoice or bill in Xero based on the payee and reference details, SmartMatch looks at one year of previous reconciliation data for each of your clients to learn how you have reconciled in the past.</p>
+        <p class="py-2">With that data, Otto can find patterns in those past reconciliations to reduce mistakes and reconcile some trickier matches than other bookkeeping bots.</p>
+        <p class="py-2">For each green match on the bank reconciliation page, Otto will use this training data to decide whether it's a match or non-match, and a confidence level from 0 to 100%. For example, he could be 90% sure something is not a match, or 50% sure something is a match. By default, we require Otto to be at least 90% sure the match is correct before he will reconcile.</p>
+    `,
+  },
+  {
+    categories: [Category.FEATURES, Category.SMART_MATCH],
+    question: "What are the pros and cons of SmartMatch?",
+    answer: `
+        <p class="py-2">Our primary goal with Otto is that he should not make an incorrect match. We don't want you to have to constantly check what he has done because you can't trust he's done the right thing. SmartMatch allows us to make sure Otto is really unlikely to do the wrong thing.</p>
+        <p class="py-2">Sometimes SmartMatch will mean Otto is not as confident about a match as you might expect. This is more likely if the information on the bank statement is confusing. Examples include the description contains the payee, reference, date, address, etc., or where the payee is completely blank.</p>
+        <p class="py-2">SmartMatch needs a certain amount of previous reconciliation data to train with–around 100 matches in our testing. Accuracy will be higher with more examples but Otto is trained to skip reconciliations he is not sure of so you should not see incorrect reconciliations even with a low volume of training data.</p>
+        <p class="py-2 font-bold">We are constantly working to improve how accurate Otto's work is and you will automatically benefit from these improvements.</p>
+    `,
+  },
+  {
+    categories: [Category.FEATURES, Category.GUIDED_MATCH],
+    question: "What's GuidedMatch?",
+    answer: `
+        <p class="py-2">GuidedMatch lets you tell Otto to reconcile something when he isn't confident enough to do that himself.</p>
+        <p class="py-2">When you tell Otto he should have matched a transaction he didn't reconcile, he will see your feedback the next day and reconcile that transaction. There's no cost for GuidedMatch so you give Otto the feedback he needs to constantly improve <i>and</i> you don't have to go into Xero to reconcile the transaction. Win-win!</p>
+        <p class="py-2">GuidedMatch is separate to the fortnightly training, so Otto isn't learning what you have told him at this point–he just trusts your decision and follow it.</p>
+    `,
+  },
+  {
+    categories: [Category.FEATURES, Category.SMART_MATCH],
+    question: "Does Otto need to be trained?",
+    answer: `
+        <p class="py-2">He doesn't. He will reconcile any bank rules you have set up, from day one. You just need to make sure that the rules only match what you want them to, and that they don't require any information to be entered during the reconciliation.</p>
+        <p class="py-2">SmartMatch works using information about previous reconciliations so you don't need to do anything there–we take care of it all.</p>
+        <p class="py-2">However, giving feedback in the portal is a key part of making sure Otto understands what should and should not be reconciled so we recommend you spend a little bit of time each week letting him know how accurate his decisions have been so he will improve next time he is retrained.</p>
+    `,
+  },
+  {
+    categories: [Category.FEATURES, Category.SMART_MATCH],
+    question: "Will Otto just reconcile any green match he sees?",
+    answer: `
+        <p class="py-2">Absolutely not. We're about matching the correct transactions, and avoiding mistakes, not clicking the OK button as many times as possible. We would rather skip some possible matches than match something incorrectly.</p>
+        <p class="py-2">Otto will only reconcile a green match when he is at least 90% confident the statement and bill are a match.</p>
+    `,
+  },
+  {
+    categories: [Category.FEATURES, Category.SMART_MATCH],
+    question: "Is there anything Otto can't (or won't) reconcile?",
+    answer: `
+        <p class="py-2">Otto currently skips these types of green matches:</p>
+        <ul class="list-disc pl-5">
+          <li><b>Batch payments: </b> A single payment that needs to be applied to more than one invoice.</li>
+          <li><b>Part payments:</b> Often use for installments, this is where you split the invoice or bill. </li>
+          <li><b>Different currencies:</b> We haven't taught Otto how to find currency exchange rates so the statement and bill need to be in the same currency.</li>
+          <li><b>Payment made before issue date:</b> We think a human should use their judgement to decide whether this type of match should be reconciled.</li>
+        </ul>
+    `,
+  },
+  {
+    categories: [Category.FEATURES, Category.SMART_MATCH],
+    question: "I only want to reconcile bank rules. Can I skip SmartMatch?",
+    answer: `
+        <p class="py-2">Absolutely! You can decide which features are enabled for each of your clients. You are in complete control.</p>
+    `,
+  },
+  {
+    categories: [Category.BILLING],
+    question: "I only want to reconcile bank rules. Can I skip SmartMatch?",
+    answer: `
+        <p class="py-2">Absolutely! Any unused credits automatically roll over to the next month as long as your subscription is active. This gives you the flexibility to handle varying workloads throughout the year.</p>
+    `,
+  },
+  {
+    categories: [Category.GETTING_STARTED],
+    question:
+      "I don't currently have many bank rules set up. What can I use them for?",
+    answer: `
+        <p class="py-2">Bank rules are great for transactions where you don't get a bill, such as bank account fees, payment processing fees, and transfers. They are also helpful where the sales invoice or receipt has been generated outside of Xero, for platforms like Stripe. For companies with payroll, rules can normally be created for the wage payment, PAYE, and pension payments.</p>
+        <p class="py-2">Read our <a href="/files/Bank%20rules%20quick%20guide.pdf" class="text-primary hover:underline hover:underline-offset-2">quick guide</a> for more ideas, as well as tips for making the most of rules and avoiding unexpected issues.</p>
+    `,
+  },
+  {
+    categories: [Category.SECURITY],
+    question: "Is Otto secure?",
+    answer: `
+        <p class="py-2">We've put a lot of work into making sure Otto is as secure as possible. Please see our <a href="/security-and-privacy/" class="text-primary hover:underline hover:underline-offset-2">security and privacy</a> page for more details. You can download a PDF from there to share with your clients if you want to explain the security measures that have been put in place.</p>
+    `,
+  },
+  {
+    categories: [Category.SECURITY],
+    question: "Is there a single Otto that is shared amongst all practices?",
+    answer: `
+        <p class="py-2">Each practice has their own Otto, with a completely random password. There is no way that anyone else's Otto can access your clients, and vice versa.</p>
+    `,
+  },
+  {
+    categories: [Category.SECURITY],
+    question: "How does Otto handle 2FA?",
+    answer: `
+        <p class="py-2">2FA is enabled for all accounts for extra security.</p>
+    `,
+  },
+  {
+    categories: [Category.SECURITY],
+    question: "How does Otto access and use our data?",
+    answer: `
+        <p class="py-2">Otto accesses your clients' Xero accounts the same as a person would, but he only looks at certain pages:</p>
+        <ul class="list-disc pl-5">
+          <li>Whilst reconciling, he will first visit the dashboard, then the bank accounts page, and then works through each reconciliation page for each bank account.</li>
+          <li>Whilst saving previously reconciled transaction information for his training, Otto again starts at the dashboard and visits each bank account. This time he views the bank statements pages, and checks the transaction details and transaction pages to learn how transactions were reconciled against bills and invoices.</li>
+        </ul>
+        <p class="py-2">Statement and bill/invoice information is saved to train Otto, and also to record what he has reconciled so you can review this.</p>
+        <p class="py-2">Training data is kept for no longer than 18 months from the date of the transaction on the bank statement.</p>
+        <p class="py-2">The training data is turned into a Machine Learning (ML) model. The model stores the underlying data as several numbers for each transaction, and whether that is a match or a non-match.</p>
+    `,
+  },
+  {
+    categories: [Category.SECURITY],
+    question: "How is my client's data handled and transmitted?",
+    answer: `
+        <p class="py-2">Otto interacts with Xero using a Chrome-based web browser using HTTPS. Saved client data relates only to information that you would see on the Xero bank reconciliation page. Data stored in the database for training and reporting is secured using a secure password and access is limited to ensure it is only used for valid purposes. Any passwords and 2FA codes are encrypted with a random key.</p>
+    `,
+  },
+  {
+    categories: [Category.SUPPORT],
+    question: "How is Otto monitored and supported?",
+    answer: `
+        <p class="py-2">Otto records status messages so we can see that his work is running as expected. Any issues will be logged for further investigation. Errors are escalated so they can be reviewed by the developer, in case a fix or other change needs to be made.</p>
+        <p class="py-2">We also monitor resource usage to ensure that reconciliations start and end within the one-hour timeslot you have chosen.</p>
+    `,
+  },
+  {
+    categories: [Category.FEATURES, Category.SMART_MATCH],
+    question: "How often is Otto retrained on my client's data?",
+    answer: `
+        <p class="py-2">Otto is automatically retrained on a fortnightly basis to keep his knowledge up-to-date.</p>
+        <p class="py-2">The training process uses new reconciliation data from Xero as well as any feedback you have provided in the portal.</p>
+    `,
+  },
+  {
+    categories: [Category.BILLING],
+    question:
+      "What happens if Otto reconciles more transactions than are included in my plan?",
+    answer: `
+        <p class="py-2">You can choose how to handle additional reconciliation needs.</p>
+        <p class="py-2"><b>Fixed Billing</b>: Otto will pause reconciliation when your credits run out and resume automatically when your plan renews. This ensures you never exceed your planned budget.</p>
+        <p class="py-2"><b>Overage Billing</b>: Otto continues reconciling and any extra credits are charged at your plan's standard rate at the end of the month. This keeps your workflow smooth during busy periods.</p>
+        <p class="py-2"> Both options give you complete visibility of credit usage, and you can change your preference anytime through your practice settings.</p>
+      `,
+  },
+  {
+    categories: [Category.GETTING_STARTED],
+    question: "Does Otto need a separate computer?",
+    answer: `
+        <p class="py-2">Absolutely not! Otto runs on servers in the cloud so you don't need to buy any new equipment, pay for the extra electricity, or be responsible for security updates.</p>
+        <p class="py-2">You just pay based on the number of reconciliations Otto makes each month.</p>
+      `,
+  },
+  {
+    categories: [Category.GETTING_STARTED],
+    question: "What will my clients see?",
+    answer: `
+        <p class="py-2">Otto is a Xero user the same as you and your staff. You can choose a profile photo and name to fit in with your practice image and your clients' expectations.</p>
+      `,
+  },
+];
+---
+
+<Layout title="Frequently Asked Questions">
+  <!--====================== Faq ======================-->
+  <div class="py-24">
+    <Container>
+      <div>
+        <h2
+          class="text-center text-3xl font-bold text-primary-strong md:text-5xl">
+          Frequently Asked Questions
+        </h2>
+        <p
+          class="mx-auto max-w-3xl pt-10 text-center text-lg font-medium leading-normal text-primary-strong">
+          Here are some of the most frequently asked questions about With Otto.
+          If you have any other questions, feel free to contact us at
+          support@withotto.app
+        </p>
+      </div>
+
+      {
+        categories.map((category) => {
+          const categoryFaqs = faqs.filter((faq) =>
+            faq.categories.includes(category),
+          );
+
+          return (
+            <div class="mx-auto flex max-w-4xl items-center justify-center p-10">
+              <div class="flex w-full flex-col">
+                <h3 class="text-2xl font-semibold text-primary">{category}</h3>
+                <div class="mt-4 flex w-full flex-col divide-y divide-neutral-200">
+                  <FaqList items={categoryFaqs} />
+                </div>
+              </div>
+            </div>
+          );
+        })
+      }
+    </Container>
+  </div>
+</Layout>

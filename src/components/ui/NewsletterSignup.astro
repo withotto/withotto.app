@@ -1,0 +1,164 @@
+---
+
+---
+
+<div
+  class="-mt-40 mb-16 grid grid-cols-1 gap-10 rounded-xl bg-primary-soft px-6 py-6 md:grid-cols-2 md:px-20 md:py-14">
+  <div class="flex gap-6">
+    <div class="flex flex-col gap-4">
+      <h3 class="text-3xl font-semibold leading-tight text-default">
+        Stay updated with Otto's monthly insights
+      </h3>
+      <p class="text-lg leading-relaxed text-default">
+        New features, industry news, and events that matter to modern accounting
+        practices
+      </p>
+    </div>
+    <div class="w-1 rounded-full bg-primary-medium/20"></div>
+  </div>
+  <form
+    id="newsletterForm"
+    class="flex flex-col space-y-4"
+    action="https://newsletter.withotto.app/subscription/form"
+    method="post"
+    target="_blank"
+    rel="noopener">
+    <input type="hidden" name="nonce" />
+    <input
+      id="167b3"
+      type="hidden"
+      name="l"
+      value="167b3e71-8786-4039-a9b0-92a166673fd0"
+    />
+    <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
+      <div class="w-full">
+        <label for="name" class="text-s inline-block font-medium text-default">
+          Your name
+        </label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          class="mt-1 w-full rounded-lg border-2 border-white px-6 py-4 text-sm text-default focus:border-primary focus:outline-none"
+        />
+      </div>
+      <div class="w-full">
+        <label for="email" class="text-s inline-block font-medium text-default">
+          Email address
+        </label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          required
+          class="mt-1 w-full rounded-lg border-2 border-white px-6 py-4 text-sm text-default focus:border-primary focus:outline-none"
+        />
+      </div>
+    </div>
+    <button
+      type="submit"
+      class="text-md rounded-lg border border-transparent bg-primary px-8 py-5 font-semibold text-white shadow transition-colors hover:bg-primary-strong lg:w-full">
+      Subscribe
+    </button>
+  </form>
+</div>
+
+<dialog
+  id="newsletterDialog"
+  class="w-full max-w-lg rounded-xl p-0 backdrop:bg-default/40">
+  <div class="relative p-6">
+    <div class="mb-6">
+      <h2 class="mb-2 text-xl font-semibold text-default">
+        Complete Your Newsletter Subscription
+      </h2>
+      <p class="text-default/70">
+        To confirm your subscription, we'll open a new browser tab. Once you've
+        confirmed your email address, you can simply close that tab to return to
+        With Otto.
+      </p>
+    </div>
+
+    <div class="flex justify-end gap-4">
+      <button
+        type="button"
+        class="shadowtext-default rounded-lg border border-default/20 px-6 py-3 text-sm font-medium hover:bg-default/5"
+        data-close-dialog>
+        Not Now
+      </button>
+      <button
+        type="button"
+        class="rounded-lg bg-primary px-6 py-3 text-sm font-medium text-white shadow hover:bg-primary-strong"
+        data-continue>
+        Continue to Subscribe
+      </button>
+    </div>
+
+    <button
+      type="button"
+      class="absolute right-4 top-4 text-default/40 hover:text-default"
+      aria-label="Close dialog"
+      data-close-dialog>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+  </div>
+</dialog>
+
+<script>
+  const form = document.getElementById("newsletterForm");
+  const dialog = document.getElementById("newsletterDialog");
+  const closeButtons = document.querySelectorAll("[data-close-dialog]");
+  const continueButton = document.querySelector("[data-continue]");
+
+  if (form && dialog) {
+    // Show dialog before form submission
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      dialog.showModal();
+    });
+
+    // Handle dialog close
+    closeButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        dialog.close();
+      });
+    });
+
+    // Handle continue button - submits the original form
+    if (continueButton) {
+      continueButton.addEventListener("click", () => {
+        form.submit(); // This will submit the form in a new tab
+        dialog.close();
+      });
+    }
+
+    // Close dialog when clicking outside
+    dialog.addEventListener("click", (e) => {
+      const dialogDimensions = dialog.getBoundingClientRect();
+      if (
+        e.clientX < dialogDimensions.left ||
+        e.clientX > dialogDimensions.right ||
+        e.clientY < dialogDimensions.top ||
+        e.clientY > dialogDimensions.bottom
+      ) {
+        dialog.close();
+      }
+    });
+  }
+</script>
+
+<style>
+  dialog::backdrop {
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(1px);
+  }
+</style>
