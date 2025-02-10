@@ -11,13 +11,13 @@ interface Stat {
 const stats: Stat[] = [
   {
     label: "Bank rules reconciled",
-    value: "8,371",
+    value: "7,283",
     subtext: "in last 30 days",
     icon: "hugeicons:check-list",
   },
   {
     label: "SmartMatches reconciled",
-    value: "1,587",
+    value: "1,496",
     subtext: "in last 30 days",
     icon: "hugeicons:artificial-intelligence-01",
   },
@@ -28,6 +28,8 @@ const stats: Stat[] = [
     icon: "hugeicons:target-02",
   },
 ];
+
+const lastUpdated = new Date("2025-02-10");
 ---
 
 <div class="mb-4 mt-16 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
@@ -43,7 +45,7 @@ const stats: Stat[] = [
           <div class="p-6">
             <p class="font-medium text-default-soft">{stat.label}</p>
             <p class="mt-2 flex flex-col">
-              <span class="text-center text-4xl font-semibold text-primary-strong md:text-6xl">
+              <span class="p-2 text-center text-4xl font-bold text-primary md:text-6xl">
                 {stat.value}
               </span>
               {stat.subtext && (
@@ -58,4 +60,12 @@ const stats: Stat[] = [
     ))
   }
 </div>
-<p class="mx-auto mb-16 text-sm">Last updated 8 February 2025</p>
+<p class="mx-auto mb-16 text-sm">
+  Last updated {
+    lastUpdated.toLocaleString("en-gb", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    })
+  }
+</p>
