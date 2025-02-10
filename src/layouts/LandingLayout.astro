@@ -1,0 +1,60 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Container from "@components/container.astro";
+
+export interface Props {
+  frontmatter: {
+    title: string;
+    subtitle: string;
+  };
+}
+
+const {
+  frontmatter: { title, subtitle },
+} = Astro.props;
+---
+
+<style is:global>
+  .content-wrapper {
+    p {
+      @apply mx-auto mt-4 max-w-3xl;
+    }
+
+    ul {
+      @apply mx-auto max-w-3xl list-disc pl-5;
+    }
+  }
+</style>
+
+<Layout title={title}>
+  <div class="py-24">
+    <Container>
+      <div class="z-10 mb-14">
+        <h2
+          class="text-center text-3xl font-bold text-primary-strong md:text-5xl">
+          {title}
+        </h2>
+        <p class="mx-auto max-w-3xl pt-8 text-lg">
+          {subtitle}
+        </p>
+        <div class="content-wrapper">
+          <slot />
+        </div>
+        <div
+          class="embedded-booking mx-auto max-w-3xl"
+          data-url="https://bookings.withotto.app"
+          data-query="&t=s&uuid=9efe86c2-31c3-4038-ac5c-94e6a62b9350"
+          data-lang="en"
+          data-autoresize="1"
+          data-showsidebar="1"
+          style="min-width: 320px; height: 768px;">
+        </div>
+        <script
+          is:inline
+          type="text/javascript"
+          src="https://bookings.withotto.app/embed.js"
+          async></script>
+      </div>
+    </Container>
+  </div>
+</Layout>
