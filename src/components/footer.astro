@@ -3,6 +3,7 @@ import Container from "./container.astro";
 import Logo from "assets/logo-white.svg";
 import { Image } from "astro:assets";
 import NewsletterSignup from "@components/ui/NewsletterSignup.astro";
+import { Icon } from "astro-icon/components";
 ---
 
 <footer class="mt-16 bg-primary-strong pt-24">
@@ -64,14 +65,26 @@ import NewsletterSignup from "@components/ui/NewsletterSignup.astro";
       </div>
       <div>
         <ul class="leading-10">
-          <li>
+          <li class="flex items-center gap-2">
+            <Icon
+              name="hugeicons:linkedin-02"
+              size={32}
+              class="size-4 text-white"
+            />
+
             <a
               href="https://www.linkedin.com/company/with-otto/"
               class="text-lg font-light text-white">
               LinkedIn
             </a>
           </li>
-          <li>
+          <li class="flex items-center gap-2">
+            <Icon
+              name="hugeicons:youtube"
+              size={32}
+              class="size-4 text-white"
+            />
+
             <a
               href="https://www.youtube.com/@WithOtto"
               class="text-lg font-light text-white">
@@ -80,18 +93,18 @@ import NewsletterSignup from "@components/ui/NewsletterSignup.astro";
           </li>
         </ul>
       </div>
-    </div>
-    <div
-      class="mt-16 flex flex-col gap-2 border-t border-white border-opacity-20 py-10 text-center md:flex-row md:justify-between md:text-start">
-      <div class="font-light text-white">
-        <p>Copyright &copy; {new Date().getFullYear()} With Otto Limited</p>
-        <p>Registered in England and Wales, company number 15923965</p>
-        <p>Registered office: 27 Old Gloucester Street, London, WC1N 3AX</p>
-        <p>VAT number: 476382654</p>
+      <div
+        class="mt-16 flex flex-col gap-2 border-t border-white border-opacity-20 py-10 text-center md:flex-row md:justify-between md:text-start">
+        <div class="font-light text-white">
+          <p>Copyright &copy; {new Date().getFullYear()} With Otto Limited</p>
+          <p>Registered in England and Wales, company number 15923965</p>
+          <p>Registered office: 27 Old Gloucester Street, London, WC1N 3AX</p>
+          <p>VAT number: 476382654</p>
+        </div>
+        <p class="font-light text-white">
+          Made with ☕️ and 🐕 in Ely, Cambridgeshire
+        </p>
       </div>
-      <p class="font-light text-white">
-        Made with ☕️ and 🐕 in Ely, Cambridgeshire
-      </p>
     </div>
   </Container>
 </footer>
