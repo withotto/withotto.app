@@ -1,8 +1,6 @@
 ---
 import Layout from "@layouts/Layout.astro";
 import Container from "@components/container.astro";
-import { Image } from "astro:assets";
-import Newsletter from "assets/newsletter.svg";
 import { type FaqItem } from "../types";
 import FaqList from "../components/faq/FaqList.astro";
 
@@ -110,7 +108,7 @@ const faqs: CategorisedFaqItem[] = [
   },
   {
     categories: [Category.BILLING],
-    question: "I only want to reconcile bank rules. Can I skip SmartMatch?",
+    question: "Can credits be carried over?",
     answer: `
         <p class="py-2">Absolutely! Any unused credits automatically roll over to the next month as long as your subscription is active. This gives you the flexibility to handle varying workloads throughout the year.</p>
     `,
@@ -161,7 +159,7 @@ const faqs: CategorisedFaqItem[] = [
   },
   {
     categories: [Category.SECURITY],
-    question: "How is my client's data handled and transmitted?",
+    question: "How is my clients' data handled and transmitted?",
     answer: `
         <p class="py-2">Otto interacts with Xero using a Chrome-based web browser using HTTPS. Saved client data relates only to information that you would see on the Xero bank reconciliation page. Data stored in the database for training and reporting is secured using a secure password and access is limited to ensure it is only used for valid purposes. Any passwords and 2FA codes are encrypted with a random key.</p>
     `,
@@ -176,7 +174,7 @@ const faqs: CategorisedFaqItem[] = [
   },
   {
     categories: [Category.FEATURES, Category.SMART_MATCH],
-    question: "How often is Otto retrained on my client's data?",
+    question: "How often is Otto retrained on my clients' data?",
     answer: `
         <p class="py-2">Otto is automatically retrained on a fortnightly basis to keep his knowledge up-to-date.</p>
         <p class="py-2">The training process uses new reconciliation data from Xero as well as any feedback you have provided in the portal.</p>
