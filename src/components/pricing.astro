@@ -112,6 +112,34 @@ const faqs: FaqItem[] = [
 ];
 ---
 
+<script>
+  // Add scroll indicators
+  const tableContainer = document.querySelector('[role="region"]');
+  const leftIndicator = document.getElementById("scroll-indicator-left");
+  const rightIndicator = document.getElementById("scroll-indicator-right");
+
+  if (tableContainer && leftIndicator && rightIndicator) {
+    const updateScrollIndicators = () => {
+      const maxScroll = tableContainer.scrollWidth - tableContainer.clientWidth;
+
+      if (maxScroll > 0) {
+        leftIndicator.style.display =
+          tableContainer.scrollLeft > 0 ? "block" : "none";
+        rightIndicator.style.display =
+          tableContainer.scrollLeft < maxScroll ? "block" : "none";
+      } else {
+        leftIndicator.style.display = "none";
+        rightIndicator.style.display = "none";
+      }
+    };
+
+    tableContainer.addEventListener("scroll", updateScrollIndicators);
+    window.addEventListener("resize", updateScrollIndicators);
+
+    updateScrollIndicators();
+  }
+</script>
+
 <div class="py-24" id="pricing">
   <Container>
     <div>
@@ -141,65 +169,89 @@ const faqs: FaqItem[] = [
           monthly and seasonal variations in transaction volume.</span
         >
       </div>
-      <div
-        class="overflow-hidden rounded-xl border border-muted-strong bg-white shadow-lg">
-        <table class="min-w-full divide-y divide-muted-strong">
-          <thead>
-            <tr class="bg-primary font-bold text-white">
-              <th scope="col" class="px-6 py-4 text-left text-white">Plan</th>
-              <th
-                scope="col"
-                class="bg-primary px-6 py-4 text-right font-bold text-white"
-                >Price
-              </th>
-              <th
-                scope="col"
-                class="bg-primary px-6 py-4 text-right font-bold text-white"
-                >Included credits
-              </th>
-              <th
-                scope="col"
-                class="bg-primary px-6 py-4 text-right font-bold text-white"
-                >Price per credit
-              </th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-muted-strong">
-            {
-              plans.map((plan, index) => (
-                <tr
-                  class={` ${index % 2 === 0 ? "bg-white" : "bg-primary-soft"}`}>
-                  <td class="whitespace-nowrap px-6 py-4">
-                    <div class="flex items-center gap-3">
-                      <span class="font-medium text-default">{plan.name}</span>
-                      {plan.label && (
-                        <span
-                          class={`inline-flex rounded-full px-3 py-1 text-sm font-medium ${plan.label.classes}`}>
-                          {plan.label.title}
+      <div class="relative">
+        {/* Outer container with position relative for scroll indicators */}
+        <div
+          class="pointer-events-none absolute bottom-0 right-0 top-0 hidden w-12 bg-gradient-to-l from-white to-transparent md:hidden"
+          aria-hidden="true"
+          id="scroll-indicator-right">
+        </div>
+        <div
+          class="pointer-events-none absolute bottom-0 left-0 top-0 hidden w-12 bg-gradient-to-r from-white to-transparent md:hidden"
+          aria-hidden="true"
+          id="scroll-indicator-left">
+        </div>
+
+        {/* Table container with horizontal scroll */}
+        <div
+          class="overflow-x-auto rounded-xl border border-muted-strong bg-white shadow-lg"
+          role="region"
+          aria-label="Pricing plans comparison"
+          tabindex="0">
+          <table class="min-w-full divide-y divide-muted-strong">
+            <thead>
+              <tr class="bg-primary font-bold text-white">
+                <th
+                  scope="col"
+                  class="sticky left-0 bg-primary px-6 py-4 text-left text-white"
+                  >Plan</th
+                >
+                <th
+                  scope="col"
+                  class="bg-primary px-6 py-4 text-right font-bold text-white">
+                  Price
+                </th>
+                <th
+                  scope="col"
+                  class="bg-primary px-6 py-4 text-right font-bold text-white">
+                  Included credits
+                </th>
+                <th
+                  scope="col"
+                  class="bg-primary px-6 py-4 text-right font-bold text-white">
+                  Price per credit
+                </th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-muted-strong">
+              {
+                plans.map((plan, index) => (
+                  <tr
+                    class={`${index % 2 === 0 ? "bg-white" : "bg-primary-soft"}`}>
+                    <td class="sticky left-0 whitespace-nowrap bg-inherit px-6 py-4">
+                      <div class="flex items-center gap-3">
+                        <span class="font-medium text-default">
+                          {plan.name}
                         </span>
-                      )}
-                    </div>
-                  </td>
-                  <td class="whitespace-nowrap px-6 py-4 text-right">
-                    <div class="font-bold text-default">
-                      £{plan.price.toFixed(2).toLocaleString()}
-                    </div>
-                  </td>
-                  <td class="whitespace-nowrap px-6 py-4 text-right">
-                    <div class="text-default">
-                      {plan.credits.toLocaleString()}
-                    </div>
-                  </td>
-                  <td class="whitespace-nowrap px-6 py-4 text-right">
-                    <div class="text-default">
-                      £{(plan.price / plan.credits).toFixed(2)}
-                    </div>
-                  </td>
-                </tr>
-              ))
-            }
-          </tbody>
-        </table>
+                        {plan.label && (
+                          <span
+                            class={`inline-flex rounded-full px-3 py-1 text-sm font-medium ${plan.label.classes}`}>
+                            {plan.label.title}
+                          </span>
+                        )}
+                      </div>
+                    </td>
+                    <td class="whitespace-nowrap px-6 py-4 text-right">
+                      <div class="font-bold text-default">
+                        £{plan.price.toFixed(2).toLocaleString()}
+                      </div>
+                    </td>
+                    <td class="whitespace-nowrap px-6 py-4 text-right">
+                      <div class="text-default">
+                        {plan.credits.toLocaleString()}
+                      </div>
+                    </td>
+                    <td class="whitespace-nowrap px-6 py-4 text-right">
+                      <div class="text-default">
+                        £{(plan.price / plan.credits).toFixed(2)}
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              }
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
 
