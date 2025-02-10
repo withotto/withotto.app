@@ -14,11 +14,11 @@ const {
       <details class="group">
         <summary
           class:list={[
-            "flex cursor-pointer list-none items-center justify-between py-6 text-start font-semibold",
+            "flex cursor-pointer list-none items-center justify-between py-4 text-start font-semibold",
             "transition hover:text-primary-strong [&::-webkit-details-marker]:hidden",
             questionClass,
           ]}>
-          <span class="truncate">{faq.question}</span>
+          <span>{faq.question}</span>
           <span class="transition group-open:rotate-180">
             <svg
               class="h-7 w-7"
