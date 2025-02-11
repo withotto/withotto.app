@@ -3,33 +3,46 @@ import { Icon } from "astro-icon/components";
 
 interface Stat {
   label: string;
-  value: string;
+  value: number;
   subtext: string;
   icon: string;
+  localeOptions: Intl.NumberFormatOptions;
 }
 
 const stats: Stat[] = [
   {
     label: "Bank rules reconciled",
-    value: "7,283",
+    value: 7522,
     subtext: "in last 30 days",
     icon: "hugeicons:check-list",
+    localeOptions: {
+      style: "decimal",
+      useGrouping: true,
+    },
   },
   {
     label: "SmartMatches reconciled",
-    value: "1,496",
+    value: 1503,
     subtext: "in last 30 days",
     icon: "hugeicons:artificial-intelligence-01",
+    localeOptions: {
+      style: "decimal",
+      useGrouping: true,
+    },
   },
   {
     label: "SmartMatch error rate",
-    value: "0.65%",
+    value: 0.00733496332518337408,
     subtext: "of matched transactions over last 60 days",
     icon: "hugeicons:target-02",
+    localeOptions: {
+      style: "percent",
+      maximumFractionDigits: 2,
+    },
   },
 ];
 
-const lastUpdated = new Date("2025-02-10");
+const lastUpdated = new Date("2025-02-11");
 ---
 
 <div class="mb-4 mt-16 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
@@ -46,7 +59,7 @@ const lastUpdated = new Date("2025-02-10");
             <p class="font-medium text-default-soft">{stat.label}</p>
             <p class="mt-2 flex flex-col">
               <span class="p-2 text-center text-4xl font-bold text-primary md:text-6xl">
-                {stat.value}
+                {stat.value.toLocaleString("en-gb", stat.localeOptions)}
               </span>
               {stat.subtext && (
                 <span class="mt-1 text-right text-sm text-default-soft">
