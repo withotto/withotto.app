@@ -1,0 +1,2 @@
+# Netlify to withotto.app
+https://withotto-v2.netlify.app/* https://withotto.app/:splat 301!
