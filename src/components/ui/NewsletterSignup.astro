@@ -16,21 +16,36 @@
     </div>
     <div class="w-1 rounded-full bg-primary-medium/20"></div>
   </div>
+
+  <div id="noJsMessage" class="flex items-center">
+    <div class="rounded-lg border-2 border-primary/40 bg-white p-6">
+      <p class="text-lg text-default">
+        To subscribe to our newsletter, please email
+        <a
+          href="mailto:support@withotto.app"
+          class="text-primary hover:underline focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">
+          support@withotto.app
+        </a>
+      </p>
+    </div>
+  </div>
+
   <form
     id="newsletterForm"
-    class="flex flex-col space-y-4"
-    action="https://newsletter.withotto.app/subscription/form"
+    class="hidden flex-col space-y-4"
     method="post"
     target="_blank"
-    rel="noopener">
+    aria-label="Newsletter signup form">
     <input type="hidden" name="nonce" />
     <input
-      id="167b3"
       type="hidden"
       name="l"
       value="167b3e71-8786-4039-a9b0-92a166673fd0"
     />
-    <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
+    <div
+      class="grid grid-cols-1 gap-4 lg:grid-cols-2"
+      role="group"
+      aria-label="Personal information">
       <div class="w-full">
         <label for="name" class="text-s inline-block font-medium text-default">
           Your name
@@ -40,6 +55,7 @@
           id="name"
           name="name"
           class="mt-1 w-full rounded-lg border-2 border-white px-6 py-4 text-sm text-default focus:border-primary focus:outline-none"
+          aria-required="false"
         />
       </div>
       <div class="w-full">
@@ -52,12 +68,14 @@
           name="email"
           required
           class="mt-1 w-full rounded-lg border-2 border-white px-6 py-4 text-sm text-default focus:border-primary focus:outline-none"
+          aria-required="true"
         />
       </div>
     </div>
     <button
       type="submit"
-      class="text-md rounded-lg border border-transparent bg-primary px-8 py-5 font-semibold text-white shadow transition-colors hover:bg-primary-strong lg:w-full">
+      class="text-md rounded-lg border border-transparent bg-primary px-8 py-5 font-semibold text-white shadow transition-colors hover:bg-primary-strong focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 lg:w-full"
+      aria-label="Subscribe to newsletter">
       Subscribe
     </button>
   </form>
@@ -65,13 +83,15 @@
 
 <dialog
   id="newsletterDialog"
-  class="w-full max-w-lg rounded-xl p-0 backdrop:bg-default/40">
+  class="w-full max-w-lg rounded-xl p-0 backdrop:bg-default/40"
+  aria-labelledby="dialog-title"
+  aria-describedby="dialog-description">
   <div class="relative p-6">
     <div class="mb-6">
-      <h2 class="mb-2 text-xl font-semibold text-default">
+      <h2 id="dialog-title" class="mb-2 text-xl font-semibold text-default">
         Complete Your Newsletter Subscription
       </h2>
-      <p class="text-default/70">
+      <p id="dialog-description" class="text-default/70">
         To confirm your subscription, we'll open a new browser tab. Once you've
         confirmed your email address, you can simply close that tab to return to
         With Otto.
@@ -81,13 +101,13 @@
     <div class="flex justify-end gap-4">
       <button
         type="button"
-        class="shadowtext-default rounded-lg border border-default/20 px-6 py-3 text-sm font-medium hover:bg-default/5"
+        class="shadowtext-default rounded-lg border border-default/20 px-6 py-3 text-sm font-medium hover:bg-default/5 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
         data-close-dialog>
         Not Now
       </button>
       <button
         type="button"
-        class="rounded-lg bg-primary px-6 py-3 text-sm font-medium text-white shadow hover:bg-primary-strong"
+        class="rounded-lg bg-primary px-6 py-3 text-sm font-medium text-white shadow hover:bg-primary-strong focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
         data-continue>
         Continue to Subscribe
       </button>
@@ -95,7 +115,7 @@
 
     <button
       type="button"
-      class="absolute right-4 top-4 text-default/40 hover:text-default"
+      class="absolute right-4 top-4 text-default/40 hover:text-default focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
       aria-label="Close dialog"
       data-close-dialog>
       <svg
@@ -105,7 +125,8 @@
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
-        stroke-width="2">
+        stroke-width="2"
+        aria-hidden="true">
         <line x1="18" y1="6" x2="6" y2="18"></line>
         <line x1="6" y1="6" x2="18" y2="18"></line>
       </svg>
@@ -113,17 +134,43 @@
   </div>
 </dialog>
 
+<style>
+  dialog::backdrop {
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(1px);
+  }
+</style>
+
 <script>
+  const FORM_ACTION = "https://newsletter.withotto.app/subscription/form";
+
   const form = document.getElementById("newsletterForm");
+  const noJsMessage = document.getElementById("noJsMessage");
   const dialog = document.getElementById("newsletterDialog");
   const closeButtons = document.querySelectorAll("[data-close-dialog]");
   const continueButton = document.querySelector("[data-continue]");
 
+  // Show form and hide no-JS message when JavaScript is available
+  if (form && noJsMessage) {
+    form.classList.remove("hidden");
+    form.classList.add("flex");
+    noJsMessage.classList.add("hidden");
+  }
+
   if (form && dialog) {
-    // Show dialog before form submission
+    // Set form action dynamically
+    form.setAttribute("action", FORM_ACTION);
+
+    // Handle form submission
     form.addEventListener("submit", (e) => {
       e.preventDefault();
-      dialog.showModal();
+
+      // Validate form before showing dialog
+      if (form.checkValidity()) {
+        dialog.showModal();
+      } else {
+        form.reportValidity();
+      }
     });
 
     // Handle dialog close
@@ -133,15 +180,22 @@
       });
     });
 
-    // Handle continue button - submits the original form
+    // Handle continue button
     if (continueButton) {
       continueButton.addEventListener("click", () => {
-        form.submit(); // This will submit the form in a new tab
+        form.submit();
         dialog.close();
       });
     }
 
-    // Close dialog when clicking outside
+    // Handle dialog keyboard interactions
+    dialog.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        dialog.close();
+      }
+    });
+
+    // Close dialog when clicking backdrop
     dialog.addEventListener("click", (e) => {
       const dialogDimensions = dialog.getBoundingClientRect();
       if (
@@ -155,10 +209,3 @@
     });
   }
 </script>
-
-<style>
-  dialog::backdrop {
-    background: rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(1px);
-  }
-</style>
