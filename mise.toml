@@ -1,4 +1,5 @@
 [tools]
+deno = "1"
 node = "lts"
 pnpm = "10"
 

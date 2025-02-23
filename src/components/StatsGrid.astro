@@ -1,84 +1,146 @@
 ---
 import { Icon } from "astro-icon/components";
+import StatError from "./StatError.astro";
+import StatsContainer from "./StatsContainer.astro";
 
 interface Stat {
   label: string;
-  value: number;
   subtext: string;
   icon: string;
   localeOptions: Intl.NumberFormatOptions;
+  key: "bank_rule" | "smart_match" | "error_rate_percentage";
 }
 
 const stats: Stat[] = [
   {
     label: "Bank rules reconciled",
-    value: 17596,
     subtext: "in last 30 days",
     icon: "hugeicons:check-list",
     localeOptions: {
       style: "decimal",
       useGrouping: true,
     },
+    key: "bank_rule",
   },
   {
     label: "SmartMatches reconciled",
-    value: 1708,
     subtext: "in last 30 days",
     icon: "hugeicons:artificial-intelligence-01",
     localeOptions: {
       style: "decimal",
       useGrouping: true,
     },
+    key: "smart_match",
   },
   {
     label: "SmartMatch error rate",
-    value: 0.02093023255813953488,
     subtext: "of matched transactions over last 60 days",
     icon: "hugeicons:target-02",
     localeOptions: {
       style: "percent",
       maximumFractionDigits: 2,
     },
+    key: "error_rate_percentage",
   },
 ];
-
-const lastUpdated = new Date("2025-02-22");
 ---
 
-<div class="mb-4 mt-16 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-  {
-    stats.map((stat: Stat) => (
-      <div class="rounded-xl bg-white shadow">
-        <div class="grid h-full grid-cols-[120px,1fr]">
-          {stat.icon && (
-            <div class="flex items-center justify-center border-r border-gray-100 bg-primary-soft/10 p-4">
-              <Icon name={stat.icon} size={32} class="size-20 text-primary" />
+<StatsContainer class="mb-16">
+  <div data-state="loading" class="mt-16">
+    <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        stats.map((stat) => (
+          <div class="rounded-xl bg-white shadow">
+            <div class="grid h-full grid-cols-[120px,1fr]">
+              <div class="flex items-center justify-center border-r border-gray-100 bg-primary-soft/10 p-4">
+                <Icon name={stat.icon} size={32} class="size-20 text-primary" />
+              </div>
+              <div class="p-6">
+                <p class="font-medium text-default-soft">{stat.label}</p>
+                <p class="mt-2 flex flex-col">
+                  <span class="w-full animate-pulse rounded bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 p-2 text-4xl md:text-6xl">
+                    &nbsp;
+                  </span>
+                  <span class="mt-1 text-right text-sm text-default-soft">
+                    {stat.subtext}
+                  </span>
+                </p>
+              </div>
             </div>
-          )}
-          <div class="p-6">
-            <p class="font-medium text-default-soft">{stat.label}</p>
-            <p class="mt-2 flex flex-col">
-              <span class="p-2 text-center text-4xl font-bold text-primary md:text-6xl">
-                {stat.value.toLocaleString("en-gb", stat.localeOptions)}
-              </span>
-              {stat.subtext && (
-                <span class="mt-1 text-right text-sm text-default-soft">
-                  {stat.subtext}
-                </span>
-              )}
-            </p>
           </div>
-        </div>
-      </div>
-    ))
-  }
-</div>
-<p class="mx-auto mb-16 text-sm">
-  Last updated {
-    lastUpdated.toLocaleString("en-gb", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    })
-  }
-</p>
+        ))
+      }
+    </div>
+    <p class="mx-auto my-4 flex items-center">
+      <Icon
+        name="hugeicons:loading-02"
+        size="16"
+        class="animate-spin text-primary"
+      />
+      <span class="ml-2">Loading latest statistics</span>
+    </p>
+  </div>
+
+  <div data-state="error" hidden class="mt-16">
+    <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        stats.map((stat) => (
+          <div class="rounded-xl bg-white shadow">
+            <div class="grid h-full grid-cols-[120px,1fr]">
+              <div class="flex items-center justify-center border-r border-gray-100 bg-primary-soft/10 p-4">
+                <Icon name={stat.icon} size={32} class="size-20 text-primary" />
+              </div>
+              <div class="p-6">
+                <p class="font-medium text-default-soft">{stat.label}</p>
+                <p class="mt-2 flex flex-col">
+                  <span class="p-2 text-center text-4xl font-bold text-primary md:text-6xl">
+                    <StatError withIcon={false} />
+                  </span>
+                  <span class="mt-1 text-right text-sm text-default-soft">
+                    {stat.subtext}
+                  </span>
+                </p>
+              </div>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+    <p class="mx-auto my-4">
+      <StatError
+        message="There was an error loading the statistics. Please try again later"
+      />
+    </p>
+  </div>
+
+  <div data-state="content" hidden class="mt-16">
+    <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        stats.map((stat) => (
+          <div class="rounded-xl bg-white shadow">
+            <div class="grid h-full grid-cols-[120px,1fr]">
+              <div class="flex items-center justify-center border-r border-gray-100 bg-primary-soft/10 p-4">
+                <Icon name={stat.icon} size={32} class="size-20 text-primary" />
+              </div>
+              <div class="p-6">
+                <p class="font-medium text-default-soft">{stat.label}</p>
+                <p class="mt-2 flex flex-col">
+                  <span
+                    class="p-2 text-center text-4xl font-bold text-primary md:text-6xl"
+                    data-stat={stat.key}
+                    data-options={JSON.stringify(stat.localeOptions)}>
+                    &mdash;
+                  </span>
+                  <span class="mt-1 text-right text-sm text-default-soft">
+                    {stat.subtext}
+                  </span>
+                </p>
+              </div>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+    <p class="mx-auto my-4" data-last-updated></p>
+  </div>
+</StatsContainer>

@@ -1,0 +1,21 @@
+---
+import { Icon } from "astro-icon/components";
+
+interface Props {
+  withIcon?: boolean;
+  message?: string;
+}
+
+const { withIcon = true, message = "Error loading data" } = Astro.props;
+---
+
+{
+  withIcon ? (
+    <span class="text-error inline-flex items-center gap-1">
+      <Icon name="hugeicons:alert-02" size={16} class="h-4 w-4 text-danger" />
+      <span>{message}</span>
+    </span>
+  ) : (
+    <span class="text-error">—</span>
+  )
+}

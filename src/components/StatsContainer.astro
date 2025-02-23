@@ -1,0 +1,159 @@
+---
+interface Props {
+  class?: string;
+}
+
+const { class: className = "" } = Astro.props;
+---
+
+<stats-container class:list={["stats-container", className]}>
+  <slot />
+</stats-container>
+
+<script>
+  interface StatsResponse {
+    bank_rule: number;
+    smart_match: number;
+    error_rate_percentage: number;
+    timestamp: string;
+  }
+
+  class StatsContainer extends HTMLElement {
+    constructor() {
+      super();
+      this.init();
+    }
+
+    private async init() {
+      this.showState("loading");
+      try {
+        const data = await this.fetchStats();
+        this.updateStats(data);
+        this.showState("content");
+      } catch (error) {
+        console.error("Error loading stats:", error);
+        this.showState("error");
+      }
+    }
+
+    private showState(state: "loading" | "error" | "content") {
+      ["loading", "error", "content"].forEach((s) => {
+        const element = this.querySelector(`[data-state="${s}"]`);
+        if (element) {
+          element.hidden = s !== state;
+        }
+      });
+    }
+
+    private getBrowserLocale(defaultLocale = "en-GB"): string {
+      try {
+        if (navigator.languages?.length) {
+          return navigator.languages[0];
+        }
+        return navigator.language || defaultLocale;
+      } catch {
+        return defaultLocale;
+      }
+    }
+
+    private testLocaleSupport(
+      locale: string,
+      options: Intl.NumberFormatOptions,
+    ): boolean {
+      try {
+        new Intl.NumberFormat(locale, options).format(1234.56);
+        return true;
+      } catch {
+        return false;
+      }
+    }
+
+    private formatNumber(
+      value: number,
+      options: Intl.NumberFormatOptions,
+      preferredLocale: string,
+    ): string {
+      const fallbackLocale = "en-GB";
+      const locales = [
+        preferredLocale,
+        preferredLocale.split("-")[0],
+        fallbackLocale,
+      ];
+
+      for (const locale of locales) {
+        if (this.testLocaleSupport(locale, options)) {
+          try {
+            return new Intl.NumberFormat(locale, options).format(value);
+          } catch {
+            continue;
+          }
+        }
+      }
+
+      return value.toString();
+    }
+
+    private formatDate(dateString: string, preferredLocale: string): string {
+      const fallbackLocale = "en-GB";
+      const options: Intl.DateTimeFormatOptions = {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      };
+
+      try {
+        const date = new Date(dateString);
+        return date.toLocaleString(preferredLocale, options);
+      } catch {
+        try {
+          const date = new Date(dateString);
+          return date.toLocaleString(fallbackLocale, options);
+        } catch {
+          return dateString;
+        }
+      }
+    }
+
+    private async fetchStats(): Promise<StatsResponse> {
+      const API_URL = import.meta.env.PUBLIC_STATS_API_URL;
+      if (!API_URL) {
+        throw new Error("PUBLIC_STATS_API_URL environment variable is not set");
+      }
+
+      const response = await fetch(API_URL);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      return await response.json();
+    }
+
+    private updateStats(data: StatsResponse) {
+      const preferredLocale = this.getBrowserLocale();
+      const statElements = this.querySelectorAll("[data-stat]");
+
+      statElements.forEach((element) => {
+        const key = element.getAttribute("data-stat") as keyof StatsResponse;
+        const optionsStr = element.getAttribute("data-options");
+        if (!optionsStr) return;
+
+        const options = JSON.parse(optionsStr);
+        const value = data[key];
+        element.textContent = this.formatNumber(
+          value,
+          options,
+          preferredLocale,
+        );
+      });
+
+      const lastUpdated = this.querySelector("[data-last-updated]");
+      if (lastUpdated) {
+        lastUpdated.textContent = `Last updated ${this.formatDate(data.timestamp, preferredLocale)}`;
+      }
+    }
+  }
+
+  customElements.define("stats-container", StatsContainer);
+</script>

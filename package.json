@@ -33,7 +33,11 @@
     "broken-link-checker-local": "^0.2.1",
     "prettier": "^3.4.2",
     "prettier-plugin-astro": "^0.14.1",
-    "prettier-plugin-tailwindcss": "^0.6.11"
+    "prettier-plugin-tailwindcss": "^0.6.11",
+    "supabase": "^2.12.1"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": ["supabase"]
   },
   "engines": {
     "pnpm": "10.x"
