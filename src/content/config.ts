@@ -9,30 +9,13 @@ const blogCollection = defineCollection({
       title: z.string(),
       excerpt: z.string(),
       image: image(),
-      publishDate: z.string().transform((str) => new Date(str)),
-      author: z.string().default("bSaaS Team"),
+      imageAlt: z.string(),
+      imageDescription: z.string(),
+      imageCredit: z.string().optional(),
+      imageCreditUrl: z.string().url().optional(),
+      publishDate: z.string().transform((str: string) => new Date(str)),
       category: z.string(),
       tags: z.array(z.string()),
-    }),
-});
-
-const teamCollection = defineCollection({
-  schema: ({ image }) =>
-    z.object({
-      draft: z.boolean().optional(),
-      name: z.string(),
-      title: z.string(),
-      avatar: z.object({
-        src: image(),
-        alt: z.string(),
-      }),
-      social: z.optional(
-        z.object({
-          twitter: z.string().url().optional(),
-          linkedin: z.string().url().optional(),
-          facebook: z.string().url().optional(),
-        }),
-      ),
     }),
 });
 
@@ -40,5 +23,4 @@ const teamCollection = defineCollection({
 //    This key should match your collection directory name in "src/content"
 export const collections = {
   blog: blogCollection,
-  team: teamCollection,
 };

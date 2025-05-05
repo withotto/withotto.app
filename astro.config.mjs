@@ -29,4 +29,7 @@ export default defineConfig({
     sitemap(),
     icon(),
   ],
+  experimental: {
+    responsiveImages: true,
+  },
 });
