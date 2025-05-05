@@ -26,7 +26,9 @@ export default defineConfig({
         ],
       ],
     }),
-    sitemap(),
+    sitemap({
+      filter: (url) => !url.startsWith("https://withotto.app/notebook/"),
+    }),
     icon(),
   ],
   experimental: {
