@@ -14,13 +14,13 @@
     "check-links": "astro build && lychee ./dist/**/*.html --include-fragments"
   },
   "dependencies": {
-    "@astrojs/mdx": "^3.1.9",
-    "@astrojs/sitemap": "^3.2.1",
+    "@astrojs/mdx": "^4.2.6",
+    "@astrojs/sitemap": "^3.3.1",
     "@astrojs/tailwind": "^5.1.5",
-    "@fontsource-variable/rethink-sans": "^5.1.1",
-    "@iconify-json/hugeicons": "^1.2.3",
+    "@fontsource-variable/rethink-sans": "^5.2.5",
+    "@iconify-json/hugeicons": "^1.2.5",
     "@tailwindcss/typography": "^0.5.16",
-    "astro": "^4.16.18",
+    "astro": "^5.7.10",
     "astro-icon": "^1.1.5",
     "astro-navbar": "^2.3.9",
     "astro-seo": "^0.8.4",
@@ -31,13 +31,15 @@
   },
   "devDependencies": {
     "broken-link-checker-local": "^0.2.1",
-    "prettier": "^3.4.2",
+    "prettier": "^3.5.3",
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-tailwindcss": "^0.6.11",
-    "supabase": "^2.12.1"
+    "supabase": "^2.22.6"
   },
   "pnpm": {
-    "onlyBuiltDependencies": ["supabase"]
+    "onlyBuiltDependencies": [
+      "supabase"
+    ]
   },
   "engines": {
     "pnpm": "10.x"
