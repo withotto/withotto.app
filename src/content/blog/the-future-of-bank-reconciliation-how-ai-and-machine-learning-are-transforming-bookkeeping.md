@@ -10,6 +10,7 @@ imageCreditUrl: "https://unsplash.com/@jeremybishop"
 publishDate: "2025-05-02"
 category: "Practice Efficiency"
 tags: ["Bank Reconciliation", "Machine Learning", "Automation", "SmartMatch", "Accounting Technology"]
+audioFile: "/audio/the-future-of-bank-reconciliation-how-ai-and-machine-learning-are-transforming-bookkeeping.mp3"
 ---
 
 In the evolving landscape of accounting technology, few processes have remained as persistently manual as bank reconciliation. Despite the digital transformation sweeping through the profession, many accountants and bookkeepers still find themselves painstakingly matching transactions one by one, often feeling the work doesn't fully utilise their professional expertise. This process—critical yet tedious—has long been overdue for meaningful innovation. Today, that innovation has arrived through AI and machine learning technologies that are fundamentally changing how reconciliation works.

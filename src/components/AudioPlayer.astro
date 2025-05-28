@@ -1,0 +1,154 @@
+---
+export interface Props {
+  audioFile: string;
+  title: string;
+  className?: string;
+}
+
+const { audioFile, title, className = "" } = Astro.props;
+
+// Generate a unique ID for this audio player instance
+const playerId = `audio-player-${Math.random().toString(36).substr(2, 9)}`;
+---
+
+<div class={`otto-audio-player bg-primary-soft rounded-lg p-6 my-8 border border-primary-accent ${className}`}>
+  <div class="flex items-start gap-4 mb-4">
+    <div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center flex-shrink-0">
+      <!-- Otto icon - using a microphone/headphones icon as placeholder -->
+      <svg 
+        class="w-6 h-6 text-white" 
+        fill="none" 
+        stroke="currentColor" 
+        viewBox="0 0 24 24" 
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+      >
+        <path 
+          stroke-linecap="round" 
+          stroke-linejoin="round" 
+          stroke-width="2" 
+          d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"
+        ></path>
+      </svg>
+    </div>
+    <div class="flex-1 min-w-0">
+      <h3 class="font-semibold text-default text-lg mb-1">Listen to this article</h3>
+      <p class="text-default-soft text-sm">Narrated by Otto • {title}</p>
+    </div>
+  </div>
+  
+  <audio 
+    id={playerId}
+    controls 
+    preload="metadata" 
+    class="w-full h-10 focus:ring-2 focus:ring-primary focus:outline-none rounded-md"
+    aria-label={`Audio version of ${title}`}
+    style="accent-color: #00AC8A;"
+  >
+    <source src={audioFile} type="audio/mpeg">
+    <div class="mt-4 p-4 bg-warning-soft border border-warning rounded-md">
+      <p class="text-warning-strong text-sm mb-2">
+        <strong>Audio not supported</strong>
+      </p>
+      <p class="text-default-soft text-sm mb-3">
+        Your browser doesn't support audio playback. You can download the audio file to listen using your preferred audio player.
+      </p>
+      <a 
+        href={audioFile} 
+        class="inline-flex items-center gap-2 text-primary hover:text-primary-strong underline text-sm font-medium" 
+        download
+        aria-label={`Download audio version of ${title}`}
+      >
+        <svg 
+          class="w-4 h-4" 
+          fill="none" 
+          stroke="currentColor" 
+          viewBox="0 0 24 24" 
+          xmlns="http://www.w3.org/2000/svg"
+          aria-hidden="true"
+        >
+          <path 
+            stroke-linecap="round" 
+            stroke-linejoin="round" 
+            stroke-width="2" 
+            d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+          ></path>
+        </svg>
+        Download audio file
+      </a>
+    </div>
+  </audio>
+</div>
+
+<script>
+  // Enhanced audio player functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    const audioPlayers = document.querySelectorAll('.otto-audio-player audio');
+    
+    audioPlayers.forEach(audio => {
+      // Add loading state management
+      audio.addEventListener('loadstart', function() {
+        // Could add a loading indicator here if needed
+      });
+      
+      // Add error handling
+      audio.addEventListener('error', function(e) {
+        console.error('Audio playback error:', e);
+        
+        // Find the parent container and show error message
+        const container = this.closest('.otto-audio-player');
+        if (container) {
+          const errorDiv = document.createElement('div');
+          errorDiv.className = 'mt-4 p-4 bg-danger-soft border border-danger rounded-md';
+          errorDiv.innerHTML = `
+            <p class="text-danger-strong text-sm mb-2">
+              <strong>Playback error</strong>
+            </p>
+            <p class="text-default-soft text-sm">
+              There was an issue loading the audio file. Please try refreshing the page or 
+              <a href="${this.querySelector('source').src}" class="text-primary hover:text-primary-strong underline" download>download the file</a> 
+              to listen offline.
+            </p>
+          `;
+          container.appendChild(errorDiv);
+        }
+      });
+      
+      // Optional: Add analytics tracking for audio engagement
+      let hasStartedPlaying = false;
+      audio.addEventListener('play', function() {
+        if (!hasStartedPlaying) {
+          hasStartedPlaying = true;
+          // You could add analytics tracking here
+          // e.g., gtag('event', 'audio_play', { 'blog_post': title });
+        }
+      });
+    });
+  });
+</script>
+
+<style>
+  /* Custom styling for audio controls to match your brand */
+  .otto-audio-player audio::-webkit-media-controls-panel {
+    background-color: white;
+  }
+  
+  .otto-audio-player audio::-webkit-media-controls-play-button,
+  .otto-audio-player audio::-webkit-media-controls-pause-button {
+    background-color: #00AC8A;
+    border-radius: 50%;
+  }
+  
+  /* Firefox styling */
+  .otto-audio-player audio::-moz-range-thumb {
+    background-color: #00AC8A;
+    border: none;
+    border-radius: 50%;
+  }
+  
+  .otto-audio-player audio::-moz-range-track {
+    background-color: #E9F2E1;
+    border: none;
+    border-radius: 4px;
+  }
+</style>

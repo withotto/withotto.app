@@ -16,6 +16,7 @@ const blogCollection = defineCollection({
       publishDate: z.string().transform((str: string) => new Date(str)),
       category: z.string(),
       tags: z.array(z.string()),
+      audioFile: z.string().optional(),
     }),
 });
 
