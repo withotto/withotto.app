@@ -1,4 +1,7 @@
 ---
+import Avatar from "assets/avatar.svg";
+import { Image } from "astro:assets";
+
 export interface Props {
   audioFile: string;
   title: string;
@@ -13,27 +16,18 @@ const playerId = `audio-player-${Math.random().toString(36).substr(2, 9)}`;
 
 <div class={`otto-audio-player bg-primary-soft rounded-lg p-6 my-8 border border-primary-accent ${className}`}>
   <div class="flex items-start gap-4 mb-4">
-    <div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center flex-shrink-0">
-      <!-- Otto icon - using a microphone/headphones icon as placeholder -->
-      <svg 
-        class="w-6 h-6 text-white" 
-        fill="none" 
-        stroke="currentColor" 
-        viewBox="0 0 24 24" 
-        xmlns="http://www.w3.org/2000/svg"
-        aria-hidden="true"
-      >
-        <path 
-          stroke-linecap="round" 
-          stroke-linejoin="round" 
-          stroke-width="2" 
-          d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"
-        ></path>
-      </svg>
+    <div class="w-12 h-12 bg-primary-soft rounded-full flex items-center justify-center flex-shrink-0 ring-2 ring-primary overflow-hidden">
+      <Image
+        src={Avatar}
+        alt="Otto"
+        class="w-10 h-10 mt-1"
+        width={40}
+        height={40}
+      />
     </div>
     <div class="flex-1 min-w-0">
-      <h3 class="font-semibold text-default text-lg mb-1">Listen to this article</h3>
-      <p class="text-default-soft text-sm">Narrated by Otto • {title}</p>
+      <h3 class="font-semibold text-default text-lg mb-1">Listen to { title }</h3>
+      <p class="text-default-soft text-sm">Narrated by Otto</p>
     </div>
   </div>
   
