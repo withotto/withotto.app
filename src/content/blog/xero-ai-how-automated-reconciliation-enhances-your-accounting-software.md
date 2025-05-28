@@ -10,6 +10,7 @@ imageCreditUrl: "https://unsplash.com/@jakubzerdzicki"
 publishDate: "2025-05-28"
 category: "Xero Integration"
 tags: ["Xero", "AI Reconciliation", "Machine Learning", "Bank Reconciliation", "Workflow Automation"]
+audioFile: "/audio/xero-ai-how-automated-reconciliation-enhances-your-accounting-software.mp3"
 ---
 
 Bank reconciliation in Xero is already more streamlined than traditional methods, but what if you could eliminate most of the manual matching work entirely? The integration of AI-powered reconciliation tools with Xero transforms one of accounting's most time-consuming tasks into a largely automated process.
