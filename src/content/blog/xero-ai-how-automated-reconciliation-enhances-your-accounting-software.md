@@ -20,9 +20,9 @@ As accountants and bookkeepers increasingly adopt cloud-based solutions like Xer
 
 Xero's bank rules feature works well for straightforward transactions, but many practices still find themselves spending considerable time on manual matching. Common scenarios that slow down the reconciliation process include:
 
-**Handling truncated and abbreviated payee names:** Bank feeds often show "AMZN Mktplace" instead of "Amazon Marketplace", or "GSUITE_companyname IRELAND" instead of "Google Workspace" - Otto learns these variations for each client.
+**Handling truncated and abbreviated payee names:** Bank feeds often show "AMZN Mktplace" instead of "Amazon Marketplace", or "GSUITE_companyname IRELAND" instead of "Google Workspace." Otto learns these variations for each client.
 
-**Managing subsidiary and trading name variations:** The same supplier might appear as "AMAZON.CO.UK", "AMZNMktplace", or "WWW.AMAZON.*" depending on whether the purchase is made directly from Amazon, a third-party supplier, or a an Amazon site from a different country, creating matching challenges that Otto's trained models can resolve.
+**Managing subsidiary and trading name variations:** The same supplier might appear as "AMAZON.CO.UK", "AMZNMktplace", or "WWW.AMAZON.*" depending on whether the purchase is made directly from Amazon, a third-party supplier, or an Amazon site from a different country, creating matching challenges that Otto's trained models can resolve.
 
 **Reference number mismatches and missing references:** When clients pay invoices but use different reference formats, or when bank descriptions don't include references at all, Otto uses historical patterns to make accurate connections.
 
@@ -90,7 +90,7 @@ AI reconciliation isn't suitable for every situation, and it's important to unde
 
 The financial case for AI reconciliation varies significantly based on practice size, client complexity, and current reconciliation efficiency. Look for tools that allow you to manage costs for each client to ensure you are using AI reconciliation where it will provide the most benefit.   
 
-**Time savings calculation**: Many practices may not know how much time is spent specifically on bank reconciliation so it can be difficult to determine the cost-benefit. Use a trial and any reporting features to see how much work the reconciliation bot has taken on, as well as how much extra time staff have.
+**Time savings calculation**: Many practices may not know how much time is spent specifically on bank reconciliation, so it can be difficult to determine the cost-benefit. Use a trial and any reporting features to see how much work the reconciliation bot has taken on, as well as how much extra time staff have.
 
 **Capacity expansion**: Rather than just saving time, many practices use automation to take on additional clients.
 
@@ -114,9 +114,9 @@ The integration between accounting software and AI continues to evolve rapidly. 
 
 **Enhanced predictive capabilities**: AI systems are beginning to identify unusual patterns that might indicate errors or fraud, adding a quality control layer beyond simple matching.
 
-**Highlighting time savings:**: As systems record information about reconciliation patterns, they can start to recommend bank rules that are performing well for one client that might be relevant for others.
+**Highlighting time savings:** As systems record information about reconciliation patterns, they can start to recommend bank rules that are performing well for one client that might be relevant for others.
 
-**Missing documents:** Reconciliation bots view clients every day so could be well placed to identify documents that clients may need to provide and deal with communicating with clients so that staff spend less time chasing up these missing receipts.
+**Missing documents:** Reconciliation bots view clients every day so could be well-placed to identify documents that clients may need to provide and deal with communicating with clients so that staff spend less time chasing up these missing receipts.
 
 ## Making the Decision: Is AI Reconciliation Right for Your Practice?
 
@@ -128,18 +128,18 @@ The decision to implement AI reconciliation alongside Xero depends on several fa
 
 **Growth ambitions**: Practices looking to expand without proportionally increasing staff often find AI reconciliation essential for managing capacity constraints.
 
-**Service positioning**: If you're moving towards advisory services and want to reduce time spent on compliance work, automation becomes a strategic necessity rather than just a efficiency improvement.
+**Service positioning**: If you're moving towards advisory services and want to reduce time spent on compliance work, automation becomes a strategic necessity rather than just an efficiency improvement.
 
 ## Getting Started with Confidence
 
 The combination of Xero and AI reconciliation represents a significant opportunity for accounting practices to improve efficiency whilst maintaining service quality. However, success requires thoughtful implementation and realistic expectations.
 
 There are two main approaches to implementing AI reconciliation:
-1. Start with a pilot approach using a small number of clients with different transaction patterns. This allows you to understand the technology's strengths and limitations within your specific practice context. Plan for a 4-6 week learning period where you'll need to monitor and guide the AI system as it learns your clients' patterns.
+1. Start with a pilot approach using a small number of clients with different transaction patterns. This allows you to understand the technology's strengths and limitations within your specific practice context. Plan for a 4–6 week learning period where you'll need to monitor and guide the AI system as it learns your clients' patterns.
 2. Include all clients you think would benefit and gradually roll out the AI features as you are confident they will perform accurately. This allows you to immediately benefit from bank rule reconciliations whilst being more cautious with the less certain AI features. A key benefit of this approach is much better visibility into time savings and cost across a large number of clients, which is a key consideration for practices. 
 
 Most importantly, remember that AI reconciliation enhances rather than replaces professional judgment. The goal isn't to remove human oversight but to eliminate routine matching work so you can focus on analysis, advisory services, and strategic support that genuinely adds value for your clients.
 
 We're ready to help transform your Xero reconciliation process. With an unlimited trial, you can test the integration with all your clients for a full month—no catches, no limits, no card required.
 
-[Sign up for your trial today](/trial/) to get a personalised onboarding call, and discover how AI can enhance your Xero workflow whilst giving you more time for the work that truly matters to your clients and your practice.
+[Sign up for your trial today](/trial/) to get a personalised onboarding call and discover how AI can enhance your Xero workflow whilst giving you more time for the work that truly matters to your clients and your practice.
