@@ -1,16 +1,18 @@
 ---
 import Layout from "@layouts/Layout.astro";
 import Container from "@components/container.astro";
+import BookingForm from "@components/BookingForm.astro";
 
 export interface Props {
   frontmatter: {
     title: string;
     subtitle: string;
+    affiliateProgramId?: string;
   };
 }
 
 const {
-  frontmatter: { title, subtitle },
+  frontmatter: { title, subtitle, affiliateProgramId },
 } = Astro.props;
 ---
 
@@ -28,13 +30,17 @@ const {
       @apply mx-auto mb-2 mt-6 max-w-3xl text-2xl font-bold;
     }
 
+    h3 {
+      font-weight: bold;
+    }
+
     nav.toc-list {
       @apply hidden;
     }
   }
 </style>
 
-<Layout title={title}>
+<Layout title={title} affiliateProgramId={affiliateProgramId}>
   <div class="py-12">
     <Container>
       <div class="z-10 mx-auto mb-14 max-w-3xl">
@@ -48,20 +54,6 @@ const {
         <div class="content-wrapper">
           <slot />
         </div>
-        <div
-          class="embedded-booking"
-          data-url="https://bookings.withotto.app"
-          data-query="&t=s&uuid=9efe86c2-31c3-4038-ac5c-94e6a62b9350"
-          data-lang="en"
-          data-autoresize="1"
-          data-showsidebar="1"
-          style="min-width: 320px; height: 768px;">
-        </div>
-        <script
-          is:inline
-          type="text/javascript"
-          src="https://bookings.withotto.app/embed.js"
-          async></script>
       </div>
     </Container>
   </div>

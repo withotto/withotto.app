@@ -3,10 +3,10 @@ import Footer from "@components/footer.astro";
 import Navbar from "@components/navbar/navbar.astro";
 import RootLayout from "@layouts/RootLayout.astro";
 
-const { title } = Astro.props;
+const { title, affiliateProgramId } = Astro.props;
 ---
 
-<RootLayout title={title}>
+<RootLayout title={title} affiliateProgramId={affiliateProgramId}>
   <Navbar />
   <slot />
   <Footer />
