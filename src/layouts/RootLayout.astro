@@ -4,6 +4,7 @@ import "@fontsource-variable/rethink-sans";
 
 export interface Props {
   title?: string;
+  affiliateProgramId?: string;
 }
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
@@ -13,7 +14,7 @@ const resolvedImageWithDomain = new URL(
   Astro.site,
 ).toString();
 
-const { title } = Astro.props;
+const { title, affiliateProgramId } = Astro.props;
 
 const makeTitle = title
   ? title + " — " + "With Otto"
@@ -28,6 +29,15 @@ const makeTitle = title
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     <link rel="sitemap" href="/sitemap-index.xml" />
+
+    {affiliateProgramId && (
+      <script 
+        src="https://pushlapgrowth.com/affiliate-tracker.js" 
+        data-affiliate 
+        data-program-id={affiliateProgramId}
+        async>
+      </script>
+    )}
 
     <SEO
       title={makeTitle}

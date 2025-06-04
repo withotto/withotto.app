@@ -1,6 +1,7 @@
 ---
 import Layout from "@layouts/Layout.astro";
 import Container from "@components/container.astro";
+import BookingForm from "@components/BookingForm.astro";
 ---
 
 <Layout title="Your Reconciliation Revolution Starts Here at DAS 2025">
@@ -96,20 +97,7 @@ import Container from "@components/container.astro";
           need to get Otto working to his maximum potential, leading to better
           results from day one.
         </p>
-        <div
-          class="embedded-booking mx-auto max-w-3xl"
-          data-url="https://bookings.withotto.app"
-          data-query="&t=s&uuid=a43f7d90-b11f-4b38-9176-9512e9943a37"
-          data-lang="en"
-          data-autoresize="1"
-          data-showsidebar="1"
-          style="min-width: 320px; height: 768px;">
-        </div>
-        <script
-          is:inline
-          type="text/javascript"
-          src="https://bookings.withotto.app/embed.js"
-          async></script>
+        <BookingForm uuid="a43f7d90-b11f-4b38-9176-9512e9943a37" />
       </div>
     </Container>
   </div>
