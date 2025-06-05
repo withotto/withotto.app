@@ -2,7 +2,7 @@
 draft: false
 title: "Xero + AI: How Automated Reconciliation Enhances Your Accounting Software"
 excerpt: "Discover how AI-powered bank reconciliation automation transforms your Xero workflow. Learn setup, benefits, and real-world results from accounting practices."
-image: "../../assets/blog/xero-ai-how-automated-reconciliation-enhances-your-accounting-software.jpg"
+image: "/src/assets/blog/xero-ai-how-automated-reconciliation-enhances-your-accounting-software.jpg"
 imageAlt: A person's hand reaching over financial charts and reports on a desk, with a computer monitor displaying colorful data analytics in the background and a calculator nearby
 imageDescription: A professional workspace scene showing financial analysis in progress. In the foreground, printed reports with colorful pie charts and bar graphs are spread across a wooden desk surface, alongside a black calculator. A person's hand is positioned over the documents, suggesting active review of the data. In the background, a computer monitor displays vibrant financial analytics with green, red, and blue data visualizations. A small potted plant adds a touch of greenery to the modern office setting. The image conveys the daily reality of financial data analysis and reconciliation work that accountants and bookkeepers perform.
 imageCredit: "Jakub Żerdzicki"

@@ -2,7 +2,7 @@
 draft: false
 title: "The Future of Bank Reconciliation: How AI and Machine Learning are Transforming Bookkeeping"
 excerpt: "Machine learning is transforming bank reconciliation, reducing tedious matching work and freeing accountants for higher-value advisory services."
-image: "../../assets/blog/the-future-of-bank-reconciliation-how-ai-and-machine-learning-are-transforming-bookkeeping.jpg"
+image: "/src/assets/blog/the-future-of-bank-reconciliation-how-ai-and-machine-learning-are-transforming-bookkeeping.jpg"
 imageAlt: A vibrant mosaic wall constructed from Lego bricks in a spectrum of colors including red, blue, white, yellow, and black, arranged in a modern, geometric pattern
 imageDescription: This striking installation features hundreds of colorful Lego bricks meticulously arranged in horizontal rows, creating a contemporary mosaic effect. The vibrant palette includes bold reds, deep blues, bright whites, sunny yellows, and stark blacks, with occasional accents of green and orange.
 imageCredit: "Jeremy Bishop"

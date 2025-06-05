@@ -6,6 +6,7 @@ import Layout from "@layouts/Layout.astro";
 import Container from "@components/container.astro";
 import Sectionhead from "@components/sectionhead.astro";
 import Pagination from "@components/pagination.astro";
+import { getBlogSlug } from "@utils/blog";
 
 export async function getStaticPaths({ paginate }) {
   const PAGE_SIZE = 6;
@@ -40,7 +41,7 @@ const { page }: { page: Page } = Astro.props;
         {
           page?.data.map((blogPostEntry, index) => (
             <li>
-              <a href={`/blog/${blogPostEntry.slug}/`} class="group">
+              <a href={`/blog/${getBlogSlug(blogPostEntry)}/`} class="group">
                 <div class="grid items-center gap-2">
                   <figure>
                     <Picture
@@ -83,7 +84,7 @@ const { page }: { page: Page } = Astro.props;
                     </p>
                     <div class="mt-2">
                       <a
-                        href={`/blog/${blogPostEntry.slug}/`}
+                        href={`/blog/${getBlogSlug(blogPostEntry)}/`}
                         class="text-primary">
                         Read
                         <svg
