@@ -14,57 +14,57 @@ const { audioFile, title, className = "" } = Astro.props;
 const playerId = `audio-player-${Math.random().toString(36).substr(2, 9)}`;
 ---
 
-<div class={`otto-audio-player bg-primary-soft rounded-lg p-6 my-8 border border-primary-accent ${className}`}>
-  <div class="flex items-start gap-4 mb-4">
-    <div class="w-12 h-12 bg-primary-soft rounded-full flex items-center justify-center flex-shrink-0 ring-2 ring-primary overflow-hidden">
+<div
+  class={`otto-audio-player bg-primary-soft rounded-lg p-6 my-8 border border-primary-accent ${className}`}>
+  <div class="mb-4 flex items-start gap-4">
+    <div
+      class="flex h-12 w-12 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-primary-soft ring-2 ring-primary">
       <Image
         src={Avatar}
         alt="Otto"
-        class="w-10 h-10 mt-1"
+        class="mt-1 h-10 w-10"
         width={40}
         height={40}
       />
     </div>
-    <div class="flex-1 min-w-0">
-      <h3 class="font-semibold text-default text-lg mb-1">Listen to { title }</h3>
-      <p class="text-default-soft text-sm">Narrated by Otto</p>
+    <div class="min-w-0 flex-1">
+      <h3 class="mb-1 text-lg font-semibold text-default">Listen to {title}</h3>
+      <p class="text-sm text-default-soft">Narrated by Otto</p>
     </div>
   </div>
-  
-  <audio 
+
+  <audio
     id={playerId}
-    controls 
-    preload="metadata" 
-    class="w-full h-10 focus:ring-2 focus:ring-primary focus:outline-none rounded-md"
+    controls
+    preload="metadata"
+    class="h-10 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
     aria-label={`Audio version of ${title}`}
-    style="accent-color: #00AC8A;"
-  >
-    <source src={audioFile} type="audio/mpeg">
-    <div class="mt-4 p-4 bg-warning-soft border border-warning rounded-md">
-      <p class="text-warning-strong text-sm mb-2">
+    style="accent-color: #00AC8A;">
+    <source src={audioFile} type="audio/mpeg" />
+    <div class="mt-4 rounded-md border border-warning bg-warning-soft p-4">
+      <p class="mb-2 text-sm text-warning-strong">
         <strong>Audio not supported</strong>
       </p>
-      <p class="text-default-soft text-sm mb-3">
-        Your browser doesn't support audio playback. You can download the audio file to listen using your preferred audio player.
+      <p class="mb-3 text-sm text-default-soft">
+        Your browser doesn't support audio playback. You can download the audio
+        file to listen using your preferred audio player.
       </p>
-      <a 
-        href={audioFile} 
-        class="inline-flex items-center gap-2 text-primary hover:text-primary-strong underline text-sm font-medium" 
+      <a
+        href={audioFile}
+        class="inline-flex items-center gap-2 text-sm font-medium text-primary underline hover:text-primary-strong"
         download
-        aria-label={`Download audio version of ${title}`}
-      >
-        <svg 
-          class="w-4 h-4" 
-          fill="none" 
-          stroke="currentColor" 
-          viewBox="0 0 24 24" 
+        aria-label={`Download audio version of ${title}`}>
+        <svg
+          class="h-4 w-4"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg"
-          aria-hidden="true"
-        >
-          <path 
-            stroke-linecap="round" 
-            stroke-linejoin="round" 
-            stroke-width="2" 
+          aria-hidden="true">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
             d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
           ></path>
         </svg>
@@ -76,41 +76,42 @@ const playerId = `audio-player-${Math.random().toString(36).substr(2, 9)}`;
 
 <script>
   // Enhanced audio player functionality
-  document.addEventListener('DOMContentLoaded', function() {
-    const audioPlayers = document.querySelectorAll('.otto-audio-player audio');
-    
-    audioPlayers.forEach(audio => {
+  document.addEventListener("DOMContentLoaded", function () {
+    const audioPlayers = document.querySelectorAll(".otto-audio-player audio");
+
+    audioPlayers.forEach((audio) => {
       // Add loading state management
-      audio.addEventListener('loadstart', function() {
+      audio.addEventListener("loadstart", function () {
         // Could add a loading indicator here if needed
       });
-      
+
       // Add error handling
-      audio.addEventListener('error', function(e) {
-        console.error('Audio playback error:', e);
-        
+      audio.addEventListener("error", function (e) {
+        console.error("Audio playback error:", e);
+
         // Find the parent container and show error message
-        const container = this.closest('.otto-audio-player');
+        const container = this.closest(".otto-audio-player");
         if (container) {
-          const errorDiv = document.createElement('div');
-          errorDiv.className = 'mt-4 p-4 bg-danger-soft border border-danger rounded-md';
+          const errorDiv = document.createElement("div");
+          errorDiv.className =
+            "mt-4 p-4 bg-danger-soft border border-danger rounded-md";
           errorDiv.innerHTML = `
             <p class="text-danger-strong text-sm mb-2">
               <strong>Playback error</strong>
             </p>
             <p class="text-default-soft text-sm">
               There was an issue loading the audio file. Please try refreshing the page or 
-              <a href="${this.querySelector('source').src}" class="text-primary hover:text-primary-strong underline" download>download the file</a> 
+              <a href="${this.querySelector("source").src}" class="text-primary hover:text-primary-strong underline" download>download the file</a> 
               to listen offline.
             </p>
           `;
           container.appendChild(errorDiv);
         }
       });
-      
+
       // Optional: Add analytics tracking for audio engagement
       let hasStartedPlaying = false;
-      audio.addEventListener('play', function() {
+      audio.addEventListener("play", function () {
         if (!hasStartedPlaying) {
           hasStartedPlaying = true;
           // You could add analytics tracking here
@@ -126,22 +127,22 @@ const playerId = `audio-player-${Math.random().toString(36).substr(2, 9)}`;
   .otto-audio-player audio::-webkit-media-controls-panel {
     background-color: white;
   }
-  
+
   .otto-audio-player audio::-webkit-media-controls-play-button,
   .otto-audio-player audio::-webkit-media-controls-pause-button {
-    background-color: #00AC8A;
+    background-color: #00ac8a;
     border-radius: 50%;
   }
-  
+
   /* Firefox styling */
   .otto-audio-player audio::-moz-range-thumb {
-    background-color: #00AC8A;
+    background-color: #00ac8a;
     border: none;
     border-radius: 50%;
   }
-  
+
   .otto-audio-player audio::-moz-range-track {
-    background-color: #E9F2E1;
+    background-color: #e9f2e1;
     border: none;
     border-radius: 4px;
   }

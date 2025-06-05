@@ -119,11 +119,16 @@ const { Content } = await entry.render();
       </div>
     </div>
 
-    {entry.data.audioFile && (
-      <div class="mx-auto max-w-3xl">
-        <AudioPlayer audioFile={entry.data.audioFile} title={entry.data.title} />
-      </div>
-    )}
+    {
+      entry.data.audioFile && (
+        <div class="mx-auto max-w-3xl">
+          <AudioPlayer
+            audioFile={entry.data.audioFile}
+            title={entry.data.title}
+          />
+        </div>
+      )
+    }
 
     <div
       class="prose prose-lg mx-auto mt-8 max-w-3xl prose-blockquote:rounded-md prose-blockquote:border prose-blockquote:border-primary-accent prose-blockquote:bg-primary-soft prose-blockquote:px-10 prose-blockquote:py-6 prose-blockquote:text-2xl prose-blockquote:not-italic">

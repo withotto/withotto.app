@@ -30,14 +30,15 @@ const makeTitle = title
     <meta name="generator" content={Astro.generator} />
     <link rel="sitemap" href="/sitemap-index.xml" />
 
-    {affiliateProgramId && (
-      <script 
-        src="https://pushlapgrowth.com/affiliate-tracker.js" 
-        data-affiliate 
-        data-program-id={affiliateProgramId}
-        async>
-      </script>
-    )}
+    {
+      affiliateProgramId && (
+        <script
+          src="https://pushlapgrowth.com/affiliate-tracker.js"
+          data-affiliate
+          data-program-id={affiliateProgramId}
+          async></script>
+      )
+    }
 
     <SEO
       title={makeTitle}

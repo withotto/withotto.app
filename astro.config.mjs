@@ -5,7 +5,6 @@ import icon from "astro-icon";
 import slug from "rehype-slug";
 import sitemap from "@astrojs/sitemap";
 
-
 // https://astro.build/config
 export default defineConfig({
   site: "https://withotto.app",

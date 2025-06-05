@@ -9,7 +9,14 @@ imageCredit: "Jeremy Bishop"
 imageCreditUrl: "https://unsplash.com/@jeremybishop"
 publishDate: "2025-05-02"
 category: "Practice Efficiency"
-tags: ["Bank Reconciliation", "Machine Learning", "Automation", "SmartMatch", "Accounting Technology"]
+tags:
+  [
+    "Bank Reconciliation",
+    "Machine Learning",
+    "Automation",
+    "SmartMatch",
+    "Accounting Technology",
+  ]
 audioFile: "/audio/the-future-of-bank-reconciliation-how-ai-and-machine-learning-are-transforming-bookkeeping.mp3"
 ---
 
@@ -157,14 +164,15 @@ A key advantage of machine learning in reconciliation is the ability to assign c
 
 - Calculates a precise confidence percentage for each potential match
 - Evaluates match probabilities on a scale from 100% not a match to 100% a match
-- Only automatically reconciles transactions when confidence of a match reaches at least 90% 
+- Only automatically reconciles transactions when confidence of a match reaches at least 90%
 - Flags lower-confidence potential matches for human review
 - When multiple potential matches exist, identifies the most statistically likely candidate
 
 This sophisticated confidence scoring system ensures that Otto only takes action when the evidence strongly supports a match, maintaining the perfect balance between automation and professional oversight. Accountants and bookkeepers remain in control while being freed from the most routine and obvious matching tasks.
 
 ### 5. Performance Transparency
-   Modern reconciliation tools provide visibility into how well the underlying algorithms are performing:
+
+Modern reconciliation tools provide visibility into how well the underlying algorithms are performing:
 
 - Our [homepage](/) displays overall accuracy statistics for the past 60 days across all clients using SmartMatch
 - These metrics show actual performance data rather than theoretical capabilities
@@ -228,6 +236,7 @@ While the benefits of ML-powered reconciliation are compelling, there are a few 
 ### Integration Requirements
 
 Otto can work autonomously with bank rule reconciliations, but practices receive the greatest benefit through a thoughtfully integrated approach:
+
 - **Complementary Bank Rules**: Creating targeted bank rules for transactions, such as salaries and bank account fees, where receipts are not required
 - **Receipt Capture Integration**: Setting up automated features in receipt capture software creates a streamlined reconciliation system
 - **Scheduled Processing**: Practices choose a specific hour of the day when Otto processes transactions, making it easier to integrate with existing workflows and staff working hours

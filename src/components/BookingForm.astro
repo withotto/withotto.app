@@ -1,22 +1,22 @@
 ---
 export interface Props {
-  variant?: 'default' | 'compact' | 'inline';
+  variant?: "default" | "compact" | "inline";
   uuid?: string;
   showSidebar?: boolean;
   height?: string;
 }
 
-const { 
-  variant = 'default',
-  uuid = '9efe86c2-31c3-4038-ac5c-94e6a62b9350',
+const {
+  variant = "default",
+  uuid = "9efe86c2-31c3-4038-ac5c-94e6a62b9350",
   showSidebar = true,
-  height = '768px'
+  height = "768px",
 } = Astro.props;
 
 const variantClasses = {
-  default: 'my-8',
-  compact: 'my-4',
-  inline: 'my-2'
+  default: "my-8",
+  compact: "my-4",
+  inline: "my-2",
 };
 ---
 
@@ -30,19 +30,20 @@ const variantClasses = {
     data-showsidebar={showSidebar ? "1" : "0"}
     style={`min-width: 320px; height: ${height};`}>
   </div>
-  
+
   <script is:inline>
     // Add ref parameter to booking form if present in URL
-    (function() {
+    (function () {
       try {
         const refValue = window.affiliateId;
-        
+
         if (refValue) {
-          const bookingDiv = document.querySelector('.embedded-booking');
+          const bookingDiv = document.querySelector(".embedded-booking");
           if (bookingDiv) {
-            const currentQuery = bookingDiv.getAttribute('data-query') || '';
-            const newQuery = currentQuery + '&ref=' + encodeURIComponent(refValue);
-            bookingDiv.setAttribute('data-query', newQuery);
+            const currentQuery = bookingDiv.getAttribute("data-query") || "";
+            const newQuery =
+              currentQuery + "&ref=" + encodeURIComponent(refValue);
+            bookingDiv.setAttribute("data-query", newQuery);
           }
         }
       } catch (error) {
@@ -50,24 +51,24 @@ const variantClasses = {
       }
     })();
   </script>
-  
+
   <script
     is:inline
     type="text/javascript"
     src="https://bookings.withotto.app/embed.js"
-    async>
-  </script>
+    async
+  ></script>
 </div>
 
 <style>
   .booking-wrapper {
     @apply mx-auto max-w-4xl;
   }
-  
+
   .booking-wrapper.compact {
     @apply max-w-2xl;
   }
-  
+
   .booking-wrapper.inline {
     @apply max-w-xl;
   }
