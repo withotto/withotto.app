@@ -4,7 +4,7 @@ import mdx from "@astrojs/mdx";
 import icon from "astro-icon";
 import slug from "rehype-slug";
 import sitemap from "@astrojs/sitemap";
-import toc from "rehype-toc";
+
 
 // https://astro.build/config
 export default defineConfig({
@@ -13,18 +13,7 @@ export default defineConfig({
   integrations: [
     tailwind(),
     mdx({
-      rehypePlugins: [
-        slug,
-        [
-          toc,
-          {
-            headings: ["h1", "h2", "h3"],
-            cssClasses: {
-              toc: "toc-list",
-            },
-          },
-        ],
-      ],
+      rehypePlugins: [slug],
     }),
     sitemap({
       filter: (url) => !url.startsWith("https://withotto.app/notebook/"),

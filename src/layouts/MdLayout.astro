@@ -2,8 +2,10 @@
 import Container from "@components/container.astro";
 import Layout from "./Layout.astro";
 import { Icon } from "astro-icon/components";
+import TableOfContents from "@components/TableOfContents.astro";
 
 const { frontmatter } = Astro.props;
+const { headings } = Astro.props;
 ---
 
 <Layout title={frontmatter.title}>
@@ -52,6 +54,9 @@ const { frontmatter } = Astro.props;
           </div>
         )
       }
+      
+      <TableOfContents headings={headings} />
+      
       <slot />
     </div>
   </Container>

@@ -1,0 +1,96 @@
+---
+// This component generates a table of contents from the headings in the current page
+// It requires the headings to have IDs (which rehype-slug provides)
+
+export interface Props {
+  headings?: Array<{ depth: number; slug: string; text: string }>;
+  maxDepth?: number;
+}
+
+const { headings = [], maxDepth = 3 } = Astro.props;
+
+// Filter headings by max depth and remove h1 (page title)
+const filteredHeadings = headings.filter(
+  (heading) => heading.depth > 1 && heading.depth <= maxDepth
+);
+---
+
+{filteredHeadings.length > 0 && (
+  <nav class="toc-list" aria-labelledby="toc-heading">
+    <h2 id="toc-heading" class="sr-only">Table of Contents</h2>
+    <ol class="toc-items">
+      {filteredHeadings.map((heading) => (
+        <li class={`toc-level-${heading.depth}`}>
+          <a
+            href={`#${heading.slug}`}
+            class="toc-link"
+          >
+            {heading.text}
+          </a>
+        </li>
+      ))}
+    </ol>
+  </nav>
+)}
+
+<style>
+  .toc-list {
+    @apply m-8 p-6 bg-primary-soft rounded-lg leading-snug;
+  }
+
+  ol {
+    @apply m-0 p-0;
+  }
+
+  .toc-items li {
+    @apply my-0;
+  }
+
+  .toc-items {
+    @apply list-none;
+    counter-reset: main-counter sub-counter;
+  }
+  
+  .toc-level-2 {
+    counter-increment: main-counter;
+    counter-reset: sub-counter;
+  }
+  
+  .toc-level-2 .toc-link {
+    @apply text-lg font-medium text-primary-strong;
+  }
+  
+  .toc-level-2 .toc-link::before {
+    content: counter(main-counter) ". ";
+  }
+  
+  .toc-level-3 {
+    @apply ml-4;
+    counter-increment: sub-counter;
+  }
+  
+  .toc-level-3 .toc-link {
+    @apply text-lg text-primary-strong;
+  }
+  
+  .toc-level-3 .toc-link::before {
+    content: counter(main-counter) "." counter(sub-counter) ". ";
+  }
+  
+  .toc-level-4 {
+    @apply ml-8;
+  }
+  
+  .toc-level-4 .toc-link {
+    @apply text-lg text-primary-strong;
+  }
+  
+  .toc-link {
+    @apply block py-1 no-underline text-primary-strong;
+    transition: color 0.2s ease;
+  }
+  
+  .toc-link:hover {
+    @apply text-primary underline;
+  }
+</style>
