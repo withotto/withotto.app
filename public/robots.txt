@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /notebook/
 
 Sitemap: https://withotto.app/sitemap-index.xml
