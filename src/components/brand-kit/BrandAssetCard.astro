@@ -1,0 +1,50 @@
+---
+const { asset } = Astro.props;
+---
+
+<div class="rounded-lg border border-muted-strong bg-white p-6 transition-shadow hover:shadow-lg flex flex-col h-full">
+  <!-- Preview Area -->
+  <div class={`mb-4 flex h-32 items-center justify-center rounded-lg p-4 ${
+    asset.name.includes("white text") ? "bg-primary-strong" : "bg-muted-soft"
+  }`}>
+    <img
+      src={asset.svgPath}
+      alt={asset.name}
+      class="max-h-full max-w-full object-contain"
+      loading="lazy"
+    />
+  </div>
+
+  <!-- Asset Info -->
+  <div class="mb-4 flex-grow">
+    <h3 class="mb-2 font-semibold text-default">{asset.name}</h3>
+    <p class="text-sm text-default-soft">{asset.description}</p>
+  </div>
+
+  <!-- Download Buttons -->
+  <div class="space-y-2 mt-auto">
+    <a
+      href={asset.pngPath}
+      download
+      class="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-strong"
+    >
+      <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+      </svg>
+      Download PNG
+    </a>
+
+    <a
+      href={asset.svgPath}
+      download
+      class="flex w-full items-center justify-center gap-2 rounded-lg border border-primary px-4 py-2 text-sm font-medium text-primary transition-colors hover:bg-primary-soft"
+    >
+      <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+      </svg>
+      Download SVG
+    </a>
+  </div>
+</div>
