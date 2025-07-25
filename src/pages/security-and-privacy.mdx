@@ -1,11 +1,11 @@
 ---
 title: Security and Privacy
 layout: "layouts/MdLayout.astro"
-lastUpdated: 2025-01-29
+lastUpdated: 2025-07-18
 pdfFilename: With Otto security and privacy guide.pdf
 ---
 
-Security and privacy are key considerations for everything we do and we’ve taken steps to ensure that your data, and that of your clients, is safe. This guide explains some of those steps and can also be shared with your clients so they know their data is in good hands.
+Security and privacy are fundamental to everything we do at With Otto. We've implemented comprehensive measures to ensure your data, and that of your clients, remains safe and secure. This guide explains our approach in clear terms and can be shared with your clients to provide transparency about how their data is protected.
 
 ## Otto
 
@@ -15,25 +15,25 @@ Each practice has its own Otto, who only works within that practice. Data is not
 
 ### You have full control over access to clients
 
-As with any other member of your team, Otto’s access to clients is managed through your Xero HQ account. Otto can only access a client if he has been given access. You can add and remove access to your clients at any time.
+As with any other member of your team, Otto's access to clients is managed through your Xero HQ account. Otto can only access a client if you have given access. You can add and remove access to your clients at any time.
 
 ### Access to Xero
 
-Otto accesses Xero via a browser and logs in just like you do. His password is randomly generated and consists of a mix of upper and lowercase letters, numbers, and symbols. 2FA is enabled. His login details are securely stored and encrypted.
+Otto accesses Xero via a browser and logs in just like you do. His password is randomly generated and consists of a mix of upper and lowercase letters, numbers, and symbols. Two-factor authentication (2FA) is enabled, adding an extra security layer beyond just a password. His login details are securely stored and encrypted.
 
 We recommend providing Otto with a Xero role that offers the minimum access possible. This is Standard for regular Xero business plans, and Advisor for partner-only plans such as Ledger and Cashbook.
 
-Otto runs on [Amazon Web Services](https://aws.amazon.com) (AWS) servers in their London data centre. Training is performed on on-premise hardware in Cambridgeshire, UK.
+Otto runs on [Amazon Web Services](https://aws.amazon.com) (AWS) servers–one of the world's most secure cloud platforms–in their London data centre. Training is also performed in AWS.
 
 ### Training and reconciliation data
 
-The information used to train Otto, as well as the information displayed in the portal, is stored in a database hosted by [Supabase](https://supabase.com). This data is stored in an AWS data centre in London.
+The information used to train Otto, as well as the information displayed in the portal, is stored in a database hosted by [Supabase](https://supabase.com), a leading secure database provider. This data is stored in an AWS data centre in London.
 
-All information used by Otto and the portal is stored in a single database and access permissions ensure practice staff can only see information for their practice.
+All information used by Otto and the portal is stored in a single database and access permissions ensure practice staff can only see information for their practice. You can assign an appropriate role to each member of staff which can further limit the data that they are able to access.
 
-12 months of reconciliation data are downloaded when you assign a client to Otto so he can be trained. Every fortnight, new reconciliation data since the last training will be downloaded. The volume of training data increases each month because Otto’s decisions are generally more accurate if he has more examples to work with.
+When you first assign a client to Otto, we download 12 months of reconciliation data for training. Every fortnight, we add new reconciliation data, building up to a maximum of 18 months. After this point, we maintain a rolling 18-month window. Each day, any data older than 18 months is automatically deleted. This approach gives Otto the examples needed to make accurate decisions while ensuring we don't retain data longer than necessary.
 
-The data used to train Otto comprises the following:
+To provide accurate reconciliations, Otto learns from specific, limited data points. Here's exactly what information we use for training:
 
 **Bank statement**
 
@@ -50,10 +50,27 @@ The data used to train Otto comprises the following:
 - Contact name
 - Reference
 
+We also store transaction amounts in the portal to help you review Otto's reconciliation decisions. These amounts don’t form part of his training.
+
 ## The portal
 
 The portal is where you can view the work Otto has done, provide feedback, and manage all the settings that control what Otto will do for each of your clients.
 
-It is important that you create a strong password that you don’t use elsewhere. We also recommend using a password manager. The portal supports multi-factor authentication using authentication apps, such as Google Authenticator, and [Passkeys](https://blog.google/inside-google/googlers/ask-a-techspert/how-passkeys-work/), a recent standard that uses technologies such as fingerprints and face recognition on your phone and laptop for extra security.
+It is important that you create a strong password that you don't use elsewhere. We also recommend using a password manager. The portal supports multi-factor authentication using:
 
-The portal accesses the database using a unique username and password, over an encrypted connection. The server is hosted by [Hetzner](https://www.hetzner.com) in their Falkenstein, Germany data centre. A network firewall ensures that only web traffic will be received by the server. Any administrative and maintenance activities can only be performed by a specific user when connecting from a specific IP address.
+- Authentication apps (such as Google Authenticator) for code-based security
+- [Passkeys](https://blog.google/inside-google/googlers/ask-a-techspert/how-passkeys-work/) – a modern standard that uses your device's biometric features (fingerprint or face recognition) for convenient, ultra-secure access
+
+The portal accesses the database using a unique username and password, over an encrypted connection. The portal server is hosted by AWS in their London data centre.
+
+# Data location and privacy
+
+Your reconciliation data is stored and processed in the UK. We use AWS London data centres for Otto's operations and Supabase's London facilities for database storage.
+
+We also use third-party services to monitor system performance and identify technical issues. These services may store data in the EU. While we configure these tools to collect minimal data, such as redacting email addresses,, error reports could occasionally capture information visible on screen when an issue occurs (such as client names or other portal details.) We're transparent about this because, whilst rare, it's important you understand how all aspects of our system work.
+
+# Our commitment to transparency
+
+We believe in being open about our security practices. Our full technical specifications and data protection details are available in our Terms and Conditions, and we're always happy to answer specific security questions from you or your clients.
+
+If you have any questions about security or privacy, please don't hesitate to contact us at support@withotto.app
