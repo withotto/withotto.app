@@ -12,10 +12,12 @@ enum Category {
   SECURITY = "Security",
   SMART_MATCH = "SmartMatch",
   SUPPORT = "Support",
+  BUSINESS = "Business users",
 }
 
 const categories: Category[] = [
   Category.GETTING_STARTED,
+  Category.BUSINESS,
   Category.SECURITY,
   Category.BILLING,
   Category.FEATURES,
@@ -34,12 +36,70 @@ const faqs: CategorisedFaqItem[] = [
     question: "What do I need to get started with Otto?",
     answer: `
       <p class="py-2">You'll need to:</p>
-        <ul class="list-disc pl-5">
-          <li>Create bank rules/make sure you're happy with your existing ones. We've made a <a href="/files/Bank%20rules%20quick%20guide.pdf" class="text-primary hover:underline hover:underline-offset-2">quick guide</a> to help you with this.</li>
-          <li>Invite Otto to your Xero practice.</li>
-          <li>Give him access to your chosen clients. We'll help you with this on the onboarding call.</li>
-        </ul>
+      <ul class="list-disc pl-5">
+        <li>Create bank rules/make sure you're happy with your existing ones. We've made a <a href="/files/Bank%20rules%20quick%20guide.pdf" class="text-primary hover:underline hover:underline-offset-2">quick guide</a> to help you with this.</li>
+        <li><b>Practices:</b> Invite Otto to your Xero practice and assign the clients he should work with.</li>
+        <li><b>Businesses:</b> Invite Otto to your Xero organisation(s) you want him to help with.</li>
+      </ul>
+      <p class="py-2">We'll help with setup on the call to make sure everything is setup correctly.</p>
     `,
+  },
+  {
+    categories: [Category.BUSINESS],
+    question: "How is Otto different for businesses vs accountancy practices?",
+    answer: `
+        <p class="py-2">Otto's reconciliation features are identical. The only difference is how he is given access to the Xero accounts he needs to work with. Neither way is better or worse, we just tailor the steps depending on whether you are a business or practice.</p>
+        <p class="py-2">Billing works exactly the same way: You pay based on credits for correct reconciliations made.</p>
+    `,
+  },
+  {
+    categories: [Category.BUSINESS],
+    question: "Do I need accounting expertise to use Otto safely?",
+    answer: `
+        <p class="py-2">Yes, absolutely. Otto is designed for businesses with established finance expertise. You need:</p>
+        <ul class="list-disc pl-5">
+          <li>Someone with solid understanding of bank reconciliation principles and Xero</li>
+          <li>The expertise to properly configure and monitor automated reconciliation</li>
+          <li>Internal finance capability (CFO, finance director, qualified accountant, or experienced bookkeeper)</li>
+        </ul>
+        <p class="py-2"><b>Why this matters:</b> Incorrect reconciliation setup can create accounting errors that require manual correction. Our support team can help with Otto's functionality, but we cannot provide general bookkeeping guidance.</p>
+    `,
+  },
+  {
+    categories: [Category.BUSINESS],
+    question:
+      "My business uses batch payments, foreign currency, or split payments - can Otto help?",
+    answer: `
+        <p class="py-2">Otto currently has limitations with these transaction types:</p>
+        <ul class="list-disc pl-5">
+          <li><b>Batch payments:</b> A single payment covering multiple invoices/bills - Otto cannot automatically select which invoices to apply the payment to.</li>
+          <li><b>Foreign currency auto-conversion:</b> Where your bank automatically converts foreign currency (e.g., USD purchase converted to GBP) - the amounts won't match exactly.</li>
+          <li><b>Split payments:</b> Partial payments towards larger balances like loans or insurance premiums.</li>
+        </ul>
+        <p class="py-2">Otto can still help with your other reconciliation types, and you can handle these transactions manually. During your consultation, we'll assess whether Otto can provide enough value for your remaining reconciliation needs.</p>
+    `,
+  },
+  {
+    categories: [Category.BUSINESS],
+    question: "How do I know if Otto is working correctly for my business?",
+    answer: `
+        <p class="py-2">You can monitor Otto's performance through the With Otto portal:</p>
+        <ul class="list-disc pl-5">
+          <li><b>Daily reports:</b> See exactly what Otto reconciled and what he skipped</li>
+          <li><b>Confidence levels:</b> Otto shows how confident he is about each match (we require 90%+ confidence)</li>
+          <li><b>Feedback system:</b> Tell Otto when he should have matched something he didn't, improving future performance</li>
+          <li><b>Reconciliation history:</b> Review all Otto's work with links back to the transactions in Xero</li>
+        </ul>
+        <p class="py-2">We recommend checking Otto's work weekly initially, then reducing frequency as you build confidence in his accuracy for your business patterns.</p>
+    `,
+  },
+  {
+    categories: [Category.BUSINESS],
+    question: "How will Otto appear in my business's Xero account?",
+    answer: `
+        <p class="py-2">Otto appears as a Xero user in your organisation, similar to any team member you might invite. You can choose his profile photo and name to fit your business preferences.</p>
+        <p class="py-2">Otto will show up in Xero's user activity logs and you'll see his reconciliation work in your transaction history, giving you full visibility of his actions.</p>
+      `,
   },
   {
     categories: [Category.FEATURES, Category.SMART_MATCH],
@@ -202,7 +262,7 @@ const faqs: CategorisedFaqItem[] = [
   },
   {
     categories: [Category.GETTING_STARTED],
-    question: "What will my clients see?",
+    question: "What will my clients see? (Accountancy practices)",
     answer: `
         <p class="py-2">Otto is a Xero user the same as you and your staff. You can choose a profile photo and name to fit in with your practice image and your clients' expectations.</p>
       `,

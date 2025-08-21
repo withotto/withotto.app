@@ -46,6 +46,12 @@ module.exports = {
           soft: "#EFF6FF",
           strong: "#1E40AF",
         },
+        terracotta: {
+          DEFAULT: "#e67d5f",
+          soft: "#faf3f0",
+          medium: "#f0b8a6",
+          strong: "#b85a3d",
+        },
       },
     },
   },

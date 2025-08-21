@@ -1,0 +1,142 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Container from "@components/container.astro";
+---
+
+<Layout title="With Otto for Your Business">
+  <div class="py-12">
+    <Container>
+      <div class="z-10 mb-14">
+        <h2
+          class="text-center text-3xl font-bold text-primary-strong md:text-5xl">
+          With Otto for Your Business
+        </h2>
+        <p class="mx-auto max-w-3xl pt-8 text-lg">
+          Transform your internal finance team's reconciliation process with
+          intelligent automation that eliminates hours of manual matching work.
+        </p>
+
+        <div
+          class="mx-auto mt-8 max-w-3xl rounded-lg border-l-4 border-terracotta bg-terracotta-soft p-6">
+          <h3 class="mb-3 text-xl font-semibold text-terracotta-strong">
+            Important: Is With Otto right for your business?
+          </h3>
+          <p class="mb-4">
+            With Otto is designed for businesses with established finance
+            expertise. To use Otto effectively and safely, your organisation
+            needs:
+          </p>
+          <ul class="list-disc space-y-2 pl-5">
+            <li>
+              An internal finance function (CFO, finance director, qualified
+              accountant or bookkeeper)
+            </li>
+            <li>
+              Someone with solid understanding of bank reconciliation principles
+              and Xero
+            </li>
+            <li>
+              The expertise to properly configure and monitor automated
+              reconciliation
+            </li>
+          </ul>
+          <p class="mt-4">
+            <strong>Why this matters:</strong> Incorrect reconciliation setup can
+            create accounting errors that require manual correction. Our support
+            team can help with Otto's functionality, but we cannot provide general
+            bookkeeping guidance.
+          </p>
+        </div>
+
+        <p class="mx-auto mt-8 max-w-3xl">
+          If your business meets these requirements, Otto can transform how your
+          finance team handles reconciliation. Our machine learning technology
+          automatically matches bank transactions with invoices, bills, and
+          transfers—eliminating the tedious manual work that takes hours each
+          month.
+        </p>
+
+        <p class="mx-auto mt-4 max-w-3xl">
+          Unlike solutions designed for accountancy practices, this direct
+          business offering focuses on your internal finance operations. Otto
+          learns your company's transaction patterns, making reconciliation
+          faster and more accurate over time.
+        </p>
+
+        <h3
+          class="mx-auto mt-8 max-w-3xl text-xl font-semibold text-primary-strong">
+          What we'll cover in your consultation:
+        </h3>
+        <ul class="mx-auto mt-4 max-w-3xl list-disc space-y-2 pl-5">
+          <li>
+            Assess your current reconciliation process and identify time-saving
+            opportunities
+          </li>
+          <li>
+            Explain how Otto's machine learning adapts to your business's
+            transaction patterns
+          </li>
+          <li>
+            Walk through the With Otto portal and show you how to monitor Otto's
+            performance
+          </li>
+          <li>Guide you through connecting Otto to your Xero organisation</li>
+          <li>
+            Discuss security, data protection, and compliance considerations
+          </li>
+          <li>
+            Determine if With Otto is the right fit for your business needs
+          </li>
+        </ul>
+
+        <p class="mx-auto mt-6 max-w-3xl">
+          This consultation helps us understand your specific requirements and
+          ensures Otto will deliver value for your business. We'll be honest
+          about whether With Otto is suitable for your situation—sometimes
+          traditional methods or other solutions may be more appropriate.
+        </p>
+
+        <div
+          class="mx-auto mt-8 max-w-3xl rounded-lg bg-primary-soft p-6 text-center">
+          <p class="mb-4 text-lg font-medium text-primary-strong">
+            Ready to explore how Otto can help your business?
+          </p>
+          <p class="mb-6">
+            Complete the form below and schedule a consultation with our team.
+          </p>
+          <iframe
+            data-tally-src="https://tally.so/embed/nr4RBo?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1"
+            loading="lazy"
+            width="100%"
+            height="1356"
+            frameborder="0"
+            marginheight="0"
+            marginwidth="0"
+            class="rounded-lg bg-white p-2 shadow-lg"
+            title="Learning more about your business"></iframe>
+          <script>
+            var d = document,
+              w = "https://tally.so/widgets/embed.js",
+              v = function () {
+                "undefined" != typeof Tally
+                  ? Tally.loadEmbeds()
+                  : d
+                      .querySelectorAll("iframe[data-tally-src]:not([src])")
+                      .forEach(function (e) {
+                        e.src = e.dataset.tallySrc;
+                      });
+              };
+            if ("undefined" != typeof Tally) v();
+            else if (d.querySelector('script[src="' + w + '"]') == null) {
+              var s = d.createElement("script");
+              (s.src = w),
+                (s.onload = v),
+                (s.onerror = v),
+                d.body.appendChild(s);
+            }
+          </script>
+        </div>
+      </div>
+    </Container>
+  </div>
+</Layout>
