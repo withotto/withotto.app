@@ -13,7 +13,7 @@ importers:
         version: 4.3.0(astro@5.8.0(@types/node@22.15.3)(jiti@1.21.7)(rollup@4.40.1)(typescript@5.7.3)(yaml@2.7.1))
       '@astrojs/sitemap':
         specifier: ^3.4.0
-        version: 3.4.0
+        version: 3.5.1
       '@astrojs/tailwind':
         specifier: ^6.0.2
         version: 6.0.2(astro@5.8.0(@types/node@22.15.3)(jiti@1.21.7)(rollup@4.40.1)(typescript@5.7.3)(yaml@2.7.1))(tailwindcss@3.4.17)
@@ -113,8 +113,8 @@ packages:
     resolution: {integrity: sha512-q8VwfU/fDZNoDOf+r7jUnMC2//H2l0TuQ6FkGJL8vD8nw/q5KiL3DS1KKBI3QhI9UQhpJ5dc7AtqfbXWuOgLCQ==}
     engines: {node: 18.20.8 || ^20.3.0 || >=22.0.0}
 
-  '@astrojs/sitemap@3.4.0':
-    resolution: {integrity: sha512-C5m/xsKvRSILKM3hy47n5wKtTQtJXn8epoYuUmCCstaE9XBt20yInym3Bz2uNbEiNfv11bokoW0MqeXPIvjFIQ==}
+  '@astrojs/sitemap@3.5.1':
+    resolution: {integrity: sha512-uX5z52GLtQTgOe8r3jeGmFRYrFe52mdpLYJzqjvL1cdy5Kg3MLOZEvaZ/OCH0fSq0t7e50uJQ6oBMZG0ffszBg==}
 
   '@astrojs/tailwind@6.0.2':
     resolution: {integrity: sha512-j3mhLNeugZq6A8dMNXVarUa8K6X9AW+QHU9u3lKNrPLMHhOQ0S7VeWhHwEeJFpEK1BTKEUY1U78VQv2gN6hNGg==}
@@ -3685,6 +3685,9 @@ packages:
   zod@3.24.4:
     resolution: {integrity: sha512-OdqJE9UDRPwWsrHjLN2F8bPxvwJBK22EHLWtanu0LSYr5YqzsaaW3RMgmjwr8Rypg5k+meEJdSPXJZXE/yqOMg==}
 
+  zod@3.25.76:
+    resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
+
   zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
 
@@ -3790,11 +3793,11 @@ snapshots:
     dependencies:
       prismjs: 1.30.0
 
-  '@astrojs/sitemap@3.4.0':
+  '@astrojs/sitemap@3.5.1':
     dependencies:
       sitemap: 8.0.0
       stream-replace-string: 2.0.0
-      zod: 3.24.4
+      zod: 3.25.76
 
   '@astrojs/tailwind@6.0.2(astro@5.8.0(@types/node@22.15.3)(jiti@1.21.7)(rollup@4.40.1)(typescript@5.7.3)(yaml@2.7.1))(tailwindcss@3.4.17)':
     dependencies:
@@ -4289,7 +4292,7 @@ snapshots:
 
   '@types/sax@1.2.7':
     dependencies:
-      '@types/node': 22.15.3
+      '@types/node': 17.0.45
 
   '@types/tar@6.1.13':
     dependencies:
@@ -7901,5 +7904,7 @@ snapshots:
       zod: 3.24.4
 
   zod@3.24.4: {}
+
+  zod@3.25.76: {}
 
   zwitch@2.0.4: {}
