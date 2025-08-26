@@ -19,7 +19,8 @@ export default defineConfig({
     }),
     icon(),
   ],
-  experimental: {
-    responsiveImages: true,
+  image: {
+    responsiveStyles: true,
+    layout: "constrained", // Default layout for most images
   },
 });
