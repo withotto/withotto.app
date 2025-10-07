@@ -22,7 +22,7 @@ importers:
         version: 5.2.6
       '@iconify-json/hugeicons':
         specifier: ^1.2.14
-        version: 1.2.14
+        version: 1.2.17
       '@tailwindcss/typography':
         specifier: ^0.5.16
         version: 0.5.16(tailwindcss@3.4.17)
@@ -332,8 +332,8 @@ packages:
   '@fontsource-variable/rethink-sans@5.2.6':
     resolution: {integrity: sha512-9fAVbjrNaNSLycyd1fRs+gK2i4XMAUnmLJj3uQjbsyy7+WotixbxFfe+z5ujnI5MZFcEGbdtL/KH7h41Hg81Sw==}
 
-  '@iconify-json/hugeicons@1.2.14':
-    resolution: {integrity: sha512-xPAwqc/jOkN024t0OaB4M1uadNteaPBUtzO2ULxe0DmkFRDqbxH6z9Li/eXu+OGLn/iKvaNq6nU5wuiDZ82LXQ==}
+  '@iconify-json/hugeicons@1.2.17':
+    resolution: {integrity: sha512-Yp+XzYfWoSuE4HTSrVGbIobNooYfIOQAczgzpLcJGGhkkGed8pVtR8K0UZEg2ZEdrtObatcCcTVrnuOwlnJqMA==}
 
   '@iconify/tools@4.1.2':
     resolution: {integrity: sha512-q6NzLQYEN9zkDfcyBqD3vItHcZw97w/s++3H3TBxUORr57EfHxj6tOW6fyufDjMq+Vl56WXWaPx1csBPYlI5CA==}
@@ -4090,7 +4090,7 @@ snapshots:
 
   '@fontsource-variable/rethink-sans@5.2.6': {}
 
-  '@iconify-json/hugeicons@1.2.14':
+  '@iconify-json/hugeicons@1.2.17':
     dependencies:
       '@iconify/types': 2.0.0
 
