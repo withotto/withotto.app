@@ -2,15 +2,13 @@
 export interface Props {
   variant?: "default" | "compact" | "inline";
   uuid?: string;
-  showSidebar?: boolean;
-  height?: string;
+  affiliateId?: string;
 }
 
 const {
   variant = "default",
   uuid = "9efe86c2-31c3-4038-ac5c-94e6a62b9350",
-  showSidebar = true,
-  height = "768px",
+  affiliateId,
 } = Astro.props;
 
 const variantClasses = {
@@ -26,18 +24,21 @@ const variantClasses = {
     data-url="https://bookings.withotto.app"
     data-query={`&t=s&uuid=${uuid}`}
     data-lang="en"
-    data-autoresize="1"
-    data-showsidebar={showSidebar ? "1" : "0"}
-    style={`min-width: 320px; height: ${height};`}>
+    data-autoresize="0"
+    data-showsidebar="1"
+    data-showservices="0"
+    style="min-width: 320px; height: 768px;">
   </div>
 
-  <script is:inline>
+  <script is:inline define:vars={{ affiliateId }}>
     // Add ref parameter to booking form if present in URL
     (function () {
       try {
-        const refValue = window.affiliateId;
+        // Prefer hardcoded affiliateId, fallback to query parameter
+        const refValue = affiliateId || window.affiliateId;
 
         if (refValue) {
+          console.log("Adding ref parameter to booking form:", refValue);
           const bookingDiv = document.querySelector(".embedded-booking");
           if (bookingDiv) {
             const currentQuery = bookingDiv.getAttribute("data-query") || "";
@@ -56,8 +57,7 @@ const variantClasses = {
     is:inline
     type="text/javascript"
     src="https://bookings.withotto.app/embed.js"
-    async
-  ></script>
+    async></script>
 </div>
 
 <style>
