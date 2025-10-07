@@ -19,7 +19,7 @@ importers:
         version: 6.0.2(astro@5.13.4(@types/node@24.3.0)(jiti@1.21.7)(rollup@4.49.0)(typescript@5.7.3)(yaml@2.8.1))(tailwindcss@3.4.17)
       '@fontsource-variable/rethink-sans':
         specifier: ^5.2.6
-        version: 5.2.6
+        version: 5.2.8
       '@iconify-json/hugeicons':
         specifier: ^1.2.14
         version: 1.2.14
@@ -329,8 +329,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@fontsource-variable/rethink-sans@5.2.6':
-    resolution: {integrity: sha512-9fAVbjrNaNSLycyd1fRs+gK2i4XMAUnmLJj3uQjbsyy7+WotixbxFfe+z5ujnI5MZFcEGbdtL/KH7h41Hg81Sw==}
+  '@fontsource-variable/rethink-sans@5.2.8':
+    resolution: {integrity: sha512-al4seUEA9sN3D7//lASAPUWPtehLIkKHQRxskZwTUHd3hOpfyjJWmXLOXYQwYAS5h4OhZ2D9S/3N73MzTJ5ecg==}
 
   '@iconify-json/hugeicons@1.2.14':
     resolution: {integrity: sha512-xPAwqc/jOkN024t0OaB4M1uadNteaPBUtzO2ULxe0DmkFRDqbxH6z9Li/eXu+OGLn/iKvaNq6nU5wuiDZ82LXQ==}
@@ -4088,7 +4088,7 @@ snapshots:
   '@esbuild/win32-x64@0.25.9':
     optional: true
 
-  '@fontsource-variable/rethink-sans@5.2.6': {}
+  '@fontsource-variable/rethink-sans@5.2.8': {}
 
   '@iconify-json/hugeicons@1.2.14':
     dependencies:
