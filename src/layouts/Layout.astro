@@ -2,11 +2,18 @@
 import Footer from "@components/footer.astro";
 import Navbar from "@components/navbar/navbar.astro";
 import RootLayout from "@layouts/RootLayout.astro";
+import type { SEOProps } from "astro-seo";
 
-const { title, affiliateProgramId } = Astro.props;
+export interface Props {
+  title?: string;
+  affiliateProgramId?: string;
+  seo?: Partial<SEOProps>;
+}
+
+const { title, affiliateProgramId, seo } = Astro.props;
 ---
 
-<RootLayout title={title} affiliateProgramId={affiliateProgramId}>
+<RootLayout title={title} affiliateProgramId={affiliateProgramId} seo={seo}>
   <Navbar />
   <slot />
   <Footer />

@@ -1,19 +1,19 @@
 ---
 import Layout from "@layouts/Layout.astro";
 import Container from "@components/container.astro";
-import BookingForm from "@components/BookingForm.astro";
+import type { SEOProps } from "astro-seo";
 
 export interface Props {
   frontmatter: {
     title: string;
     subtitle: string;
     affiliateProgramId?: string;
+    seo?: Partial<SEOProps>;
   };
 }
 
-const {
-  frontmatter: { title, subtitle, affiliateProgramId },
-} = Astro.props;
+const { frontmatter } = Astro.props;
+const { title, subtitle, affiliateProgramId, seo } = frontmatter;
 ---
 
 <style is:global>
@@ -40,7 +40,7 @@ const {
   }
 </style>
 
-<Layout title={title} affiliateProgramId={affiliateProgramId}>
+<Layout title={title} affiliateProgramId={affiliateProgramId} seo={{ noindex: true, ...seo }}>
   <div class="py-12">
     <Container>
       <div class="z-10 mx-auto mb-14 max-w-3xl">
