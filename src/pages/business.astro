@@ -11,10 +11,15 @@ import Container from "@components/container.astro";
           class="text-center text-3xl font-bold text-primary-strong md:text-5xl">
           With Otto for Your Business
         </h2>
-        <p class="mx-auto max-w-3xl pt-8 text-lg">
-          Transform your internal finance team's reconciliation process with
-          intelligent automation that eliminates hours of manual matching work.
-        </p>
+        <div
+          class="mx-auto mt-6 max-w-3xl rounded-lg border-l-4 border-terracotta bg-terracotta-soft p-4">
+          <p>
+            <strong class="block text-lg"
+              >We are not running any new trials over Christmas and new year.
+              Check back in January 2026 for updates.</strong
+            >
+          </p>
+        </div>
 
         <div
           class="mx-auto mt-8 max-w-3xl rounded-lg border-l-4 border-terracotta bg-terracotta-soft p-6">
@@ -95,47 +100,6 @@ import Container from "@components/container.astro";
           about whether With Otto is suitable for your situation—sometimes
           traditional methods or other solutions may be more appropriate.
         </p>
-
-        <div
-          class="mx-auto mt-8 max-w-3xl rounded-lg bg-primary-soft p-6 text-center">
-          <p class="mb-4 text-lg font-medium text-primary-strong">
-            Ready to explore how Otto can help your business?
-          </p>
-          <p class="mb-6">
-            Complete the form below and schedule a consultation with our team.
-          </p>
-          <iframe
-            data-tally-src="https://tally.so/embed/nr4RBo?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1"
-            loading="lazy"
-            width="100%"
-            height="1356"
-            frameborder="0"
-            marginheight="0"
-            marginwidth="0"
-            class="rounded-lg bg-white p-2 shadow-lg"
-            title="Learning more about your business"></iframe>
-          <script>
-            var d = document,
-              w = "https://tally.so/widgets/embed.js",
-              v = function () {
-                "undefined" != typeof Tally
-                  ? Tally.loadEmbeds()
-                  : d
-                      .querySelectorAll("iframe[data-tally-src]:not([src])")
-                      .forEach(function (e) {
-                        e.src = e.dataset.tallySrc;
-                      });
-              };
-            if ("undefined" != typeof Tally) v();
-            else if (d.querySelector('script[src="' + w + '"]') == null) {
-              var s = d.createElement("script");
-              (s.src = w),
-                (s.onload = v),
-                (s.onerror = v),
-                d.body.appendChild(s);
-            }
-          </script>
-        </div>
       </div>
     </Container>
   </div>
