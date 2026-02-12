@@ -1,0 +1,281 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Container from "@components/container.astro";
+import { Icon } from "astro-icon/components";
+
+const seo = {
+  title: "Otto Capture - Early Access",
+  description:
+    "Register your interest in testing Otto Capture, our new receipt capture tool built for smaller accounting practices.",
+};
+---
+
+<Layout title="Otto Capture - Early Access" seo={seo}>
+  <div class="py-12">
+    <Container>
+      <!-- Hero Section -->
+      <div class="mb-16 text-center">
+        <div class="mb-4">
+          <span
+            class="inline-block rounded-full bg-primary-soft px-4 py-1 text-sm font-medium text-primary-strong">
+            Early Alpha
+          </span>
+        </div>
+        <h1
+          class="mb-6 text-4xl font-bold text-primary-strong md:text-5xl lg:text-6xl">
+          Otto Capture
+        </h1>
+        <p class="mx-auto max-w-3xl text-xl text-default-soft md:text-2xl">
+          Receipt capture built for smaller practices. Accurate extraction,
+          streamlined submission, fair pricing.
+        </p>
+      </div>
+
+      <!-- Video Section -->
+      <div class="mb-16">
+        <div class="mx-auto max-w-4xl">
+          <div
+            class="overflow-hidden rounded-xl border border-muted-strong bg-white shadow-lg">
+            <div
+              class="flex aspect-video items-center justify-center bg-muted-soft">
+              <video controls preload="metadata" class="w-full rounded-lg">
+                <source
+                  src="/videos/otto-capture-teaser.mp4"
+                  type="video/mp4"
+                />
+                Your browser doesn't support video playback.
+                <a href="/videos/otto-capture-teaser.mp4">Download the video</a>
+                instead.
+              </video>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- What We're Building -->
+      <div class="mb-16">
+        <div class="mx-auto max-w-3xl">
+          <h2
+            class="mb-6 text-2xl font-semibold text-primary-strong md:text-3xl">
+            What we're building
+          </h2>
+          <div class="space-y-4 text-lg text-default">
+            <p>
+              We've been constantly searching for the perfect receipt capture
+              solution for our accounting practice, and nothing has quite ticked
+              all the boxes.
+            </p>
+            <p>
+              So we decided to build something focused on what actually matters:
+              accurate extraction and streamlined submission.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Core Features -->
+      <div class="mb-16">
+        <div class="mx-auto max-w-3xl">
+          <h2
+            class="mb-8 text-2xl font-semibold text-primary-strong md:text-3xl">
+            Core features
+          </h2>
+          <div class="grid gap-6 sm:grid-cols-2">
+            <div class="rounded-lg border border-muted-strong bg-white p-6">
+              <div
+                class="mb-3 flex size-12 items-center justify-center rounded-lg bg-primary-soft">
+                <Icon
+                  name="hugeicons:document-validation"
+                  class="size-6 text-primary-strong"
+                />
+              </div>
+              <h3 class="mb-2 font-semibold text-default">
+                Accurate extraction
+              </h3>
+              <p class="text-default-soft">
+                AI-powered data extraction designed to minimise manual
+                correction.
+              </p>
+            </div>
+
+            <div class="rounded-lg border border-muted-strong bg-white p-6">
+              <div
+                class="mb-3 flex size-12 items-center justify-center rounded-lg bg-primary-soft">
+                <Icon
+                  name="hugeicons:upload-04"
+                  class="size-6 text-primary-strong"
+                />
+              </div>
+              <h3 class="mb-2 font-semibold text-default">Easy submission</h3>
+              <p class="text-default-soft">
+                Multiple ways for clients to submit receipts without complex
+                setup, and timesaving tools for you to get missing documents.
+              </p>
+            </div>
+
+            <div class="rounded-lg border border-muted-strong bg-white p-6">
+              <div
+                class="mb-3 flex size-12 items-center justify-center rounded-lg bg-primary-soft">
+                <Icon
+                  name="hugeicons:cells"
+                  class="size-6 text-primary-strong"
+                />
+              </div>
+              <h3 class="mb-2 font-semibold text-default">
+                Platform integration
+              </h3>
+              <p class="text-default-soft">
+                Starting with Xero, with plans for FreeAgent and other
+                platforms.
+              </p>
+            </div>
+
+            <div class="rounded-lg border border-muted-strong bg-white p-6">
+              <div
+                class="mb-3 flex size-12 items-center justify-center rounded-lg bg-primary-soft">
+                <Icon
+                  name="hugeicons:coins-01"
+                  class="size-6 text-primary-strong"
+                />
+              </div>
+              <h3 class="mb-2 font-semibold text-default">Fair pricing</h3>
+              <p class="text-default-soft">
+                Pricing that makes sense for smaller practices and lower volume
+                clients.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Current Status -->
+      <div class="mb-16">
+        <div class="mx-auto max-w-3xl">
+          <div
+            class="rounded-lg border-l-4 border-terracotta bg-terracotta-soft p-6">
+            <h3 class="mb-3 text-lg font-semibold text-default">
+              Where we are now
+            </h3>
+            <p class="mb-4 text-default">
+              We've just processed our first receipt end-to-end. The core
+              workflow works, but there's still plenty to build:
+            </p>
+            <ul class="space-y-2 text-default-soft">
+              <li class="flex items-start gap-2">
+                <Icon
+                  name="hugeicons:checkmark-circle-02"
+                  class="mt-0.5 size-5 shrink-0 text-primary"
+                />
+                <span>Core extraction and publishing to Xero</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <Icon
+                  name="hugeicons:loading-03"
+                  class="mt-0.5 size-5 shrink-0 text-default-soft"
+                />
+                <span>Email forwarding for receipt submission</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <Icon
+                  name="hugeicons:loading-03"
+                  class="mt-0.5 size-5 shrink-0 text-default-soft"
+                />
+                <span>Support for additional accounting platforms</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <Icon
+                  name="hugeicons:loading-03"
+                  class="mt-0.5 size-5 shrink-0 text-default-soft"
+                />
+                <span>User experience polish and refinements</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <Icon
+                  name="hugeicons:magic-wand-01"
+                  class="mt-0.5 size-5 shrink-0 text-default-soft"
+                />
+                <span
+                  ><b
+                    >Some exciting things that we're keeping close to our
+                    chests!</b
+                  ></span
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Register Interest -->
+      <div class="mb-16">
+        <div class="mx-auto max-w-3xl">
+          <div class="mb-8 text-center">
+            <h2
+              class="mb-4 text-2xl font-semibold text-primary-strong md:text-3xl">
+              Register your interest
+            </h2>
+            <p class="text-lg text-default-soft">
+              We're aiming to open up testing in early March 2026. If you'd like
+              to be involved, let us know.
+            </p>
+          </div>
+
+          <!-- Tally Form Embed -->
+          <div
+            class="rounded-xl border border-muted-strong bg-white p-8 shadow-sm">
+            <iframe
+              data-tally-src="https://tally.so/embed/44xdK5?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1"
+              loading="lazy"
+              width="100%"
+              height="1638"
+              frameborder="0"
+              marginheight="0"
+              marginwidth="0"
+              title="Otto Capture early access"></iframe>
+            <script>
+              var d = document,
+                w = "https://tally.so/widgets/embed.js",
+                v = function () {
+                  "undefined" != typeof Tally
+                    ? Tally.loadEmbeds()
+                    : d
+                        .querySelectorAll("iframe[data-tally-src]:not([src])")
+                        .forEach(function (e) {
+                          e.src = e.dataset.tallySrc;
+                        });
+                };
+              if ("undefined" != typeof Tally) v();
+              else if (d.querySelector('script[src="' + w + '"]') == null) {
+                var s = d.createElement("script");
+                ((s.src = w),
+                  (s.onload = v),
+                  (s.onerror = v),
+                  d.body.appendChild(s));
+              }
+            </script>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fair Warning -->
+      <div class="mx-auto max-w-3xl">
+        <div class="rounded-lg bg-primary-soft p-8">
+          <h3 class="mb-4 text-xl font-semibold text-primary-strong">
+            Fair warning
+          </h3>
+          <div class="space-y-3 text-default">
+            <p>
+              This will be early alpha software. Things will break. There will
+              be edge cases we haven't thought of. Features might change based
+              on what we learn.
+            </p>
+            <p>
+              But if you're curious about what we're building and want to help
+              shape it, we'd genuinely value your input.
+            </p>
+          </div>
+        </div>
+      </div>
+    </Container>
+  </div>
+</Layout>
