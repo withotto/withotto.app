@@ -155,5 +155,5 @@ the volume and final match—you create a scalable, accurate, and highly efficie
 lucrative client segment better, improve your team's job satisfaction, and build a more profitable and future-proof
 practice.
 
-Ready to implement a truly scalable ecommerce workflow? [Book a personalised onboarding call today](/trial/) to
-see this framework in action and start your completely unlimited one-month trial.
+Ready to implement a truly scalable ecommerce workflow? [Find out more about Otto's bank reconciliation](/bank-reconciliation/) to
+see how this framework can work for your practice.

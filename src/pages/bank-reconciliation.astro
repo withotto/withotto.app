@@ -1,0 +1,74 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Container from "@components/container.astro";
+import FeaturesCol from "@components/features-col.astro";
+import StatsGrid from "@components/StatsGrid.astro";
+import Pricing from "@components/pricing.astro";
+
+const seo = {
+  title: "Bank Reconciliation - With Otto",
+  description:
+    "Otto's machine learning automatically matches bank transactions with bookkeeping entries in Xero, saving your practice hours of manual reconciliation work.",
+};
+---
+
+<Layout title="Bank Reconciliation" seo={seo}>
+  <div class="bg-primary-soft pt-10 md:pt-24">
+    <Container>
+      <div class="mx-auto max-w-screen-xl pb-16">
+        <div class="mb-4 text-center">
+          <span
+            class="inline-block rounded-full bg-white px-4 py-1 text-sm font-medium text-primary-strong">
+            Existing product
+          </span>
+        </div>
+        <h1
+          class="mx-auto max-w-4xl text-center text-4xl font-bold text-primary-strong md:text-6xl">
+          Otto transforms bank reconciliation from tedious to effortless
+        </h1>
+        <p
+          class="mx-auto max-w-3xl py-6 text-center text-xl leading-normal text-default">
+          Transform reconciliation from a drain on talent to an efficient,
+          automated process. Our AI helps your team deliver more value to
+          clients.
+        </p>
+        <div
+          class="mx-auto mt-2 max-w-3xl rounded-lg border-l-4 border-terracotta bg-terracotta-soft p-4 text-center">
+          <p>
+            We are not currently running new trials for bank reconciliation. If
+            you're interested in our AI-powered receipt capture tool, <a
+              href="/capture/"
+              class="font-medium text-primary underline hover:text-primary-strong"
+              >check out Otto Capture</a
+            >.
+          </p>
+        </div>
+        <StatsGrid />
+      </div>
+    </Container>
+  </div>
+
+  <div class="py-24" id="features">
+    <Container>
+      <div>
+        <h2
+          class="text-center text-3xl font-bold text-primary-strong md:text-5xl">
+          How Otto transforms your practice
+        </h2>
+        <p class="mx-auto mt-6 max-w-4xl text-lg text-default">
+          Transform your practice's reconciliation process with Otto, your
+          intelligent bookkeeping assistant. Using advanced machine learning,
+          Otto handles the time-consuming task of transaction matching, letting
+          you focus on providing higher-value services to your clients. Whether
+          you manage a handful of clients or hundreds, Otto scales with your
+          practice while maintaining exceptional accuracy.
+        </p>
+      </div>
+      <div class="mt-20">
+        <FeaturesCol />
+      </div>
+    </Container>
+  </div>
+
+  <Pricing />
+</Layout>

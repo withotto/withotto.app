@@ -9,25 +9,13 @@ import { Icon } from "astro-icon/components";
 
 const menuItems = [
   {
-    title: "Features",
-    path: "/#features",
+    title: "Capture",
+    path: "/capture/",
   },
   {
-    title: "Pricing",
-    path: "/#pricing",
+    title: "Bank Reconciliation",
+    path: "/bank-reconciliation/",
   },
-  {
-    title: "Business",
-    path: "/business/",
-  },
-  // {
-  //   title: "About",
-  //   path: "/about",
-  // },
-  // {
-  //   title: "Blog",
-  //   path: "/blog",
-  // },
   {
     title: "Security",
     path: "/security-and-privacy/",
@@ -44,10 +32,6 @@ const menuItems = [
     title: "Help centre",
     path: "https://support.withotto.app",
   },
-  // {
-  //   title: "Contact",
-  //   path: "/contact",
-  // },
   {
     title: "Portal",
     path: "https://portal.withotto.app",
@@ -124,16 +108,16 @@ const menuItems = [
             }
           </ul>
           <div class="mt-3 flex items-center gap-4 lg:hidden">
-            <Link href="/trial/" size="md" block>Try Otto for free</Link>
+            <Link href="/capture/" size="md" block>Otto Capture</Link>
           </div>
         </MenuItems>
       </Astronav>
       <div>
         <div class="hidden items-center gap-4 lg:flex">
           <a
-            href="/trial/"
+            href="/capture/"
             class="text-primary-strong-strong rounded-lg bg-white px-6 py-3 font-medium shadow transition hover:bg-primary hover:text-white">
-            Try Otto for free
+            Otto Capture
           </a>
         </div>
       </div>

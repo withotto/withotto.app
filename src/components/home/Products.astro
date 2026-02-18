@@ -1,0 +1,80 @@
+---
+import Container from "@components/container.astro";
+import { Icon } from "astro-icon/components";
+---
+
+<div class="bg-primary-soft py-24" id="products">
+  <Container>
+    <div class="text-center">
+      <h2 class="text-3xl font-bold text-primary-strong md:text-5xl">
+        Tools that solve real problems
+      </h2>
+      <p class="mx-auto mt-6 max-w-3xl text-lg text-default">
+        Each tool is built to do one thing well, priced fairly, and shaped by
+        the day-to-day reality of running a practice.
+      </p>
+    </div>
+
+    <div class="mx-auto mt-16 grid max-w-5xl gap-8 md:grid-cols-2">
+      <!-- Otto Capture — primary focus -->
+      <a
+        href="/capture/"
+        class="group relative flex flex-col rounded-2xl border-2 border-primary bg-white p-8 shadow-lg transition hover:shadow-xl">
+        <div class="mb-4 flex items-center gap-3">
+          <div
+            class="flex size-12 items-center justify-center rounded-lg bg-primary-soft">
+            <Icon
+              name="hugeicons:document-validation"
+              class="size-6 text-primary-strong"
+            />
+          </div>
+          <span
+            class="rounded-full bg-primary-soft px-3 py-1 text-sm font-medium text-primary-strong">
+            Early access
+          </span>
+        </div>
+        <h3 class="text-2xl font-bold text-primary-strong">Otto Capture</h3>
+        <p class="mt-3 flex-1 text-default">
+          AI-powered receipt capture that focuses on what matters: accurate
+          extraction, streamlined client submission, and fair pricing.
+        </p>
+        <div
+          class="mt-6 inline-flex items-center font-medium text-primary group-hover:underline">
+          Find out more
+          <Icon name="hugeicons:arrow-right-01" class="ml-1 size-5" />
+        </div>
+      </a>
+
+      <!-- Bank Reconciliation — existing product -->
+      <a
+        href="/bank-reconciliation/"
+        class="group flex flex-col rounded-2xl border border-muted-strong bg-white p-8 shadow-sm transition hover:shadow-lg">
+        <div class="mb-4">
+          <div
+            class="flex size-12 items-center justify-center rounded-lg bg-primary-soft">
+            <Icon
+              name="hugeicons:ai-brain-05"
+              class="size-6 text-primary-strong"
+            />
+          </div>
+        </div>
+        <h3 class="text-2xl font-bold text-primary-strong">
+          Bank Reconciliation
+        </h3>
+        <p class="mt-3 flex-1 text-default">
+          Machine learning that automatically matches bank transactions with
+          bookkeeping entries in Xero, consistently achieving over 98% accuracy.
+        </p>
+        <p class="mt-4 text-sm text-default-soft">
+          We're not currently running new trials, but continue to support our
+          existing customers.
+        </p>
+        <div
+          class="mt-6 inline-flex items-center font-medium text-primary group-hover:underline">
+          Learn more
+          <Icon name="hugeicons:arrow-right-01" class="ml-1 size-5" />
+        </div>
+      </a>
+    </div>
+  </Container>
+</div>

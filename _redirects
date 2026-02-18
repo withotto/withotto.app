@@ -1,2 +1,12 @@
 # Netlify to withotto.app
 https://withotto-v2.netlify.app/* https://withotto.app/:splat 301!
+
+# Removed pages
+/business /bank-reconciliation/ 301
+/trial /bank-reconciliation/ 301
+/notebook/dac-offer /bank-reconciliation/ 301
+/notebook/das-2025 /bank-reconciliation/ 301
+/notebook/fab-2025 /bank-reconciliation/ 301
+/notebook/from-tedious-to-effortless-webinar /bank-reconciliation/ 301
+/notebook/the-accountants-mastermind /bank-reconciliation/ 301
+/notebook/the-automated-practice /bank-reconciliation/ 301

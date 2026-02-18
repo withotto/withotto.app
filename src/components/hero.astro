@@ -1,7 +1,6 @@
 ---
 import Container from "@components/container.astro";
 import Circles from "assets/frame.svg?raw";
-import StatsGrid from "@components/StatsGrid.astro";
 ---
 
 <div class="relative overflow-hidden bg-primary-soft pt-10 md:pt-24">
@@ -13,40 +12,17 @@ import StatsGrid from "@components/StatsGrid.astro";
     <Fragment set:html={Circles} />
   </div>
   <Container>
-    <div class="relative mx-auto max-w-screen-xl">
+    <div class="relative mx-auto max-w-screen-xl pb-16">
       <h1
         class="mx-auto max-w-4xl text-center text-4xl font-bold text-primary-strong md:text-6xl">
-        Otto transforms bank reconciliation from tedious to effortless
+        Focused automation tools for accountants and bookkeepers
       </h1>
       <p
         class="mx-auto max-w-3xl py-6 text-center text-xl leading-normal text-default">
-        Transform reconciliation from a drain on talent to an efficient,
-        automated process. Our AI helps your team deliver more value to clients.
+        We build tools that tackle specific, time-consuming tasks in your
+        practice. Each one is designed to do its job well, priced fairly, and
+        shaped by our own experience running an accountancy practice.
       </p>
-      <div class="mx-auto flex flex-wrap justify-center gap-4 text-center">
-        <a
-          href="/trial/"
-          class="w-full rounded-lg bg-primary px-8 py-5 text-lg font-medium text-white shadow transition hover:bg-primary-strong sm:w-auto">
-          Sign up for an unlimited<sup>*</sup> trial
-        </a>
-      </div>
-      <div class="mx-auto mt-4 text-center">
-        <p class="text-sm text-default-soft">
-          Business with internal finance team? <a
-            href="/business/"
-            class="text-primary underline hover:text-primary-strong"
-            >Check if Otto is right for you</a
-          >
-        </p>
-      </div>
-      <div class="my-4 text-center">
-        <p>
-          <sup>*</sup>Well, this is refreshing: no catches, no limits, and no
-          card required.
-        </p>
-        <p>I'm ready to help with all your clients for a full month.</p>
-      </div>
-      <StatsGrid />
     </div>
   </Container>
 </div>

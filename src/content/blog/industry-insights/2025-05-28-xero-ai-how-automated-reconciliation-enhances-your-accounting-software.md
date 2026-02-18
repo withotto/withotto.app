@@ -149,6 +149,4 @@ There are two main approaches to implementing AI reconciliation:
 
 Most importantly, remember that AI reconciliation enhances rather than replaces professional judgment. The goal isn't to remove human oversight but to eliminate routine matching work so you can focus on analysis, advisory services, and strategic support that genuinely adds value for your clients.
 
-We're ready to help transform your Xero reconciliation process. With an unlimited trial, you can test the integration with all your clients for a full month—no catches, no limits, no card required.
-
-[Sign up for your trial today](/trial/) to get a personalised onboarding call and discover how AI can enhance your Xero workflow whilst giving you more time for the work that truly matters to your clients and your practice.
+[Find out more about Otto's bank reconciliation](/bank-reconciliation/) and discover how AI can enhance your Xero workflow whilst giving you more time for the work that truly matters to your clients and your practice.

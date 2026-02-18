@@ -282,6 +282,4 @@ This approach ensures that automation handles the routine, highly-confident matc
 
 ## Ready to Transform Your Practice's Reconciliation Process?
 
-Experience how machine learning can revolutionise your practice's approach to bank reconciliation. [Book an onboarding call](/trial/) to learn how With Otto can fit seamlessly into your practice's workflow, and start your completely unlimited one-month trial today.
-
-With no commitments and comprehensive support throughout your trial period, you'll be able to see firsthand how intelligent reconciliation technology can transform your practice's efficiency and free your team to focus on higher-value work.
+Experience how machine learning can revolutionise your practice's approach to bank reconciliation. [Find out more about Otto's bank reconciliation](/bank-reconciliation/) and how machine learning can fit seamlessly into your practice's workflow.
