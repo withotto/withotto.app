@@ -10,3 +10,6 @@ https://withotto-v2.netlify.app/* https://withotto.app/:splat 301!
 /notebook/from-tedious-to-effortless-webinar /bank-reconciliation/ 301
 /notebook/the-accountants-mastermind /bank-reconciliation/ 301
 /notebook/the-automated-practice /bank-reconciliation/ 301
+
+# Legal redirects
+/privacy-and-security/ /bank-rec-privacy-and-security/ 301
