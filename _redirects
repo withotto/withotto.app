@@ -12,4 +12,5 @@ https://withotto-v2.netlify.app/* https://withotto.app/:splat 301!
 /notebook/the-automated-practice /bank-reconciliation/ 301
 
 # Legal redirects
-/privacy-and-security/ /bank-rec-privacy-and-security/ 301
+/privacy-and-security/ /bank-rec-security-and-privacy/ 301
+/bank-rec-privacy-and-security/ /bank-rec-security-and-privacy/ 301
