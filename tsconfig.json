@@ -12,5 +12,6 @@
       "@assets/*": ["assets/*"],
       "@pages/*": ["pages/*"]
     }
-  }
+  },
+  "exclude": ["supabase/functions/**"]
 }
