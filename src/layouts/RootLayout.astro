@@ -13,33 +13,34 @@ const { title, affiliateProgramId, seo = {} } = Astro.props;
 
 const makeTitle = title
   ? title + " — " + "With Otto"
-  : "With Otto — Transform bank reconciliation from tedious to effortless with your new AI assistant";
+  : "With Otto — practical software for accountants and bookkeepers";
 
 const defaultCanonical = new URL(Astro.url.pathname, Astro.site).toString();
 const defaultImage = new URL("/opengraph.png", Astro.site).toString();
-const defaultDescription = "With Otto — Transform bank reconciliation from tedious to effortless with your new AI assistant";
+const defaultDescription =
+  "Practical automation tools for UK accounting and bookkeeping practices. Otto Capture for receipts and bills; Otto Bank Rec supporting existing customers through 2026. Built by a practice that uses its own software.";
 ---
 
 <!doctype html>
 <html lang="en" class="h-full">
   <head>
     <meta name="viewport" content="width=device-width" />
-    
+
     <!-- Favicons -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png" />
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-    
+
     <!-- Apple Touch Icons -->
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-    
+
     <!-- Web App Manifest -->
     <link rel="manifest" href="/site.webmanifest" />
-    
+
     <!-- Theme colour for mobile browsers -->
     <meta name="theme-color" content="#02AC8A" />
     <meta name="msapplication-TileColor" content="#02AC8A" />
-    
+
     <meta name="generator" content={Astro.generator} />
     <link rel="sitemap" href="/sitemap-index.xml" />
 
@@ -49,7 +50,8 @@ const defaultDescription = "With Otto — Transform bank reconciliation from ted
           src="https://pushlapgrowth.com/affiliate-tracker.js"
           data-affiliate
           data-program-id={affiliateProgramId}
-          async></script>
+          async
+        />
       )
     }
 

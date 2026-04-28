@@ -4,13 +4,13 @@ import Container from "@components/container.astro";
 import { Icon } from "astro-icon/components";
 
 const seo = {
-  title: "Otto Capture - Early Access",
+  title: "Otto Capture (beta)",
   description:
-    "Register your interest in testing Otto Capture, our AI-powered receipt capture tool with accurate extraction, streamlined submission, and fair pricing.",
+    "AI-powered receipt and bill capture for UK accounting practices. In beta, with per-document pricing and no minimums. Currently integrates with Xero; FreeAgent on the roadmap.",
 };
 ---
 
-<Layout title="Otto Capture - Early Access" seo={seo}>
+<Layout title="Otto Capture (beta)" seo={seo}>
   <div class="py-12">
     <Container>
       <!-- Hero Section -->
@@ -18,7 +18,7 @@ const seo = {
         <div class="mb-4">
           <span
             class="inline-block rounded-full bg-primary-soft px-4 py-1 text-sm font-medium text-primary-strong">
-            Early Alpha
+            Beta
           </span>
         </div>
         <h1
@@ -157,8 +157,9 @@ const seo = {
               Where we are now
             </h3>
             <p class="mb-4 text-default">
-              We've just processed our first receipt end-to-end. The core
-              workflow works, but there's still plenty to build:
+              Otto Capture is in beta. The core workflow is in daily use, with
+              practices joining as we work through Xero app certification.
+              Here's what's shipped and what's next:
             </p>
             <ul class="space-y-2 text-default-soft">
               <li class="flex items-start gap-2">
@@ -166,40 +167,42 @@ const seo = {
                   name="hugeicons:checkmark-circle-02"
                   class="mt-0.5 size-5 shrink-0 text-primary"
                 />
-                <span>Core extraction and publishing to Xero</span>
+                <span
+                  >Extraction and publishing of bills and receipts to Xero</span
+                >
               </li>
               <li class="flex items-start gap-2">
                 <Icon
                   name="hugeicons:checkmark-circle-02"
                   class="mt-0.5 size-5 shrink-0 text-primary"
                 />
-                <span>Email forwarding for receipt submission</span>
+                <span
+                  >Email forwarding with practice-branded submission addresses</span
+                >
               </li>
               <li class="flex items-start gap-2">
                 <Icon
-                  name="hugeicons:loading-03"
-                  class="mt-0.5 size-5 shrink-0 text-default-soft"
-                />
-                <span>Support for additional accounting platforms</span>
-              </li>
-              <li class="flex items-start gap-2">
-                <Icon
-                  name="hugeicons:loading-03"
-                  class="mt-0.5 size-5 shrink-0 text-default-soft"
-                />
-                <span>User experience polish and refinements</span>
-              </li>
-              <li class="flex items-start gap-2">
-                <Icon
-                  name="hugeicons:magic-wand-01"
-                  class="mt-0.5 size-5 shrink-0 text-default-soft"
+                  name="hugeicons:checkmark-circle-02"
+                  class="mt-0.5 size-5 shrink-0 text-primary"
                 />
                 <span
-                  ><b
-                    >Some exciting things that we're keeping close to our
-                    chests!</b
-                  ></span
+                  >Sales invoice support, line item extraction, fuzzy search,
+                  and a practice inbox</span
                 >
+              </li>
+              <li class="flex items-start gap-2">
+                <Icon
+                  name="hugeicons:loading-03"
+                  class="mt-0.5 size-5 shrink-0 text-default-soft"
+                />
+                <span>Xero app certification (in progress)</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <Icon
+                  name="hugeicons:loading-03"
+                  class="mt-0.5 size-5 shrink-0 text-default-soft"
+                />
+                <span>FreeAgent integration</span>
               </li>
             </ul>
           </div>
@@ -212,11 +215,11 @@ const seo = {
           <div class="mb-8 text-center">
             <h2
               class="mb-4 text-2xl font-semibold text-primary-strong md:text-3xl">
-              Register your interest
+              Join the beta
             </h2>
             <p class="text-lg text-default-soft">
-              We're aiming to open up testing in early March 2026. If you'd like
-              to be involved, let us know.
+              The beta is open to UK accounting and bookkeeping practices. If
+              you'd like to try Otto Capture with your clients, let us know.
             </p>
           </div>
 
@@ -265,13 +268,13 @@ const seo = {
           </h3>
           <div class="space-y-3 text-default">
             <p>
-              This will be early alpha software. Things will break. There will
-              be edge cases we haven't thought of. Features might change based
-              on what we learn.
+              This is beta software. There will be edge cases we haven't seen
+              yet, and some features will change as we learn from how practices
+              use it.
             </p>
             <p>
-              But if you're curious about what we're building and want to help
-              shape it, we'd genuinely value your input.
+              If you want to try Otto Capture with your clients and help shape
+              what comes next, we'd genuinely value your input.
             </p>
           </div>
         </div>
