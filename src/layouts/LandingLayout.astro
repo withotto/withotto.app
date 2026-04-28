@@ -40,7 +40,10 @@ const { title, subtitle, affiliateProgramId, seo } = frontmatter;
   }
 </style>
 
-<Layout title={title} affiliateProgramId={affiliateProgramId} seo={{ noindex: true, ...seo }}>
+<Layout
+  title={title}
+  affiliateProgramId={affiliateProgramId}
+  seo={{ noindex: true, ...seo }}>
   <div class="py-12">
     <Container>
       <div class="z-10 mx-auto mb-14 max-w-3xl">
