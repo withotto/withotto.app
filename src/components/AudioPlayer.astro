@@ -37,9 +37,8 @@ const playerId = `audio-player-${Math.random().toString(36).substr(2, 9)}`;
     id={playerId}
     controls
     preload="metadata"
-    class="h-10 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
-    aria-label={`Audio version of ${title}`}
-    style="accent-color: #00AC8A;">
+    class="h-10 w-full rounded-md accent-primary focus:outline-none focus:ring-2 focus:ring-primary"
+    aria-label={`Audio version of ${title}`}>
     <source src={audioFile} type="audio/mpeg" />
     <div class="mt-4 rounded-md border border-warning bg-warning-soft p-4">
       <p class="mb-2 text-sm text-warning-strong">
@@ -123,26 +122,29 @@ const playerId = `audio-player-${Math.random().toString(36).substr(2, 9)}`;
 </script>
 
 <style>
-  /* Custom styling for audio controls to match your brand */
+  .otto-audio-player {
+    --otto-audio-accent: theme("colors.primary.DEFAULT");
+    --otto-audio-track: theme("colors.primary.soft");
+  }
+
   .otto-audio-player audio::-webkit-media-controls-panel {
     background-color: white;
   }
 
   .otto-audio-player audio::-webkit-media-controls-play-button,
   .otto-audio-player audio::-webkit-media-controls-pause-button {
-    background-color: #00ac8a;
+    background-color: var(--otto-audio-accent);
     border-radius: 50%;
   }
 
-  /* Firefox styling */
   .otto-audio-player audio::-moz-range-thumb {
-    background-color: #00ac8a;
+    background-color: var(--otto-audio-accent);
     border: none;
     border-radius: 50%;
   }
 
   .otto-audio-player audio::-moz-range-track {
-    background-color: #e9f2e1;
+    background-color: var(--otto-audio-track);
     border: none;
     border-radius: 4px;
   }

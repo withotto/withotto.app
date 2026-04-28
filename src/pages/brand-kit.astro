@@ -10,58 +10,82 @@ const brandAssets = [
     description: "Main logo with dark text, ideal for light backgrounds",
     pngPath: "/brand-kit/With Otto logo - dark text.png",
     svgPath: "/brand-kit/With Otto logo - dark text.svg",
-    category: "logos"
+    category: "logos",
   },
   {
     name: "With Otto logo with white text",
     description: "Main logo with white text, perfect for dark backgrounds",
     pngPath: "/brand-kit/With Otto logo - white text.png",
     svgPath: "/brand-kit/With Otto logo - white text.svg",
-    category: "logos"
+    category: "logos",
   },
   {
     name: "Otto face",
     description: "Otto's friendly face icon",
     pngPath: "/brand-kit/With Otto logo face.png",
     svgPath: "/brand-kit/With Otto logo face.svg",
-    category: "icons"
-  }
+    category: "icons",
+  },
 ];
 
 const brandColours = [
   {
     name: "Persian Green",
-    hex: "#00AC8A",
-    rgb: "0, 172, 138",
-    description: "Main brand colour"
+    hex: "#02AC8A",
+    rgb: "2, 172, 138",
+    description: "Main brand colour",
   },
   {
     name: "Deep Sea Green",
-    hex: "#115E59",
-    rgb: "17, 94, 89",
-    description: "Darker green for accents"
+    hex: "#105E59",
+    rgb: "16, 94, 89",
+    description: "Darker green for headings and emphasis",
   },
   {
     name: "Loafer",
     hex: "#E9F2E1",
     rgb: "233, 242, 225",
-    description: "Light green background"
+    description: "Light green background",
   },
   {
     name: "Willow Brook",
-    hex: "#CDDDC0",
-    rgb: "205, 221, 192",
-    description: "Medium green accent"
-  }
+    hex: "#E4EDDB",
+    rgb: "228, 237, 219",
+    description: "Secondary background and hover states",
+  },
+  {
+    name: "Mindaro",
+    hex: "#D6ED89",
+    rgb: "214, 237, 137",
+    description: "Success states and feature highlights",
+  },
+  {
+    name: "Terracotta",
+    hex: "#E67D5F",
+    rgb: "230, 125, 95",
+    description: "Alerts and warm accent elements",
+  },
+  {
+    name: "Charcoal Green",
+    hex: "#2C3B2A",
+    rgb: "44, 59, 42",
+    description: "Body text and dense information",
+  },
+  {
+    name: "Sage",
+    hex: "#A1B58F",
+    rgb: "161, 181, 143",
+    description: "Secondary text and inactive states",
+  },
 ];
 ---
 
-<Layout title="Brand Kit">
+<Layout title="Brand kit">
   <div class="py-12">
     <Container>
       <div class="mb-16 text-center">
         <h1 class="text-3xl font-bold text-primary-strong md:text-5xl">
-          With Otto Brand Kit
+          With Otto brand kit
         </h1>
       </div>
 
@@ -76,9 +100,12 @@ const brandColours = [
           <a
             href="/brand-kit/With Otto brand kit.zip"
             download
-            class="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 text-white font-medium transition-colors hover:bg-primary-strong"
-          >
-            <Icon name="hugeicons:download-square-02" size={16} class="size-5 text-white" />
+            class="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 font-medium text-white transition-colors hover:bg-primary-strong">
+            <Icon
+              name="hugeicons:download-square-02"
+              size={16}
+              class="size-5 text-white"
+            />
             Download complete brand kit
           </a>
         </div>
@@ -89,9 +116,7 @@ const brandColours = [
           Logo assets
         </h2>
         <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {brandAssets.map((asset) => (
-            <BrandAssetCard asset={asset} />
-          ))}
+          {brandAssets.map((asset) => <BrandAssetCard asset={asset} />)}
         </div>
       </div>
 
@@ -100,36 +125,38 @@ const brandColours = [
           Brand colours
         </h2>
         <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {brandColours.map((colour) => (
-            <div class="rounded-lg border border-muted-strong bg-white p-6">
-              <div
-                class="mb-4 h-20 w-full rounded-lg border border-muted-strong"
-                style={`background-color: ${colour.hex}`}
-              ></div>
-              <h3 class="mb-2 font-semibold text-default">{colour.name}</h3>
-              <p class="mb-3 text-sm text-default-soft">{colour.description}</p>
-              <div class="space-y-1 text-sm">
-                <div class="flex justify-between">
-                  <span class="text-default-soft">HEX:</span>
-                  <button
-                    class="font-mono text-default hover:text-primary cursor-pointer"
-                    onclick={`navigator.clipboard.writeText('${colour.hex}'); this.textContent = 'Copied!'; setTimeout(() => this.textContent = '${colour.hex}', 1000)`}
-                  >
-                    {colour.hex}
-                  </button>
-                </div>
-                <div class="flex justify-between">
-                  <span class="text-default-soft">RGB:</span>
-                  <button
-                    class="font-mono text-default hover:text-primary cursor-pointer"
-                    onclick={`navigator.clipboard.writeText('${colour.rgb}'); this.textContent = 'Copied!'; setTimeout(() => this.textContent = '${colour.rgb}', 1000)`}
-                  >
-                    {colour.rgb}
-                  </button>
+          {
+            brandColours.map((colour) => (
+              <div class="rounded-lg border border-muted-strong bg-white p-6">
+                <div
+                  class="mb-4 h-20 w-full rounded-lg border border-muted-strong"
+                  style={`background-color: ${colour.hex}`}
+                />
+                <h3 class="mb-2 font-semibold text-default">{colour.name}</h3>
+                <p class="mb-3 text-sm text-default-soft">
+                  {colour.description}
+                </p>
+                <div class="space-y-1 text-sm">
+                  <div class="flex justify-between">
+                    <span class="text-default-soft">HEX:</span>
+                    <button
+                      class="cursor-pointer font-mono text-default hover:text-primary"
+                      onclick={`navigator.clipboard.writeText('${colour.hex}'); this.textContent = 'Copied!'; setTimeout(() => this.textContent = '${colour.hex}', 1000)`}>
+                      {colour.hex}
+                    </button>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-default-soft">RGB:</span>
+                    <button
+                      class="cursor-pointer font-mono text-default hover:text-primary"
+                      onclick={`navigator.clipboard.writeText('${colour.rgb}'); this.textContent = 'Copied!'; setTimeout(() => this.textContent = '${colour.rgb}', 1000)`}>
+                      {colour.rgb}
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))
+          }
         </div>
       </div>
 
@@ -137,52 +164,65 @@ const brandColours = [
         <h2 class="mb-8 text-2xl font-semibold text-primary-strong">
           Usage guidelines
         </h2>
-          <div class="prose prose-lg max-w-none">
-            <h3 class="text-primary-strong">Logo usage</h3>
-            <ul>
-              <li>Maintain clear space around the logo</li>
-              <li>Use the dark text version on light backgrounds</li>
-              <li>Use the white text version on dark backgrounds or photos</li>
-              <li>Don't modify, stretch, or alter the logo proportions</li>
-              <li>Don't use the logo on backgrounds that don't provide sufficient contrast</li>
-            </ul>
+        <div class="prose prose-lg max-w-none">
+          <h3 class="text-primary-strong">Logo usage</h3>
+          <ul>
+            <li>Maintain clear space around the logo</li>
+            <li>Use the dark text version on light backgrounds</li>
+            <li>Use the white text version on dark backgrounds or photos</li>
+            <li>Don't modify, stretch, or alter the logo proportions</li>
+            <li>
+              Don't use the logo on backgrounds that don't provide sufficient
+              contrast
+            </li>
+          </ul>
 
-            <h3 class="text-primary-strong">Colour usage</h3>
-            <ul>
-              <li>Primary green (#00AC8A) is our main brand colour</li>
-              <li>Use primary strong (#115E59) for headings and emphasis</li>
-              <li>Use soft variants for backgrounds and subtle accents</li>
-              <li>Maintain accessibility by ensuring proper contrast ratios</li>
-            </ul>
+          <h3 class="text-primary-strong">Colour usage</h3>
+          <ul>
+            <li>Persian Green (#02AC8A) is our main brand colour</li>
+            <li>Use Deep Sea Green (#105E59) for headings and emphasis</li>
+            <li>
+              Use Loafer and Willow Brook for backgrounds and subtle accents
+            </li>
+            <li>Use Mindaro for success states and feature highlights</li>
+            <li>Use Terracotta for alerts and warnings</li>
+            <li>Maintain accessibility by ensuring proper contrast ratios</li>
+          </ul>
 
-            <h3 class="text-primary-strong">General guidelines</h3>
-            <ul>
-              <li>These assets are provided for editorial, educational, and promotional use</li>
-              <li>Please don't use our branding in a way that suggests endorsement</li>
-              <li>If you have questions about usage, contact us at support@withotto.app</li>
-            </ul>
-          </div>
-        </div>
-      </div
-
-      <div class="text-center">
-        <div class="rounded-lg bg-primary-soft p-8 text-center">
-          <h2 class="mb-4 text-2xl font-semibold text-primary-strong">
-            Need something else?
-          </h2>
-          <p class="mb-6 text-default-soft">
-            Can't find what you're looking for? We're happy to help with additional assets or answer any questions about
-            brand usage.
-          </p>
-          <a
-            href="mailto:support@withotto.app"
-            class="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 text-white font-medium transition-colors hover:bg-primary-strong"
-          >
-            <Icon name="hugeicons:mail-01" size={16} class="size-5 text-white" />
-            Get in Touch
-          </a>
+          <h3 class="text-primary-strong">General guidelines</h3>
+          <ul>
+            <li>
+              These assets are provided for editorial, educational, and
+              promotional use
+            </li>
+            <li>
+              Please don't use our branding in a way that suggests endorsement
+            </li>
+            <li>
+              If you have questions about usage, contact us at
+              support@withotto.app
+            </li>
+          </ul>
         </div>
       </div>
     </Container>
+
+    <div class="text-center">
+      <div class="rounded-lg bg-primary-soft p-8 text-center">
+        <h2 class="mb-4 text-2xl font-semibold text-primary-strong">
+          Need something else?
+        </h2>
+        <p class="mb-6 text-default-soft">
+          Can't find what you're looking for? We're happy to help with
+          additional assets or answer any questions about brand usage.
+        </p>
+        <a
+          href="mailto:support@withotto.app"
+          class="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 font-medium text-white transition-colors hover:bg-primary-strong">
+          <Icon name="hugeicons:mail-01" size={16} class="size-5 text-white" />
+          Get in touch
+        </a>
+      </div>
+    </div>
   </div>
 </Layout>

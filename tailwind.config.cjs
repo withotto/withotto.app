@@ -14,12 +14,13 @@ module.exports = {
           strong: "#000000",
         },
         primary: {
-          DEFAULT: "#00AC8A",
+          DEFAULT: "#02AC8A",
           soft: "#E9F2E1",
-          accent: "#CDDDC0",
+          accent: "#E4EDDB",
           medium: "#A1B58F",
-          strong: "#115E59",
+          strong: "#105E59",
         },
+        mindaro: "#D6ED89",
         // add secondary if two main colors uses
         muted: {
           DEFAULT: "#2c3b2a",
