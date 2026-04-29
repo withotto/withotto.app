@@ -14,7 +14,7 @@
     "check-links": "astro build && lychee ./dist/**/*.html --include-fragments"
   },
   "dependencies": {
-    "@astrojs/mdx": "^4.3.13",
+    "@astrojs/mdx": "^5.0.0",
     "@astrojs/sitemap": "^3.7.0",
     "@astrojs/tailwind": "^6.0.2",
     "@fontsource-variable/rethink-sans": "^5.2.8",
