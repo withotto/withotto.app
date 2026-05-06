@@ -14,13 +14,13 @@
     "check-links": "astro build && lychee ./dist/**/*.html --include-fragments"
   },
   "dependencies": {
-    "@astrojs/mdx": "^4.3.13",
-    "@astrojs/sitemap": "^3.7.0",
+    "@astrojs/mdx": "^5.0.4",
+    "@astrojs/sitemap": "^3.7.2",
     "@tailwindcss/vite": "^4",
     "@fontsource-variable/rethink-sans": "^5.2.8",
     "@iconify-json/hugeicons": "^1.2.23",
     "@tailwindcss/typography": "^0.5.19",
-    "astro": "^5.17.2",
+    "astro": "^6.2.2",
     "astro-icon": "^1.1.5",
     "astro-navbar": "^2.4.0",
     "astro-seo": "^1.1.0",
