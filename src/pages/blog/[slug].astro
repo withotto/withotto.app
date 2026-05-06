@@ -50,7 +50,7 @@ const { Content } = await render(entry);
         <div class="flex flex-wrap items-center gap-3">
           <span>Share</span>
           <a
-            href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(Astro.url)}`}
+            href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(Astro.url.href)}`}
             target="_blank"
             rel="noopener noreferrer"
             class="flex h-7 w-7 items-center justify-center rounded-full bg-primary-soft">
@@ -61,7 +61,7 @@ const { Content } = await render(entry);
             />
           </a>
           <a
-            href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(Astro.url)}`}
+            href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(Astro.url.href)}`}
             target="_blank"
             rel="noopener noreferrer"
             class="flex h-7 w-7 items-center justify-center rounded-full bg-primary-soft">
