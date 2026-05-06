@@ -1,0 +1,133 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "timezone": "Europe/London",
+  "schedule": ["before 7am every weekday"],
+  "prConcurrentLimit": 0,
+  "prHourlyLimit": 0,
+  "dependencyDashboard": true,
+  "configMigration": true,
+  "rangeStrategy": "replace",
+  "postUpdateOptions": ["pnpmDedupe"],
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["before 7am on sunday"]
+  },
+  "osvVulnerabilityAlerts": true,
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "minimumReleaseAge": "1 day",
+    "schedule": ["at any time"],
+    "labels": ["security"]
+  },
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Track Node.js version in mise.toml — captures bare semver; the node-version datasource returns bare numeric so no extractVersion needed",
+      "managerFilePatterns": ["/^mise\\.toml$/"],
+      "matchStrings": [
+        "(^|\\n)node\\s*=\\s*\"(?<currentValue>[0-9]+\\.[0-9]+\\.[0-9]+)\""
+      ],
+      "datasourceTemplate": "node-version",
+      "depNameTemplate": "node"
+    },
+    {
+      "customType": "regex",
+      "description": "Track pnpm version in mise.toml — captures bare semver; the npm datasource returns bare numeric",
+      "managerFilePatterns": ["/^mise\\.toml$/"],
+      "matchStrings": [
+        "(^|\\n)pnpm\\s*=\\s*\"(?<currentValue>[0-9]+\\.[0-9]+\\.[0-9]+)\""
+      ],
+      "datasourceTemplate": "npm",
+      "depNameTemplate": "pnpm"
+    },
+    {
+      "customType": "regex",
+      "description": "Track Deno version in mise.toml — captures bare numeric only; extractVersion strips the v prefix from github-releases tags so write-back is also bare numeric",
+      "managerFilePatterns": ["/^mise\\.toml$/"],
+      "matchStrings": [
+        "(^|\\n)deno\\s*=\\s*\"(?<currentValue>[0-9]+\\.[0-9]+\\.[0-9]+)\""
+      ],
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "denoland/deno"
+    },
+    {
+      "customType": "regex",
+      "description": "Track Deno jsr: imports pinned to exact versions (major-only pins like '@2' are intentionally ignored)",
+      "managerFilePatterns": ["/^supabase\\/functions\\/.*\\.ts$/"],
+      "matchStrings": [
+        "jsr:(?<depName>@[^/]+/[^@\"']+)@(?<currentValue>\\d+\\.\\d+\\.\\d+)"
+      ],
+      "datasourceTemplate": "jsr"
+    }
+  ],
+  "packageRules": [
+    {
+      "description": "Label every Renovate PR for filtering",
+      "matchPackageNames": ["*"],
+      "labels": ["dependencies"]
+    },
+    {
+      "description": "Tag major updates for triage (no automerge anywhere; default automerge is false)",
+      "matchUpdateTypes": ["major"],
+      "labels": ["major-update"]
+    },
+    {
+      "description": "Group Astro core + integrations (excludes @astrojs/tailwind, which groups with Tailwind)",
+      "matchPackageNames": ["astro", "@astrojs/**", "!@astrojs/tailwind"],
+      "groupName": "Astro"
+    },
+    {
+      "description": "Group Tailwind CSS core, plugins, and @astrojs/tailwind (bundled so v3→v4 migration lands as one PR)",
+      "matchPackageNames": [
+        "tailwindcss",
+        "@tailwindcss/**",
+        "@astrojs/tailwind"
+      ],
+      "groupName": "Tailwind CSS"
+    },
+    {
+      "description": "Group Prettier and its plugins (plugin versions are tied to Prettier's API)",
+      "matchPackageNames": ["prettier", "prettier-plugin-*"],
+      "groupName": "Prettier"
+    },
+    {
+      "description": "Group astro-icon and Iconify JSON packages (icon renderer + icon set versions move together)",
+      "matchPackageNames": ["astro-icon", "@iconify-json/**"],
+      "groupName": "Iconify"
+    },
+    {
+      "description": "Cross-file: collapse Node bumps from mise.toml customManager into one PR; apply 5-day supply-chain floor",
+      "matchPackageNames": ["node"],
+      "groupName": "node",
+      "minimumReleaseAge": "5 days"
+    },
+    {
+      "description": "Cross-file: collapse pnpm bumps from mise.toml customManager, packageManager field, and engines.pnpm into one PR; apply 5-day supply-chain floor",
+      "matchPackageNames": ["pnpm"],
+      "groupName": "pnpm",
+      "minimumReleaseAge": "5 days"
+    },
+    {
+      "description": "Cross-file: collapse Deno bumps from mise.toml customManager into one PR; apply 5-day supply-chain floor",
+      "matchPackageNames": ["denoland/deno"],
+      "groupName": "deno",
+      "minimumReleaseAge": "5 days"
+    },
+    {
+      "description": "5-day minimum age for Deno jsr: imports (matchDepTypes is npm-only; jsr-tracked deps need their own datasource rule)",
+      "matchDatasources": ["jsr"],
+      "minimumReleaseAge": "5 days"
+    },
+    {
+      "description": "5-day minimum age for production dependencies (supply-chain protection)",
+      "matchDepTypes": ["dependencies"],
+      "minimumReleaseAge": "5 days"
+    },
+    {
+      "description": "2-day minimum age for dev dependencies",
+      "matchDepTypes": ["devDependencies"],
+      "minimumReleaseAge": "2 days"
+    }
+  ]
+}
