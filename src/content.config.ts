@@ -14,7 +14,7 @@ const blog = defineCollection({
       imageAlt: z.string(),
       imageDescription: z.string(),
       imageCredit: z.string().optional(),
-      imageCreditUrl: z.string().url().optional(),
+      imageCreditUrl: z.url().optional(),
       publishDate: z.string().transform((str: string) => new Date(str)),
       category: z.string(),
       tags: z.array(z.string()),
