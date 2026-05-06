@@ -1,5 +1,5 @@
 import { defineConfig } from "astro/config";
-import tailwind from "@astrojs/tailwind";
+import tailwindcss from "@tailwindcss/vite";
 import mdx from "@astrojs/mdx";
 import icon from "astro-icon";
 import slug from "rehype-slug";
@@ -10,7 +10,6 @@ export default defineConfig({
   site: "https://withotto.app",
   trailingSlash: "always",
   integrations: [
-    tailwind(),
     mdx({
       rehypePlugins: [slug],
     }),
@@ -21,6 +20,9 @@ export default defineConfig({
   ],
   image: {
     responsiveStyles: true,
-    layout: "constrained", // Default layout for most images
+    layout: "constrained",
+  },
+  vite: {
+    plugins: [tailwindcss()],
   },
 });

@@ -37,7 +37,7 @@ const playerId = `audio-player-${Math.random().toString(36).substr(2, 9)}`;
     id={playerId}
     controls
     preload="metadata"
-    class="h-10 w-full rounded-md accent-primary focus:outline-none focus:ring-2 focus:ring-primary"
+    class="h-10 w-full rounded-md accent-primary focus:ring-2 focus:ring-primary focus:outline-none"
     aria-label={`Audio version of ${title}`}>
     <source src={audioFile} type="audio/mpeg" />
     <div class="mt-4 rounded-md border border-warning bg-warning-soft p-4">
@@ -123,8 +123,8 @@ const playerId = `audio-player-${Math.random().toString(36).substr(2, 9)}`;
 
 <style>
   .otto-audio-player {
-    --otto-audio-accent: theme("colors.primary.DEFAULT");
-    --otto-audio-track: theme("colors.primary.soft");
+    --otto-audio-accent: var(--color-primary);
+    --otto-audio-track: var(--color-primary-soft);
   }
 
   .otto-audio-player audio::-webkit-media-controls-panel {

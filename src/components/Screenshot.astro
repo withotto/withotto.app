@@ -29,7 +29,7 @@ const titleId = `title-${screenshotId}`;
 <figure class={`screenshot-container not-prose prose-base ${className}`}>
   <button
     type="button"
-    class="screenshot-button group relative block w-full cursor-zoom-in overflow-hidden rounded-xl border border-gray-200 bg-white p-3 shadow-sm transition-all hover:border-primary/20 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+    class="screenshot-button group relative block w-full cursor-zoom-in overflow-hidden rounded-xl border border-gray-200 bg-white p-3 shadow-sm transition-all hover:border-primary/20 hover:shadow-lg focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:outline-none"
     data-screenshot-trigger={screenshotId}
     aria-label={`View full size image: ${alt}`}>
     <Image
@@ -91,7 +91,7 @@ const titleId = `title-${screenshotId}`;
       </h3>
       <button
         type="button"
-        class="screenshot-close flex h-10 w-10 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+        class="screenshot-close flex h-10 w-10 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:outline-none"
         data-screenshot-close={screenshotId}
         aria-label="Close image">
         <svg

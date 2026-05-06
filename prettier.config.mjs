@@ -5,6 +5,7 @@ export default {
   useTabs: false,
   bracketSameLine: true,
   plugins: ["prettier-plugin-astro", "prettier-plugin-tailwindcss"],
+  tailwindStylesheet: "./src/styles/global.css",
   overrides: [
     {
       files: "*.astro",

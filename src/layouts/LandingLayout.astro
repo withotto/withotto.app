@@ -17,6 +17,8 @@ const { title, subtitle, affiliateProgramId, seo } = frontmatter;
 ---
 
 <style is:global>
+  @reference "../styles/global.css";
+
   .content-wrapper {
     p {
       @apply mx-auto my-4 max-w-3xl;
@@ -27,7 +29,7 @@ const { title, subtitle, affiliateProgramId, seo } = frontmatter;
     }
 
     h2 {
-      @apply mx-auto mb-2 mt-6 max-w-3xl text-2xl font-bold;
+      @apply mx-auto mt-6 mb-2 max-w-3xl text-2xl font-bold;
     }
 
     h3 {

@@ -24,7 +24,7 @@ const { Content } = await render(entry);
 <Layout title={entry.data.title}>
   <Container>
     <div class="mx-auto mt-14 max-w-3xl text-center">
-      <span class="text-sm font-medium uppercase tracking-wider text-primary">
+      <span class="text-sm font-medium tracking-wider text-primary uppercase">
         {entry.data.category}
       </span>
       <h1
@@ -131,7 +131,7 @@ const { Content } = await render(entry);
     }
 
     <div
-      class="prose prose-lg mx-auto mt-8 max-w-3xl prose-blockquote:rounded-md prose-blockquote:border prose-blockquote:border-primary-accent prose-blockquote:bg-primary-soft prose-blockquote:px-10 prose-blockquote:py-6 prose-blockquote:text-2xl prose-blockquote:not-italic">
+      class="mx-auto prose prose-lg mt-8 max-w-3xl prose-blockquote:rounded-md prose-blockquote:border prose-blockquote:border-primary-accent prose-blockquote:bg-primary-soft prose-blockquote:px-10 prose-blockquote:py-6 prose-blockquote:text-2xl prose-blockquote:not-italic">
       <Content />
       <div class="mx-auto mt-6 flex max-w-3xl flex-wrap gap-3">
         {
@@ -141,7 +141,7 @@ const { Content } = await render(entry);
         }
       </div>
     </div>
-    <div class="mb-16 mt-8 text-center">
+    <div class="mt-8 mb-16 text-center">
       <a
         href="/blog/"
         class="rounded-md bg-gray-100 px-5 py-3 transition hover:bg-gray-200">
