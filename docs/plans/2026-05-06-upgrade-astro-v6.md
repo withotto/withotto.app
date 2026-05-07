@@ -2,7 +2,7 @@
 
 Created: 2026-05-06
 Author: stuart@withotto.app
-Status: PENDING
+Status: VERIFIED
 Approved: Yes
 Iterations: 0
 Worktree: No
@@ -221,9 +221,9 @@ Type: Feature
 - [x] Task 3: Migrate Tailwind v3 → v4 via @tailwindcss/vite (Astro 5)
 - [x] Task 4: Run `@astrojs/upgrade` and resolve dependency bump
 - [x] Task 5: Post-upgrade Zod and deprecation cleanup
-- [ ] Task 6: Verify build, format, link check, and visually smoke-test all page templates
+- [x] Task 6: Verify build, format, link check, and visually smoke-test all page templates
 
-**Total Tasks:** 6 | **Completed:** 5 | **Remaining:** 1
+**Total Tasks:** 6 | **Completed:** 6 | **Remaining:** 0
 
 ## Implementation Tasks
 
