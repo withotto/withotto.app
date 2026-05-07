@@ -1,0 +1,12 @@
+# Lockfiles (managed by pnpm)
+pnpm-lock.yaml
+
+# Build output
+dist/
+.netlify/
+
+# Dependencies
+node_modules/
+
+# Astro
+.astro/
