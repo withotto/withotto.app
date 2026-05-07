@@ -159,7 +159,7 @@ Type: Feature
 | 2 | `pnpm format:check` | Exit 0 |
 | 3 | `pnpm build` | Exit 0; build summary mentions Astro 6.x; no deprecation warnings for content collections, Tailwind, or Zod APIs we use |
 | 4 | `pnpm list astro @astrojs/mdx @astrojs/sitemap @tailwindcss/vite tailwindcss @tailwindcss/typography` | Astro is 6.x; mdx/sitemap on their v6-compatible majors; `@astrojs/tailwind` not present; `tailwindcss` is 4.x; typography is 0.5.16+ |
-| 5 | `git ls-files \| grep -E '(tailwind\\.config\|src/content/config\\.ts)'` | Empty output |
+| 5 | `git ls-files 'tailwind.config.cjs' 'src/content/config.ts'` | Empty output |
 
 ### TS-002: Blog detail URL is preserved
 
