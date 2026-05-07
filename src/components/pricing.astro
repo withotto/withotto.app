@@ -150,7 +150,7 @@ const faqs: FaqItem[] = [
         size
       </h2>
       <p
-        class="mx-auto mt-6 max-w-4xl text-lg font-medium leading-snug text-primary-strong">
+        class="mx-auto mt-6 max-w-4xl text-lg leading-snug font-medium text-primary-strong">
         Otto is here to automate your daily reconciliation tasks with machine
         learning precision. You'll get all premium features, unlimited clients,
         and full support from day one.
@@ -173,12 +173,12 @@ const faqs: FaqItem[] = [
       <div class="relative">
         {/* Outer container with position relative for scroll indicators */}
         <div
-          class="pointer-events-none absolute bottom-0 right-0 top-0 hidden w-12 bg-gradient-to-l from-white to-transparent md:hidden"
+          class="pointer-events-none absolute top-0 right-0 bottom-0 hidden w-12 bg-gradient-to-l from-white to-transparent md:hidden"
           aria-hidden="true"
           id="scroll-indicator-right">
         </div>
         <div
-          class="pointer-events-none absolute bottom-0 left-0 top-0 hidden w-12 bg-gradient-to-r from-white to-transparent md:hidden"
+          class="pointer-events-none absolute top-0 bottom-0 left-0 hidden w-12 bg-gradient-to-r from-white to-transparent md:hidden"
           aria-hidden="true"
           id="scroll-indicator-left">
         </div>
@@ -219,7 +219,7 @@ const faqs: FaqItem[] = [
                 plans.map((plan, index) => (
                   <tr
                     class={`${index % 2 === 0 ? "bg-white" : "bg-primary-soft"}`}>
-                    <td class="sticky left-0 whitespace-nowrap bg-inherit px-6 py-4">
+                    <td class="sticky left-0 bg-inherit px-6 py-4 whitespace-nowrap">
                       <div class="flex items-center gap-3">
                         <span class="font-medium text-default">
                           {plan.name}
@@ -232,17 +232,17 @@ const faqs: FaqItem[] = [
                         )}
                       </div>
                     </td>
-                    <td class="whitespace-nowrap px-6 py-4 text-right">
+                    <td class="px-6 py-4 text-right whitespace-nowrap">
                       <div class="font-bold text-default">
                         £{plan.price.toFixed(2).toLocaleString()}
                       </div>
                     </td>
-                    <td class="whitespace-nowrap px-6 py-4 text-right">
+                    <td class="px-6 py-4 text-right whitespace-nowrap">
                       <div class="text-default">
                         {plan.credits.toLocaleString()}
                       </div>
                     </td>
-                    <td class="whitespace-nowrap px-6 py-4 text-right">
+                    <td class="px-6 py-4 text-right whitespace-nowrap">
                       <div class="text-default">
                         £{(plan.price / plan.credits).toFixed(2)}
                       </div>

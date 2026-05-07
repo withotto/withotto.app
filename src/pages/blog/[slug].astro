@@ -1,5 +1,5 @@
 ---
-import { getCollection } from "astro:content";
+import { getCollection, render } from "astro:content";
 import Layout from "@layouts/Layout.astro";
 import Container from "@components/container.astro";
 import { Picture } from "astro:assets";
@@ -18,13 +18,13 @@ export async function getStaticPaths() {
 
 // Get the entry directly from the prop on render
 const { entry } = Astro.props;
-const { Content } = await entry.render();
+const { Content } = await render(entry);
 ---
 
 <Layout title={entry.data.title}>
   <Container>
     <div class="mx-auto mt-14 max-w-3xl text-center">
-      <span class="text-sm font-medium uppercase tracking-wider text-primary">
+      <span class="text-sm font-medium tracking-wider text-primary uppercase">
         {entry.data.category}
       </span>
       <h1
@@ -50,7 +50,7 @@ const { Content } = await entry.render();
         <div class="flex flex-wrap items-center gap-3">
           <span>Share</span>
           <a
-            href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(Astro.url)}`}
+            href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(Astro.url.href)}`}
             target="_blank"
             rel="noopener noreferrer"
             class="flex h-7 w-7 items-center justify-center rounded-full bg-primary-soft">
@@ -61,7 +61,7 @@ const { Content } = await entry.render();
             />
           </a>
           <a
-            href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(Astro.url)}`}
+            href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(Astro.url.href)}`}
             target="_blank"
             rel="noopener noreferrer"
             class="flex h-7 w-7 items-center justify-center rounded-full bg-primary-soft">
@@ -131,7 +131,7 @@ const { Content } = await entry.render();
     }
 
     <div
-      class="prose prose-lg mx-auto mt-8 max-w-3xl prose-blockquote:rounded-md prose-blockquote:border prose-blockquote:border-primary-accent prose-blockquote:bg-primary-soft prose-blockquote:px-10 prose-blockquote:py-6 prose-blockquote:text-2xl prose-blockquote:not-italic">
+      class="mx-auto prose prose-lg mt-8 max-w-3xl prose-blockquote:rounded-md prose-blockquote:border prose-blockquote:border-primary-accent prose-blockquote:bg-primary-soft prose-blockquote:px-10 prose-blockquote:py-6 prose-blockquote:text-2xl prose-blockquote:not-italic">
       <Content />
       <div class="mx-auto mt-6 flex max-w-3xl flex-wrap gap-3">
         {
@@ -141,7 +141,7 @@ const { Content } = await entry.render();
         }
       </div>
     </div>
-    <div class="mb-16 mt-8 text-center">
+    <div class="mt-8 mb-16 text-center">
       <a
         href="/blog/"
         class="rounded-md bg-gray-100 px-5 py-3 transition hover:bg-gray-200">
