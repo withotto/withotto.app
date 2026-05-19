@@ -35,13 +35,6 @@
     "prettier-plugin-tailwindcss": "^0.8.0",
     "supabase": "^2.76.8"
   },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "esbuild",
-      "sharp",
-      "supabase"
-    ]
-  },
   "engines": {
     "pnpm": "11.x"
   },
