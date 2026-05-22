@@ -11,8 +11,7 @@
   "postUpdateOptions": ["pnpmDedupe"],
   "lockFileMaintenance": {
     "enabled": true,
-    "schedule": ["before 7am on sunday"],
-    "minimumReleaseAge": "5 days"
+    "schedule": ["before 7am on sunday"]
   },
   "osvVulnerabilityAlerts": true,
   "vulnerabilityAlerts": {
