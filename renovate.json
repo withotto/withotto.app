@@ -125,9 +125,9 @@
       "minimumReleaseAge": "5 days"
     },
     {
-      "description": "2-day minimum age for dev dependencies",
+      "description": "5-day minimum age for dev dependencies (matches prod-dep floor; pnpm enforces the same floor at install time for transitives via pnpm-workspace.yaml)",
       "matchDepTypes": ["devDependencies"],
-      "minimumReleaseAge": "2 days"
+      "minimumReleaseAge": "5 days"
     }
   ]
 }

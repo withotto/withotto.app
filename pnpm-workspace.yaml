@@ -1,5 +1,10 @@
 engineStrict: true
 
+# Supply-chain cooldown: refuse to resolve any package version (direct or
+# transitive) published less than 5 days ago. Closes the lockFileMaintenance
+# gap that Renovate's minimumReleaseAge cannot enforce for pnpm.
+minimumReleaseAge: 7200
+
 allowBuilds:
   esbuild: true
   sharp: true
