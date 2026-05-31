@@ -41,7 +41,7 @@ If a hero needs to mention AI, prefer the outcome over the mechanism. "Receipt c
 Calls to action in heroes should match the product's current stage:
 
 - **Otto Capture:** "Join the beta" or "Request beta access" until general availability; "Start using Capture" after GA.
-- **Otto Bank Rec:** No signup CTAs for new customers. Existing customers get "Sign in to the portal". Prospects see "Read about Otto Bank Rec" or similar informational CTAs.
+- **Otto Bank Rec:** "Start a trial" is the primary CTA, anchored to the booking section on the product page. Existing customers get "Sign in to the portal". Keep the tone informative rather than hard-sell, since the product is supported but not actively promoted.
 
 ## Transparency as differentiator
 

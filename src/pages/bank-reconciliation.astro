@@ -4,6 +4,7 @@ import Container from "@components/container.astro";
 import FeaturesCol from "@components/features-col.astro";
 import StatsGrid from "@components/StatsGrid.astro";
 import Pricing from "@components/pricing.astro";
+import BookingForm from "@components/BookingForm.astro";
 
 const seo = {
   title: "Otto Bank Rec - With Otto",
@@ -16,34 +17,65 @@ const seo = {
   <div class="bg-primary-soft pt-10 md:pt-24">
     <Container>
       <div class="mx-auto max-w-screen-xl pb-16">
-        <div class="mb-4 text-center">
-          <span
-            class="inline-block rounded-full bg-white px-4 py-1 text-sm font-medium text-primary-strong">
-            Existing product
-          </span>
-        </div>
         <h1
           class="mx-auto max-w-4xl text-center text-4xl font-bold text-primary-strong md:text-6xl">
-          Otto transforms bank reconciliation from tedious to effortless
+          Bank reconciliation that learns how you work
         </h1>
         <p
           class="mx-auto max-w-3xl py-6 text-center text-xl leading-normal text-default">
-          Transform reconciliation from a drain on talent to an efficient,
-          automated process. Our AI helps your team deliver more value to
-          clients.
+          Otto Bank Rec is built for practices and finance teams whose
+          reconciliation needs go beyond automated rules. Plenty of teams get
+          what they need from JAX, and if that is you, great. Otto is for the
+          cases where you need more.
         </p>
-        <div
-          class="mx-auto mt-2 max-w-3xl rounded-lg border-l-4 border-terracotta bg-terracotta-soft p-4 text-center">
-          <p>
-            We are not currently running new trials for bank reconciliation. If
-            you're interested in our AI-powered receipt capture tool, <a
-              href="/capture/"
-              class="font-medium text-primary underline hover:text-primary-strong"
-              >check out Otto Capture</a
-            >.
-          </p>
+        <div class="mb-12 flex justify-center">
+          <a
+            href="#start-a-trial"
+            class="rounded-lg bg-primary px-6 py-3 font-medium text-white shadow transition hover:bg-primary-strong">
+            Start a trial
+          </a>
         </div>
         <StatsGrid />
+      </div>
+    </Container>
+  </div>
+
+  <div class="py-24">
+    <Container>
+      <div class="mx-auto max-w-4xl">
+        <h2
+          class="text-center text-3xl font-bold text-primary-strong md:text-5xl">
+          What makes Otto different
+        </h2>
+        <div class="mt-12 grid gap-8 md:grid-cols-3">
+          <div>
+            <h3 class="text-xl font-semibold text-primary-strong">
+              Intelligent matching
+            </h3>
+            <p class="mt-2 text-default">
+              Otto draws on your own reconciliation history rather than relying
+              on fixed assumptions.
+            </p>
+          </div>
+          <div>
+            <h3 class="text-xl font-semibold text-primary-strong">
+              Decisions you can see
+            </h3>
+            <p class="mt-2 text-default">
+              Otto shows why he matched each transaction, so you stay in
+              control.
+            </p>
+          </div>
+          <div>
+            <h3 class="text-xl font-semibold text-primary-strong">
+              Improves as you correct it
+            </h3>
+            <p class="mt-2 text-default">
+              Your corrections feed back in, so the same issue does not keep
+              recurring month after month.
+            </p>
+          </div>
+        </div>
       </div>
     </Container>
   </div>
@@ -53,15 +85,14 @@ const seo = {
       <div>
         <h2
           class="text-center text-3xl font-bold text-primary-strong md:text-5xl">
-          How Otto transforms your practice
+          How Otto works in your practice
         </h2>
         <p class="mx-auto mt-6 max-w-4xl text-lg text-default">
-          Transform your practice's reconciliation process with Otto, your
-          intelligent bookkeeping assistant. Using advanced machine learning,
-          Otto handles the time-consuming task of transaction matching, letting
-          you focus on providing higher-value services to your clients. Whether
-          you manage a handful of clients or hundreds, Otto scales with your
-          practice while maintaining exceptional accuracy.
+          Otto handles the repetitive matching so your team can focus on the
+          work that needs judgement. He learns each client's reconciliation
+          history, reconciles the matches he is confident about, and leaves the
+          rest for you to check. Whether you look after a handful of clients or
+          hundreds, Otto works the same way.
         </p>
       </div>
       <div class="mt-20">
@@ -71,4 +102,35 @@ const seo = {
   </div>
 
   <Pricing />
+
+  <div class="py-24" id="start-a-trial">
+    <Container>
+      <div class="mx-auto max-w-3xl">
+        <h2
+          class="text-center text-3xl font-bold text-primary-strong md:text-5xl">
+          Start a trial
+        </h2>
+        <p class="mx-auto mt-6 max-w-3xl text-center text-lg text-default">
+          A proper introduction makes the difference. Book an hour of guided
+          setup and we'll get Otto working with your practice from the start.
+        </p>
+        <p class="mx-auto mt-6 max-w-3xl text-default">In the session we'll:</p>
+        <ul class="mx-auto mt-2 max-w-3xl list-disc space-y-1 pl-5 text-default">
+          <li>understand what you want Otto to help with</li>
+          <li>
+            explain how Otto learns from each client's reconciliation history
+          </li>
+          <li>
+            show you around the portal, where you monitor and configure Otto
+          </li>
+          <li>help you invite Otto and assign your first trial clients</li>
+          <li>answer any questions on security, compliance, and best practice</li>
+        </ul>
+        <p class="mx-auto mt-6 max-w-3xl text-default">
+          There's no pressure and no obligation to continue.
+        </p>
+      </div>
+      <BookingForm />
+    </Container>
+  </div>
 </Layout>

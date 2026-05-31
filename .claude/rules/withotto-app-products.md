@@ -43,21 +43,24 @@ Status badges on the product page should match prose. Pick one of "Beta" or "In 
 
 ### Otto Bank Rec
 
-Status: in wind-down, supporting existing customers, not accepting new signups. Planned sunset end of 2026.
+Status: available and supported. Trials are open and the product page can take new sign-ups. It is not actively promoted, so copy should be informative and matter-of-fact rather than a marketing push.
+
+Position it by need, not by quality. Many teams are well served by Xero's built-in JAX, and that is fine. Otto Bank Rec is for practices and finance teams whose reconciliation needs go beyond automated rules: intelligent matching that draws on the team's own reconciliation history, and visibility into why Otto reached each decision, with corrections feeding back in so he improves over time.
 
 Use:
 
-- "Otto Bank Rec is supporting existing customers through the end of 2026"
+- "Bank reconciliation that learns how you work"
+- "Start a trial" as the primary CTA
+- "Plenty of teams get what they need from JAX. Otto is for the cases where you need more."
 - For existing customers: "Sign in to the portal"
-- "We're not accepting new signups for Otto Bank Rec at this time"
 
 Avoid:
 
-- Signup CTAs, "start a trial", "get started" for prospects
-- Language that suggests active growth or expansion
-- Anything that could mislead a new practice into thinking this is a current offer
+- Any suggestion that Bank Rec is winding down, legacy, or a lower priority
+- Positioning Bank Rec relative to any other Otto product; the page should stand on its own
+- Hard-sell or urgency
 
-The product page can still explain what Otto Bank Rec does and why it existed; it just shouldn't try to acquire new customers.
+The product page explains what Otto Bank Rec does and lets a visitor start a trial directly.
 
 ## Audience positioning
 
@@ -80,7 +83,7 @@ A secondary audience is direct business users doing their own bookkeeping. If Ca
 - **Multiple reconciliation types with different credit costs.** Bank rule matches, SmartMatch, GuidedMatch, each priced by how much ML work it involved.
 - **Credits carry over.** Unused credits roll to the next month without expiry.
 
-Because Otto Bank Rec is winding down, these differentiators are less relevant for new marketing but still matter for existing-customer communication.
+These differentiators matter for both new trials and existing-customer communication. Lead with the first two: matching that learns from the team's own history, and decisions you can see and correct.
 
 ## Terminology
 
