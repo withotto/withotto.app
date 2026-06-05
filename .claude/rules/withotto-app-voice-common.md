@@ -49,14 +49,15 @@ Do:
 
 - Address the reader as "you". Address practices as "your practice" or "your team".
 - Name specific problems the reader actually has ("chasing clients for missing receipts", "reconciling 400 transactions on the first of the month").
-- Cite concrete facts where we have them (per-document pricing, no minimums, line items by default).
-- Admit limitations honestly (beta status, Xero certification in progress, wind-down for Otto Bank Rec).
+- Cite concrete facts where we have them (line items by default, historical learning from the practice's own coding, a no-training agreement with the LLM provider). For Otto Capture, don't cite pricing as a fact until the model is decided.
+- Admit limitations honestly (Otto Capture beta status, Xero certification in progress).
 
 Avoid:
 
 - "Revolutionise", "transform", "game-changing", "cutting-edge", "next-generation", "world-class".
 - "Seamlessly", "effortlessly", "easily" as filler.
 - "Unleash", "unlock", "supercharge".
+- "Autopilot", "hands-off", "fully automated", "end-to-end by AI", or any framing that implies the practice steps out. Otto works with the user, who stays in control and reviews the work. The brand is "With Otto", not "instead of you".
 - "We believe" without evidence.
 - Passive voice in marketing prose ("transactions are reconciled" → "Otto reconciles transactions").
 

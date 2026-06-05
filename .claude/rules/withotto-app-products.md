@@ -64,7 +64,7 @@ The product page explains what Otto Bank Rec does and lets a visitor start a tri
 
 ## Audience positioning
 
-Otto Capture is for accounting and bookkeeping practices of any size. Do not position Capture as "for small practices". The differentiators (per-document pricing, line items by default, no minimums) are valuable across practice sizes.
+Otto Capture is for accounting and bookkeeping practices of any size. Do not position Capture as "for small practices". The differentiators (line items by default, and historical learning from the practice's own coding) are valuable across practice sizes.
 
 A secondary audience is direct business users doing their own bookkeeping. If Capture pages mention this audience, do so without making them the primary focus.
 
@@ -72,8 +72,10 @@ A secondary audience is direct business users doing their own bookkeeping. If Ca
 
 ### Otto Capture
 
-- **Per-document pricing with no minimums.** Most alternatives charge per-client minimums, per-practice minimums, or tiered fees that assume a minimum volume. Capture charges only for documents actually processed.
+The pricing model is not yet decided and is not a differentiator we can state. It is being worked out with beta practices (see the pricing guidance in `withotto-app-voice-marketing.md`), so do not present per-document pricing, "no minimums", or any specific model or rate as a current fact. Update this section once the model is settled.
+
 - **Line items extracted by default.** Most alternatives either don't extract line items or charge extra for it. Capture does it as standard.
+- **Historical learning.** Otto suggests account codes by learning from the practice's own past coding for that client, not from a generic model. Frame this as a suggestion the bookkeeper reviews, not as automatic correctness. Otto does not claim to know the "right" code, and the practice stays in control of the final coding.
 - **No-training agreement with the underlying LLM provider.** Documents are not used to train the extraction model. Matters for client confidentiality and often matters to clients who ask.
 - **Transparency about how it works.** Open about the AI provider, the hosting, the data lifecycle. Both a product choice and a marketing position.
 
@@ -84,6 +86,22 @@ A secondary audience is direct business users doing their own bookkeeping. If Ca
 - **Credits carry over.** Unused credits roll to the next month without expiry.
 
 These differentiators matter for both new trials and existing-customer communication. Lead with the first two: matching that learns from the team's own history, and decisions you can see and correct.
+
+## Claims we don't make (Otto Capture)
+
+Capture extracts document data and suggests coding. It is not a compliance engine. Do not write copy that claims or implies:
+
+- VAT number validation or verification against HMRC. Capture does not do this.
+- VAT treatment or tax rates grounded in legislation. Capture does not reason about VAT law. It extracts the figures shown on the document; responsibility for VAT treatment stays with the practice.
+- That categorisation is automatically correct. Historical learning suggests codes from the practice's own history; the bookkeeper reviews and decides.
+
+Some competitors make these claims. Don't match them to keep up. The honest position, that Otto helps and the professional stays responsible for compliance judgement, is the stronger one and fits the collaborative "with Otto" framing.
+
+### Extraction accuracy and eval figures
+
+Do not publish raw extraction-accuracy percentages or internal eval scores on product, pricing, or landing pages. The internal eval is deliberately strict (all-or-nothing per document, with judgement fields scored against a specific bookkeeper's choice), so the headline figure understates the experience a user actually gets and invites misreading out of context.
+
+On marketing pages, promise the workflow instead: Otto extracts, you review, you publish. It is fine to say extraction quality is measured rigorously and improves over time, without a number. Candid figures, with the methodology and context that make them meaningful, belong in building-in-public content (LinkedIn and the blog), not on the product pages.
 
 ## Terminology
 

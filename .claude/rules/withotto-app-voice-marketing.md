@@ -32,7 +32,7 @@ Default everywhere else is team voice with Otto in third person.
 
 ## Hero and landing page patterns
 
-Hero headlines should name a specific benefit, not a vague category. "Receipt capture that doesn't charge you minimums" beats "AI-powered receipt capture for modern practices". Lead with the differentiator.
+Hero headlines should name a specific benefit, not a vague category. "Receipt capture that learns how your practice codes" beats "AI-powered receipt capture for modern practices". Lead with the differentiator.
 
 Subheaders do one job: explain the headline in one sentence. Not two.
 
@@ -40,7 +40,7 @@ If a hero needs to mention AI, prefer the outcome over the mechanism. "Receipt c
 
 Calls to action in heroes should match the product's current stage:
 
-- **Otto Capture:** "Join the beta" or "Request beta access" until general availability; "Start using Capture" after GA.
+- **Otto Capture:** "Join the beta" or "Request beta access" until general availability. After GA the CTA becomes a self-serve trial ("Start a trial"), optionally paired with a secondary "Book a setup call" for practices that want guided onboarding. Do not show a trial CTA until GA.
 - **Otto Bank Rec:** "Start a trial" is the primary CTA, anchored to the booking section on the product page. Existing customers get "Sign in to the portal". Keep the tone informative rather than hard-sell, since the product is supported but not actively promoted.
 
 ## Transparency as differentiator
@@ -48,7 +48,7 @@ Calls to action in heroes should match the product's current stage:
 The strongest marketing move available to With Otto is being more honest than competitors. Use it.
 
 - Where a limitation exists, name it with the reassurance alongside. "Xero app certification is in progress. You can still use Capture with your existing Xero connection."
-- Where a competitor is more expensive or more complicated, let the numbers speak rather than insult the competitor. "Capture charges per document. No minimums, no per-client fees."
+- Where a competitor is more expensive or more complicated, let the specifics speak rather than insult the competitor. "Otto extracts line items as standard, where some tools charge extra for them."
 - Where something is in beta, say so plainly. Don't dress it up as "early access for innovators".
 
 ## Product page structure
@@ -67,14 +67,15 @@ Not rigid, but most product pages should contain most of these.
 
 ## Pricing copy
 
-The pricing page is where transparency matters most.
+Otto Capture pricing is not yet decided. It is being worked out with beta practices, balancing cost (AI usage favours per-document) against the predictability practices tend to prefer. Until it is settled:
 
-- Lead with the pricing model in plain terms. "25p per document. No minimums." Everything else elaborates.
-- Show all tiers. No "contact us for enterprise pricing" unless the price genuinely varies.
-- Include a calculator or example if the model is non-trivial.
-- FAQ should address the questions buyers actually ask: carry-over, overage, per-client usage, VAT.
+- Do not state a model, a rate, or "no minimums" for Capture. No "25p per document", no tiers, no calculator with real numbers.
+- A "coming soon" treatment is the right call: explain that pricing will be transparent and that the details are being finalised with beta practices. Being open that pricing is still being shaped is more honest, and more on-brand, than a vague placeholder.
+- When the model is set, update this section together with the Capture differentiators in `withotto-app-products.md`.
 
-Pricing FAQ answers should be short and direct. If an answer starts "Absolutely!" or "Great question!", rewrite.
+For Otto Bank Rec, pricing is established and the transparency rules apply: lead with the model in plain terms, show the pricing, no hidden "contact us" pricing, and a calculator or example where the model is non-trivial.
+
+Pricing FAQ answers should be short and direct. Lead with the direct answer. If an answer starts "Absolutely!" or "Great question!", rewrite.
 
 ## Feature lists
 
@@ -100,3 +101,4 @@ Treat the FAQ as a real sales surface, not a dumping ground. Group questions by 
 - Social proof numbers without context ("10,000 receipts processed!" across how long? by how many users?)
 - "Get started in seconds" when the real onboarding takes minutes
 - Countdown timers, fake scarcity, or pressure tactics of any kind
+- Idealised or faked product mockups where a real screenshot would do. Show the actual product. For Otto Capture, the honesty of a real interface is worth more than a polished render.

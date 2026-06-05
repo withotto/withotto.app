@@ -1,6 +1,6 @@
 # Project: withotto.app (v2)
 
-**Last Updated:** 2026-04-27
+**Last Updated:** 2026-06-05
 
 ## Overview
 
@@ -11,7 +11,7 @@ Marketing website for With Otto, a multi-product brand making focused automation
 | Product                            | Status                                              | Landing                               | Notes                                                                                                                                                                        |
 | ---------------------------------- | --------------------------------------------------- | ------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Otto Capture** (receipt capture) | In beta, active development                         | `src/pages/capture/index.astro`       | Foreground product. Active dev since Jan 2026, beta started April 2026, full launch targeted late Q2 / early Q3 2026. Marketing claims need a "beta" qualifier until launch. |
-| **Bank Reconciliation** (ML)       | Closed to new signups; existing customers supported | `src/pages/bank-reconciliation.astro` | Maintenance-only. Trial bookings removed. Old `/business/`, `/trial/`, `/notebook/*` URLs redirect here. Do not add new signup/trial CTAs.                                   |
+| **Bank Reconciliation** (ML)       | Available and supported; trials open, not actively promoted | `src/pages/bank-reconciliation.astro` | The product page explains Bank Rec and lets a visitor start a trial directly. Old `/business/`, `/trial/`, `/notebook/*` URLs redirect here. Position by need, not by quality (see `withotto-app-products.md`).                                   |
 
 Homepage and shared copy should lead with the brand (tools for accountants/bookkeepers) and foreground Otto Capture. New product pages should follow the pattern of `src/pages/capture/index.astro`, a discrete per-product landing sharing the common Navbar/Footer.
 
