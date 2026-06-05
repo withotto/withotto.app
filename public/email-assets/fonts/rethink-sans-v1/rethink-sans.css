@@ -14,41 +14,46 @@
  */
 
 @font-face {
-  font-family: 'Rethink Sans';
+  font-family: "Rethink Sans";
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url(https://withotto.app/email-assets/fonts/rethink-sans-v1/rethink-sans-400.woff2) format('woff2');
+  src: url(https://withotto.app/email-assets/fonts/rethink-sans-v1/rethink-sans-400.woff2)
+    format("woff2");
 }
 
 @font-face {
-  font-family: 'Rethink Sans';
+  font-family: "Rethink Sans";
   font-style: normal;
   font-weight: 500;
   font-display: swap;
-  src: url(https://withotto.app/email-assets/fonts/rethink-sans-v1/rethink-sans-500.woff2) format('woff2');
+  src: url(https://withotto.app/email-assets/fonts/rethink-sans-v1/rethink-sans-500.woff2)
+    format("woff2");
 }
 
 @font-face {
-  font-family: 'Rethink Sans';
+  font-family: "Rethink Sans";
   font-style: normal;
   font-weight: 600;
   font-display: swap;
-  src: url(https://withotto.app/email-assets/fonts/rethink-sans-v1/rethink-sans-600.woff2) format('woff2');
+  src: url(https://withotto.app/email-assets/fonts/rethink-sans-v1/rethink-sans-600.woff2)
+    format("woff2");
 }
 
 @font-face {
-  font-family: 'Rethink Sans';
+  font-family: "Rethink Sans";
   font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: url(https://withotto.app/email-assets/fonts/rethink-sans-v1/rethink-sans-700.woff2) format('woff2');
+  src: url(https://withotto.app/email-assets/fonts/rethink-sans-v1/rethink-sans-700.woff2)
+    format("woff2");
 }
 
 @font-face {
-  font-family: 'Rethink Sans';
+  font-family: "Rethink Sans";
   font-style: normal;
   font-weight: 800;
   font-display: swap;
-  src: url(https://withotto.app/email-assets/fonts/rethink-sans-v1/rethink-sans-800.woff2) format('woff2');
+  src: url(https://withotto.app/email-assets/fonts/rethink-sans-v1/rethink-sans-800.woff2)
+    format("woff2");
 }
