@@ -1,0 +1,9 @@
+# Email assets are immutable by policy (versioned filenames/folders, never
+# mutated after publishing - sent emails must render forever), so cache hard.
+/email-assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Fonts are CORS-restricted resources: the listmonk "view in browser" page
+# loads them cross-origin and browsers block them without this header.
+/email-assets/fonts/*
+  Access-Control-Allow-Origin: *
