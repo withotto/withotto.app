@@ -1,0 +1,54 @@
+/*
+ * Rethink Sans - self-hosted for With Otto newsletter emails.
+ *
+ * Static instances (latin subset) per weight, served from email-assets so
+ * URLs stay stable forever (sent emails are immutable). Files are the static
+ * WOFF2 builds from Google Fonts (rethinksans v7); licensed under the SIL
+ * Open Font License - see OFL.txt alongside this file.
+ *
+ * Versioning lives on the folder: never edit these files in place. Breaking
+ * changes get a new rethink-sans-v2/ folder; sent emails keep referencing v1.
+ *
+ * Absolute src URLs on purpose: some email clients resolve relative URLs
+ * against the message, not the stylesheet.
+ */
+
+@font-face {
+  font-family: 'Rethink Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://withotto.app/email-assets/fonts/rethink-sans-v1/rethink-sans-400.woff2) format('woff2');
+}
+
+@font-face {
+  font-family: 'Rethink Sans';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://withotto.app/email-assets/fonts/rethink-sans-v1/rethink-sans-500.woff2) format('woff2');
+}
+
+@font-face {
+  font-family: 'Rethink Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://withotto.app/email-assets/fonts/rethink-sans-v1/rethink-sans-600.woff2) format('woff2');
+}
+
+@font-face {
+  font-family: 'Rethink Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://withotto.app/email-assets/fonts/rethink-sans-v1/rethink-sans-700.woff2) format('woff2');
+}
+
+@font-face {
+  font-family: 'Rethink Sans';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url(https://withotto.app/email-assets/fonts/rethink-sans-v1/rethink-sans-800.woff2) format('woff2');
+}
