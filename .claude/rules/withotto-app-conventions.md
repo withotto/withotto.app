@@ -52,6 +52,23 @@ Swap embed URLs here; they are not configurable via env var.
 - **Remote set:** `astro-icon` + `@iconify-json/hugeicons`. Example: `<Icon name="hugeicons:calendar-03" size={32} class="..." />`
 - **Local SVGs:** `src/components/ui/icons/index.js` exports SVG strings. Render with `<Fragment set:html={IconName} />` (e.g. `Circles` decorative pattern in Hero).
 
+## Screenshots
+
+Use `Screenshot.astro` for product/blog screenshots (zoomable, responsive, optional caption). Import the image from `src/assets/*` (it goes through Astro's image pipeline; see the `public/` vs `src/assets/` pitfall below):
+
+```
+// frontmatter
+import Screenshot from "@components/Screenshot.astro";
+import shot from "@assets/capture/step-01-capture.png";
+
+// template
+<Screenshot src={shot} alt="A receipt being submitted to Otto Capture" caption="Optional" />
+```
+
+- **Only `src` and `alt` are required.** `width`/`height` default to the image's intrinsic dimensions, so the box matches the source aspect ratio and the image is **not cropped**.
+- **Do not pass `width`/`height` to "size" the image.** The site uses Astro `layout: "constrained"`, which applies `object-fit: cover` to whatever dimensions are in effect, so a width/height whose ratio differs from the source **crops** it. Pass both only when you deliberately want to crop to a fixed ratio.
+- Layout/size on the page is controlled by the surrounding container (e.g. `max-w-4xl`), not by these props.
+
 ## Tailwind: Project Tokens
 
 - **Brand colours** are defined in `tailwind.config.cjs`. Canonical palette and copy-friendly hex values live on the `/brand-kit/` page (`src/pages/brand-kit.astro`). Use semantic Tailwind utilities (`bg-primary`, `text-primary-strong`, `border-primary-accent`, `bg-terracotta-soft`, etc.); do not hardcode hex values in components. Token shape: each colour has `.soft / .DEFAULT / .strong` (some also `.accent / .medium`).

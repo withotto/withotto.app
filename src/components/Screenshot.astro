@@ -1,4 +1,25 @@
 ---
+/**
+ * Screenshot - a zoomable, responsive screenshot with an optional caption.
+ *
+ * Usage:
+ *   import Screenshot from "@components/Screenshot.astro";
+ *   import shot from "@assets/<area>/<name>.png"; // image under src/assets/*
+ *   <Screenshot src={shot} alt="What the screenshot shows" />
+ *
+ * Props:
+ *   - src      (required) ImageMetadata - an image imported from src/assets/*.
+ *   - alt      (required) string        - accessible description of the image.
+ *   - caption  (optional) string        - shown under the image and in the zoom modal.
+ *   - class    (optional) string        - extra classes on the <figure>.
+ *   - width / height (optional) number  - display dimensions. Leave them unset in
+ *     almost all cases: they default to the image's intrinsic size, so the box
+ *     matches the source aspect ratio and the image is never cropped. The site
+ *     uses Astro `layout: "constrained"`, which applies `object-fit: cover` to
+ *     whatever width/height are in effect - so passing a width/height whose ratio
+ *     differs from the source WILL crop it. Only set both together when you
+ *     deliberately want to crop to a fixed ratio.
+ */
 import { Image } from "astro:assets";
 import type { ImageMetadata } from "astro";
 
@@ -11,13 +32,16 @@ interface Props {
   height?: number;
 }
 
+// Default to the source image's intrinsic dimensions so the rendered box always
+// matches the source aspect ratio (no cropping). Callers override only to crop
+// deliberately. See the doc comment above.
 const {
   src,
   alt,
   caption,
   class: className = "",
-  width = 1200,
-  height = 800,
+  width = src.width,
+  height = src.height,
 } = Astro.props;
 
 // Generate unique ID for this screenshot instance
@@ -253,8 +277,14 @@ const titleId = `title-${screenshotId}`;
     max-width: none !important;
   }
 
-  /* Ensure modal content doesn't exceed viewport */
+  /* Ensure modal content doesn't exceed viewport.
+     width/height auto + max-width override the reset block's
+     `max-width: none !important` so a large intrinsic image scales to fit
+     the modal (preserving aspect ratio) instead of overflowing it. */
   .screenshot-modal img {
+    width: auto !important;
+    height: auto !important;
+    max-width: 100% !important;
     max-height: calc(90vh - 200px);
     object-fit: contain;
   }

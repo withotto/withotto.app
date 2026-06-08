@@ -1,272 +1,509 @@
 ---
+import type { ImageMetadata } from "astro";
 import Layout from "@layouts/Layout.astro";
 import Container from "@components/container.astro";
+import Link from "@components/ui/link.astro";
+import Screenshot from "@components/Screenshot.astro";
 import { Icon } from "astro-icon/components";
+import captureImg from "@assets/capture/step-01-capture.png";
+import reviewImg from "@assets/capture/step-03-review.png";
+import historicalImg from "@assets/capture/historical-learning.png";
+import lineItemImg from "@assets/capture/line-item-extraction.png";
 
 const seo = {
-  title: "Otto Capture (beta)",
   description:
-    "AI-powered receipt and bill capture for UK accounting practices. In beta, with per-document pricing and no minimums. Currently integrates with Xero; FreeAgent on the roadmap.",
+    "AI-powered receipt and bill capture for UK accounting practices. In beta. Currently integrates with Xero, with FreeAgent in development.",
 };
+
+const howItWorksSteps: {
+  name: string;
+  intent: string;
+  image: ImageMetadata | null;
+  imageAlt: string;
+}[] = [
+  {
+    name: "Capture",
+    intent:
+      "Receipts and invoices arrive by upload or email, to an address branded to your practice.",
+    image: captureImg,
+    imageAlt: "A receipt being submitted to Otto Capture by email",
+  },
+  {
+    name: "Extract",
+    intent:
+      "Otto reads each document and pulls out the supplier, dates, totals, and line items.",
+    image: null,
+    imageAlt: "",
+  },
+  {
+    name: "Review",
+    intent:
+      "Otto suggests the nominal code and tax rate from that client's history, and you check and adjust anything before it goes further.",
+    image: reviewImg,
+    imageAlt:
+      "Reviewing Otto's extracted fields and suggested coding before publishing",
+  },
+  {
+    name: "Publish",
+    intent: "Once you're happy, publish straight to Xero.",
+    image: null,
+    imageAlt: "",
+  },
+];
+
+type EmailAnatomy = {
+  segments: {
+    value: string;
+    label: string;
+    accent: "client" | "practice" | "hosted";
+    sep: string;
+  }[];
+  ownDomain: string;
+};
+
+// Colour-codes each address segment: the two meaningful parts (the client and
+// the practice) get the brand accents; the hosted domain stays neutral.
+const emailAccent: Record<
+  EmailAnatomy["segments"][number]["accent"],
+  { bar: string; label: string }
+> = {
+  client: { bar: "bg-primary", label: "text-primary-strong" },
+  practice: { bar: "bg-terracotta", label: "text-terracotta-strong" },
+  hosted: { bar: "bg-default-soft", label: "text-default-soft" },
+};
+
+const differentiators: {
+  title: string;
+  intent: string;
+  image: ImageMetadata | null;
+  imageAlt: string;
+  emailExample?: EmailAnatomy;
+}[] = [
+  {
+    title: "Historical learning",
+    intent:
+      "Otto looks at how you've coded that supplier for that specific client before, and suggests the same nominal code and tax rate for you to confirm. The history stays per client, so one client's coding is never mixed with another's, or with how that supplier is coded elsewhere on the system.",
+    image: historicalImg,
+    imageAlt:
+      "Otto suggesting a nominal code from the client's previous coding",
+  },
+  {
+    title: "Line items extracted by default",
+    intent:
+      "Otto extracts line items as standard, not as a paid extra, so the detail is there when you need it.",
+    image: lineItemImg,
+    imageAlt: "Line items extracted from a receipt",
+  },
+  {
+    title: "Practice-branded email submission addresses",
+    intent:
+      "Each client gets its own submission address, branded to your practice rather than a generic shared inbox. Use a subdomain we host, or point your practice's own domain at it.",
+    image: null,
+    imageAlt: "",
+    emailExample: {
+      segments: [
+        {
+          value: "flower-power",
+          label: "the client",
+          accent: "client",
+          sep: "@",
+        },
+        {
+          value: "top-accountant-limited",
+          label: "your practice",
+          accent: "practice",
+          sep: ".",
+        },
+        {
+          value: "ottocapture.email",
+          label: "hosted by Otto",
+          accent: "hosted",
+          sep: "",
+        },
+      ],
+      ownDomain: "flower-power@receipts.topaccountant.com",
+    },
+  },
+  {
+    title: "Transparency and zero data retention",
+    intent:
+      "Every model we use runs under a zero-data-retention policy, so your documents are not stored by the provider and are never used to train a model, and we're open about how the rest works.",
+    image: null,
+    imageAlt: "",
+  },
+];
 ---
 
 <Layout title="Otto Capture (beta)" seo={seo}>
-  <div class="py-12">
+  <!-- Hero -->
+  <div class="bg-primary-soft pt-10 md:pt-24">
     <Container>
-      <!-- Hero Section -->
-      <div class="mb-16 text-center">
+      <div class="mx-auto max-w-screen-xl pb-16 text-center">
         <div class="mb-4">
           <span
-            class="inline-block rounded-full bg-primary-soft px-4 py-1 text-sm font-medium text-primary-strong">
+            class="inline-block rounded-full bg-white px-4 py-1 text-sm font-medium text-primary-strong">
             Beta
           </span>
         </div>
-        <h1
-          class="mb-6 text-4xl font-bold text-primary-strong md:text-5xl lg:text-6xl">
+        <p class="mb-3 text-sm font-semibold text-primary-strong">
           Otto Capture
+        </p>
+        <h1
+          class="mx-auto max-w-4xl text-4xl font-bold text-primary-strong md:text-6xl">
+          Receipt capture that learns how your practice codes
         </h1>
-        <p class="mx-auto max-w-3xl text-xl text-default-soft md:text-2xl">
-          AI-powered receipt capture. Accurate extraction, streamlined
-          submission, fair pricing.
+        <p class="mx-auto max-w-3xl py-6 text-xl leading-normal text-default">
+          Otto extracts each document, suggests the coding from how you've
+          handled that client before, and leaves you to review and publish to
+          Xero.
+        </p>
+        <div class="flex justify-center">
+          <Link href="#join-the-beta" style="primary" size="lg">
+            Join the beta
+          </Link>
+        </div>
+      </div>
+    </Container>
+  </div>
+
+  <!-- What we're building -->
+  <div class="py-16">
+    <Container>
+      <div class="mx-auto max-w-3xl">
+        <h2
+          class="text-center text-3xl font-bold text-primary-strong md:text-5xl">
+          What we're building
+        </h2>
+        <div class="mt-8 space-y-4 text-lg text-default">
+          <p>
+            We run our own accounting practice, and we'd never found a receipt
+            capture tool that ticked all the boxes.
+          </p>
+          <p>
+            So we built one, focused on what actually matters: accurate
+            extraction, coding that learns from how you already work, and
+            getting documents into Xero with less manual effort.
+          </p>
+        </div>
+      </div>
+    </Container>
+  </div>
+
+  <!-- How it works -->
+  <div class="py-16">
+    <Container>
+      <h2
+        class="text-center text-3xl font-bold text-primary-strong md:text-5xl">
+        How it works
+      </h2>
+      <div class="mx-auto mt-12 max-w-4xl space-y-16">
+        {
+          howItWorksSteps.map((step, index) => (
+            <div>
+              <div class="flex items-center gap-4">
+                <div class="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary-soft font-semibold text-primary-strong">
+                  {index + 1}
+                </div>
+                <h3 class="text-2xl font-semibold text-primary-strong">
+                  {step.name}
+                </h3>
+              </div>
+              <p class="mt-3 text-lg text-default">{step.intent}</p>
+              {step.image && (
+                <Screenshot src={step.image} alt={step.imageAlt} />
+              )}
+            </div>
+          ))
+        }
+      </div>
+
+      <!-- Teaser video -->
+      <div class="mx-auto mt-16 max-w-4xl">
+        <div
+          class="overflow-hidden rounded-xl border border-muted-strong bg-white shadow-lg">
+          <div
+            class="flex aspect-video items-center justify-center bg-muted-soft">
+            <video controls preload="metadata" class="w-full rounded-lg">
+              <source src="/videos/otto-capture-teaser.mp4" type="video/mp4" />
+              Your browser doesn't support video playback.
+              <a href="/videos/otto-capture-teaser.mp4">Download the video</a>
+              instead.
+            </video>
+          </div>
+        </div>
+      </div>
+    </Container>
+  </div>
+
+  <!-- What makes it different -->
+  <div class="py-16">
+    <Container>
+      <h2
+        class="text-center text-3xl font-bold text-primary-strong md:text-5xl">
+        What makes it different
+      </h2>
+      <div class="mx-auto mt-12 max-w-5xl space-y-16">
+        {
+          differentiators.map((item, index) =>
+            item.image ? (
+              <div class="grid items-center gap-10 md:grid-cols-2">
+                <div class:list={[index % 2 === 1 && "md:order-last"]}>
+                  <h3 class="text-2xl font-semibold text-primary-strong">
+                    {item.title}
+                  </h3>
+                  <p class="mt-3 text-lg text-default">{item.intent}</p>
+                </div>
+                <Screenshot src={item.image} alt={item.imageAlt} />
+              </div>
+            ) : (
+              <div class="mx-auto max-w-3xl">
+                <h3 class="text-2xl font-semibold text-primary-strong">
+                  {item.title}
+                </h3>
+                <p class="mt-3 text-lg text-default">{item.intent}</p>
+                {item.emailExample && (
+                  <div class="mt-6 rounded-xl border border-muted-strong bg-muted-soft p-5 md:p-6">
+                    <div class="flex flex-wrap items-start gap-x-1.5 gap-y-4">
+                      {item.emailExample.segments.map((seg) => (
+                        <Fragment>
+                          <span class="flex flex-col">
+                            <span class="font-mono text-sm text-default md:text-base">
+                              {seg.value}
+                            </span>
+                            <span
+                              class:list={[
+                                "mt-1.5 h-0.5 rounded-full",
+                                emailAccent[seg.accent].bar,
+                              ]}
+                            />
+                            <span
+                              class:list={[
+                                "mt-1.5 text-xs font-medium",
+                                emailAccent[seg.accent].label,
+                              ]}>
+                              {seg.label}
+                            </span>
+                          </span>
+                          {seg.sep && (
+                            <span class="font-mono text-sm text-default-soft md:text-base">
+                              {seg.sep}
+                            </span>
+                          )}
+                        </Fragment>
+                      ))}
+                    </div>
+                    <div class="mt-5 border-t border-muted-strong pt-4">
+                      <p class="text-sm text-default-soft">
+                        Prefer your own domain? Point it at Otto instead:
+                      </p>
+                      <p class="mt-2 font-mono text-sm text-default md:text-base">
+                        {item.emailExample.ownDomain}
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ),
+          )
+        }
+      </div>
+    </Container>
+  </div>
+
+  <!-- Accuracy and staying in control -->
+  <div class="py-16">
+    <Container>
+      <div class="mx-auto max-w-3xl">
+        <h2
+          class="text-center text-3xl font-bold text-primary-strong md:text-5xl">
+          Accuracy and staying in control
+        </h2>
+        <div class="mt-8 space-y-4 text-lg text-default">
+          <p>
+            Otto reads each document and proposes the detail and coding. You
+            stay in control of what reaches Xero, reviewing and adjusting as
+            much as you need. Behind the scenes we measure accuracy rigorously
+            against real coding decisions, rather than asking you to take
+            quality on trust.
+          </p>
+        </div>
+      </div>
+    </Container>
+  </div>
+
+  <!-- Who it's for -->
+  <div class="py-16">
+    <Container>
+      <div class="mx-auto max-w-3xl">
+        <h2
+          class="text-center text-3xl font-bold text-primary-strong md:text-5xl">
+          Who it's for
+        </h2>
+        <p class="mt-8 text-lg text-default">
+          Otto Capture is for any practice that handles receipts and bills in
+          Xero, whether you're a sole practitioner or a larger firm. The
+          features that matter, historical learning, line items, and branded
+          submission, hold up at any size.
         </p>
       </div>
+    </Container>
+  </div>
 
-      <!-- Video Section -->
-      <div class="mb-16">
-        <div class="mx-auto max-w-4xl">
-          <div
-            class="overflow-hidden rounded-xl border border-muted-strong bg-white shadow-lg">
-            <div
-              class="flex aspect-video items-center justify-center bg-muted-soft">
-              <video controls preload="metadata" class="w-full rounded-lg">
-                <source
-                  src="/videos/otto-capture-teaser.mp4"
-                  type="video/mp4"
-                />
-                Your browser doesn't support video playback.
-                <a href="/videos/otto-capture-teaser.mp4">Download the video</a>
-                instead.
-              </video>
-            </div>
-          </div>
+  <!-- Pricing (coming soon) -->
+  <div class="py-16">
+    <Container>
+      <div class="mx-auto max-w-3xl">
+        <h2
+          class="text-center text-3xl font-bold text-primary-strong md:text-5xl">
+          Pricing
+        </h2>
+        <div class="mt-4 flex justify-center">
+          <span
+            class="inline-block rounded-full bg-primary-soft px-4 py-1 text-sm font-medium text-primary-strong">
+            Coming soon
+          </span>
         </div>
+        <p class="mt-8 text-lg text-default">
+          We're finalising pricing with our beta practices. It will be
+          transparent and straightforward when it's published, with no hidden
+          extras.
+        </p>
       </div>
+    </Container>
+  </div>
 
-      <!-- What We're Building -->
-      <div class="mb-16">
-        <div class="mx-auto max-w-3xl">
-          <h2
-            class="mb-6 text-2xl font-semibold text-primary-strong md:text-3xl">
-            What we're building
+  <!-- Where we are now -->
+  <div class="py-16">
+    <Container>
+      <div class="mx-auto max-w-3xl">
+        <div
+          class="rounded-lg border-l-4 border-terracotta bg-terracotta-soft p-6">
+          <h2 class="mb-3 text-2xl font-semibold text-default">
+            Where we are now
           </h2>
-          <div class="space-y-4 text-lg text-default">
-            <p>
-              We've been constantly searching for the perfect receipt capture
-              solution for our accounting practice, and nothing has quite ticked
-              all the boxes.
-            </p>
-            <p>
-              So we decided to build something focused on what actually matters:
-              accurate extraction and streamlined submission.
-            </p>
-          </div>
+          <p class="mb-4 text-default">
+            Otto Capture is in beta. The core workflow is in daily use, with
+            practices joining as we work through Xero app certification. Here's
+            what's shipped and what's next:
+          </p>
+          <ul class="space-y-2 text-default-soft">
+            <li class="flex items-start gap-2">
+              <Icon
+                name="hugeicons:checkmark-circle-02"
+                class="mt-0.5 size-5 shrink-0 text-primary"
+              />
+              <span
+                >Extraction and publishing of bills, receipts, and sales
+                invoices to Xero</span
+              >
+            </li>
+            <li class="flex items-start gap-2">
+              <Icon
+                name="hugeicons:checkmark-circle-02"
+                class="mt-0.5 size-5 shrink-0 text-primary"
+              />
+              <span>Line item extraction as standard</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <Icon
+                name="hugeicons:checkmark-circle-02"
+                class="mt-0.5 size-5 shrink-0 text-primary"
+              />
+              <span
+                >Nominal code suggestions from each client's coding history,
+                reviewed by you</span
+              >
+            </li>
+            <li class="flex items-start gap-2">
+              <Icon
+                name="hugeicons:checkmark-circle-02"
+                class="mt-0.5 size-5 shrink-0 text-primary"
+              />
+              <span
+                >Email forwarding with practice-branded submission addresses</span
+              >
+            </li>
+            <li class="flex items-start gap-2">
+              <Icon
+                name="hugeicons:progress-04"
+                class="mt-0.5 size-5 shrink-0 text-primary"
+              />
+              <span>Xero app certification (in progress)</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <Icon
+                name="hugeicons:progress-02"
+                class="mt-0.5 size-5 shrink-0 text-primary"
+              />
+              <span>FreeAgent integration (in progress)</span>
+            </li>
+          </ul>
+          <p class="mt-4 border-t border-terracotta-medium pt-4 text-default">
+            <span class="font-semibold">What's coming:</span> requesting missing documents
+            from your clients is next, with WhatsApp submission to follow. We'll add
+            features here as they ship.
+          </p>
         </div>
       </div>
+    </Container>
+  </div>
 
-      <!-- Core Features -->
-      <div class="mb-16">
-        <div class="mx-auto max-w-3xl">
+  <!-- Join the beta -->
+  <div class="py-16" id="join-the-beta">
+    <Container>
+      <div class="mx-auto max-w-3xl">
+        <div class="mb-8 text-center">
           <h2
-            class="mb-8 text-2xl font-semibold text-primary-strong md:text-3xl">
-            Core features
+            class="text-center text-3xl font-bold text-primary-strong md:text-5xl">
+            Join the beta
           </h2>
-          <div class="grid gap-6 sm:grid-cols-2">
-            <div class="rounded-lg border border-muted-strong bg-white p-6">
-              <div
-                class="mb-3 flex size-12 items-center justify-center rounded-lg bg-primary-soft">
-                <Icon
-                  name="hugeicons:document-validation"
-                  class="size-6 text-primary-strong"
-                />
-              </div>
-              <h3 class="mb-2 font-semibold text-default">
-                Accurate extraction
-              </h3>
-              <p class="text-default-soft">
-                AI-powered data extraction designed to minimise manual
-                correction.
-              </p>
-            </div>
+          <p class="mt-6 text-lg text-default-soft">
+            The beta is open to UK accounting and bookkeeping practices. If
+            you'd like to try Otto Capture with your clients, let us know.
+          </p>
+        </div>
 
-            <div class="rounded-lg border border-muted-strong bg-white p-6">
-              <div
-                class="mb-3 flex size-12 items-center justify-center rounded-lg bg-primary-soft">
-                <Icon
-                  name="hugeicons:upload-04"
-                  class="size-6 text-primary-strong"
-                />
-              </div>
-              <h3 class="mb-2 font-semibold text-default">Easy submission</h3>
-              <p class="text-default-soft">
-                Multiple ways for clients to submit receipts without complex
-                setup, and timesaving tools for you to get missing documents.
-              </p>
-            </div>
-
-            <div class="rounded-lg border border-muted-strong bg-white p-6">
-              <div
-                class="mb-3 flex size-12 items-center justify-center rounded-lg bg-primary-soft">
-                <Icon
-                  name="hugeicons:cells"
-                  class="size-6 text-primary-strong"
-                />
-              </div>
-              <h3 class="mb-2 font-semibold text-default">
-                Platform integration
-              </h3>
-              <p class="text-default-soft">
-                Starting with Xero, with plans for FreeAgent and other
-                platforms.
-              </p>
-            </div>
-
-            <div class="rounded-lg border border-muted-strong bg-white p-6">
-              <div
-                class="mb-3 flex size-12 items-center justify-center rounded-lg bg-primary-soft">
-                <Icon
-                  name="hugeicons:coins-01"
-                  class="size-6 text-primary-strong"
-                />
-              </div>
-              <h3 class="mb-2 font-semibold text-default">Fair pricing</h3>
-              <p class="text-default-soft">
-                Pay for what you use, with no hidden costs or unused features
-                inflating your bill.
-              </p>
-            </div>
-          </div>
+        <!-- Tally Form Embed -->
+        <div
+          class="rounded-xl border border-muted-strong bg-white p-8 shadow-sm">
+          <iframe
+            data-tally-src="https://tally.so/embed/44xdK5?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1"
+            loading="lazy"
+            width="100%"
+            height="1638"
+            frameborder="0"
+            marginheight="0"
+            marginwidth="0"
+            title="Otto Capture early access"></iframe>
+          <script is:inline>
+            var d = document,
+              w = "https://tally.so/widgets/embed.js",
+              v = function () {
+                "undefined" != typeof Tally
+                  ? Tally.loadEmbeds()
+                  : d
+                      .querySelectorAll("iframe[data-tally-src]:not([src])")
+                      .forEach(function (e) {
+                        e.src = e.dataset.tallySrc;
+                      });
+              };
+            if ("undefined" != typeof Tally) v();
+            else if (d.querySelector('script[src="' + w + '"]') == null) {
+              var s = d.createElement("script");
+              ((s.src = w),
+                (s.onload = v),
+                (s.onerror = v),
+                d.body.appendChild(s));
+            }
+          </script>
         </div>
       </div>
+    </Container>
+  </div>
 
-      <!-- Current Status -->
-      <div class="mb-16">
-        <div class="mx-auto max-w-3xl">
-          <div
-            class="rounded-lg border-l-4 border-terracotta bg-terracotta-soft p-6">
-            <h3 class="mb-3 text-lg font-semibold text-default">
-              Where we are now
-            </h3>
-            <p class="mb-4 text-default">
-              Otto Capture is in beta. The core workflow is in daily use, with
-              practices joining as we work through Xero app certification.
-              Here's what's shipped and what's next:
-            </p>
-            <ul class="space-y-2 text-default-soft">
-              <li class="flex items-start gap-2">
-                <Icon
-                  name="hugeicons:checkmark-circle-02"
-                  class="mt-0.5 size-5 shrink-0 text-primary"
-                />
-                <span
-                  >Extraction and publishing of bills, receipts, and sales invoices to Xero</span
-                >
-              </li>
-              <li class="flex items-start gap-2">
-                <Icon
-                  name="hugeicons:checkmark-circle-02"
-                  class="mt-0.5 size-5 shrink-0 text-primary"
-                />
-                <span
-                >Line item extraction with smart account code and tax rate support</span
-                >
-              </li>
-              <li class="flex items-start gap-2">
-                <Icon
-                  name="hugeicons:checkmark-circle-02"
-                  class="mt-0.5 size-5 shrink-0 text-primary"
-                />
-                <span
-                  >Email forwarding with practice-branded submission addresses</span
-                >
-              </li>
-              <li class="flex items-start gap-2">
-                <Icon
-                  name="hugeicons:checkmark-circle-02"
-                  class="mt-0.5 size-5 shrink-0 text-primary"
-                />
-                <span>Categorisation based on historical transactions</span>
-              </li>
-              <li class="flex items-start gap-2">
-                <Icon
-                  name="hugeicons:loading-03"
-                  class="mt-0.5 size-5 shrink-0 text-default-soft"
-                />
-                <span>Xero app certification (in progress)</span>
-              </li>
-              <li class="flex items-start gap-2">
-                <Icon
-                  name="hugeicons:loading-03"
-                  class="mt-0.5 size-5 shrink-0 text-default-soft"
-                />
-                <span>FreeAgent integration</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <!-- Register Interest -->
-      <div class="mb-16">
-        <div class="mx-auto max-w-3xl">
-          <div class="mb-8 text-center">
-            <h2
-              class="mb-4 text-2xl font-semibold text-primary-strong md:text-3xl">
-              Join the beta
-            </h2>
-            <p class="text-lg text-default-soft">
-              The beta is open to UK accounting and bookkeeping practices. If
-              you'd like to try Otto Capture with your clients, let us know.
-            </p>
-          </div>
-
-          <!-- Tally Form Embed -->
-          <div
-            class="rounded-xl border border-muted-strong bg-white p-8 shadow-sm">
-            <iframe
-              data-tally-src="https://tally.so/embed/44xdK5?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1"
-              loading="lazy"
-              width="100%"
-              height="1638"
-              frameborder="0"
-              marginheight="0"
-              marginwidth="0"
-              title="Otto Capture early access"></iframe>
-            <script>
-              var d = document,
-                w = "https://tally.so/widgets/embed.js",
-                v = function () {
-                  "undefined" != typeof Tally
-                    ? Tally.loadEmbeds()
-                    : d
-                        .querySelectorAll("iframe[data-tally-src]:not([src])")
-                        .forEach(function (e) {
-                          e.src = e.dataset.tallySrc;
-                        });
-                };
-              if ("undefined" != typeof Tally) v();
-              else if (d.querySelector('script[src="' + w + '"]') == null) {
-                var s = d.createElement("script");
-                ((s.src = w),
-                  (s.onload = v),
-                  (s.onerror = v),
-                  d.body.appendChild(s));
-              }
-            </script>
-          </div>
-        </div>
-      </div>
-
-      <!-- Fair Warning -->
+  <!-- Beta honesty note -->
+  <div class="pb-16">
+    <Container>
       <div class="mx-auto max-w-3xl">
         <div class="rounded-lg bg-primary-soft p-8">
           <div class="space-y-3 text-default">
@@ -274,10 +511,6 @@ const seo = {
               This is beta software. There will be edge cases we haven't seen
               yet, and some features will change as we learn from how practices
               use it.
-            </p>
-            <p>
-              If you want to try Otto Capture with your clients and help shape
-              what comes next, we'd love your input.
             </p>
           </div>
         </div>

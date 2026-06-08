@@ -49,7 +49,7 @@ Do:
 
 - Address the reader as "you". Address practices as "your practice" or "your team".
 - Name specific problems the reader actually has ("chasing clients for missing receipts", "reconciling 400 transactions on the first of the month").
-- Cite concrete facts where we have them (line items by default, historical learning from the practice's own coding, a no-training agreement with the LLM provider). For Otto Capture, don't cite pricing as a fact until the model is decided.
+- Cite concrete facts where we have them (line items by default, historical learning from the practice's own coding, zero data retention across every model we use). For Otto Capture, don't cite pricing as a fact until the model is decided.
 - Admit limitations honestly (Otto Capture beta status, Xero certification in progress).
 
 Avoid:

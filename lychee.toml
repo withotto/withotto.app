@@ -1,1 +1,5 @@
-base = "dist/"
+root_dir = "dist/"
+# ico.org.uk rate-limits/blocks automated checkers (observed timing out in a
+# real browser from this machine too). The canonical regulator URL in the
+# privacy policy is correct - skip checking it.
+exclude = ["ico\\.org\\.uk"]

@@ -76,7 +76,7 @@ The pricing model is not yet decided and is not a differentiator we can state. I
 
 - **Line items extracted by default.** Most alternatives either don't extract line items or charge extra for it. Capture does it as standard.
 - **Historical learning.** Otto suggests account codes by learning from the practice's own past coding for that client, not from a generic model. Frame this as a suggestion the bookkeeper reviews, not as automatic correctness. Otto does not claim to know the "right" code, and the practice stays in control of the final coding.
-- **No-training agreement with the underlying LLM provider.** Documents are not used to train the extraction model. Matters for client confidentiality and often matters to clients who ask.
+- **Zero data retention.** Every model runs under a zero-data-retention policy, so documents are not stored by the provider or used to train any model. This subsumes the older no-training claim. Keep it generic in marketing copy (providers unnamed); the mechanism may be named on transparency pages. Matters for client confidentiality and often matters to clients who ask.
 - **Transparency about how it works.** Open about the AI provider, the hosting, the data lifecycle. Both a product choice and a marketing position.
 
 ### Otto Bank Rec
