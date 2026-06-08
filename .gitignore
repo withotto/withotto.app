@@ -24,3 +24,4 @@ pnpm-debug.log*
 /.claude/skills/pr-feedback
 /.claude/skills/review-upgrades
 .playwright-cli
+.codegraph/daemon.pid
