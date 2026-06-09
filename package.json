@@ -17,23 +17,23 @@
     "@astrojs/mdx": "^5.0.4",
     "@astrojs/sitemap": "^3.7.2",
     "@tailwindcss/vite": "^4",
-    "@fontsource-variable/rethink-sans": "^5.2.8",
+    "@fontsource-variable/rethink-sans": "5.2.8",
     "@iconify-json/hugeicons": "^1.2.23",
     "@tailwindcss/typography": "^0.5.19",
     "astro": "^6.2.2",
     "astro-icon": "^1.1.5",
-    "astro-navbar": "^2.4.0",
-    "astro-seo": "^1.1.0",
-    "rehype-slug": "^6.0.0",
-    "sharp": "^0.34.5",
+    "astro-navbar": "2.4.0",
+    "astro-seo": "1.1.0",
+    "rehype-slug": "6.0.0",
+    "sharp": "0.34.5",
     "tailwindcss": "^4"
   },
   "devDependencies": {
-    "broken-link-checker-local": "^0.2.1",
+    "broken-link-checker-local": "0.2.1",
     "prettier": "^3.8.1",
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-tailwindcss": "^0.8.0",
-    "supabase": "^2.76.8"
+    "supabase": "2.76.8"
   },
   "engines": {
     "pnpm": "11.x"

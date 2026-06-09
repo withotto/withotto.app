@@ -15,7 +15,7 @@ importers:
         specifier: ^3.7.2
         version: 3.7.2
       '@fontsource-variable/rethink-sans':
-        specifier: ^5.2.8
+        specifier: 5.2.8
         version: 5.2.8
       '@iconify-json/hugeicons':
         specifier: ^1.2.23
@@ -33,23 +33,23 @@ importers:
         specifier: ^1.1.5
         version: 1.1.5
       astro-navbar:
-        specifier: ^2.4.0
+        specifier: 2.4.0
         version: 2.4.0
       astro-seo:
-        specifier: ^1.1.0
+        specifier: 1.1.0
         version: 1.1.0(prettier-plugin-astro@0.14.1)(prettier@3.8.1)(typescript@5.7.3)
       rehype-slug:
-        specifier: ^6.0.0
+        specifier: 6.0.0
         version: 6.0.0
       sharp:
-        specifier: ^0.34.5
+        specifier: 0.34.5
         version: 0.34.5
       tailwindcss:
         specifier: ^4
         version: 4.2.4
     devDependencies:
       broken-link-checker-local:
-        specifier: ^0.2.1
+        specifier: 0.2.1
         version: 0.2.1
       prettier:
         specifier: ^3.8.1
@@ -61,7 +61,7 @@ importers:
         specifier: ^0.8.0
         version: 0.8.0(prettier-plugin-astro@0.14.1)(prettier@3.8.1)
       supabase:
-        specifier: ^2.76.8
+        specifier: 2.76.8
         version: 2.76.8
 
 packages:
