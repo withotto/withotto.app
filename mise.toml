@@ -1,7 +1,7 @@
 [tools]
-deno = "2.7.14"
-node = "24.15.0"
-pnpm = "11.1.2"
+deno = "2.8.2"
+node = "24.16.0"
+pnpm = "11.5.2"
 
 [env]
 _.path = ['./node_modules/.bin']
