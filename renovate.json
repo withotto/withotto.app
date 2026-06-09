@@ -7,7 +7,7 @@
   "prHourlyLimit": 0,
   "dependencyDashboard": true,
   "configMigration": true,
-  "rangeStrategy": "replace",
+  "rangeStrategy": "pin",
   "postUpdateOptions": ["pnpmDedupe"],
   "lockFileMaintenance": {
     "enabled": true,
