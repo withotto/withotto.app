@@ -5,6 +5,18 @@ engineStrict: true
 # gap that Renovate's minimumReleaseAge cannot enforce for pnpm.
 minimumReleaseAge: 7200
 
+# Supply-chain trust policy: block packages whose trust level dropped vs an
+# earlier release (provenance downgrade / possible takeover). Inherited from the
+# depsguard-managed global pnpm config; pinned here so CI and teammates enforce
+# it too. The excluded entries are verified-safe, first-party transitive deps
+# pulled by direct deps that pin older majors:
+#   chokidar@4.0.3 <- astro-seo (via @astrojs/check); newer chokidar@5 is also in the tree
+#   undici@6.21.3  <- astro-icon (via @iconify/tools -> cheerio)
+trustPolicy: no-downgrade
+trustPolicyExclude:
+  - "chokidar@4.0.3"
+  - "undici@6.21.3"
+
 allowBuilds:
   esbuild: true
   sharp: true

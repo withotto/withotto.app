@@ -29,7 +29,6 @@
     "tailwindcss": "^4"
   },
   "devDependencies": {
-    "broken-link-checker-local": "0.2.1",
     "prettier": "^3.8.1",
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-tailwindcss": "^0.8.0",
