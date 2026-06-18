@@ -1,7 +1,7 @@
 ---
 title: Privacy Policy
 layout: "layouts/MdLayout.astro"
-lastUpdated: 2026-04-09
+lastUpdated: 2026-06-18
 ---
 
 Your privacy is important to us. It is With Otto's policy to respect your privacy and comply with any applicable law and regulation regarding any personal information we may collect about you, including across our website, withotto.app, and other sites we own and operate.
@@ -10,9 +10,9 @@ Personal information is any information about you which can be used to identify 
 
 In the event our site contains links to third-party sites and services, please be aware that those sites and services have their own privacy policies. After following a link to any third-party content, you should read their posted privacy policy information about how they collect and use personal information. This Privacy Policy does not apply to any of your activities after you leave our site.
 
-This policy is effective as of 9 April 2026
+This policy is effective as of 18 June 2026
 
-Last updated: 9 April 2026
+Last updated: 18 June 2026
 
 ## Information we collect
 
@@ -29,6 +29,34 @@ When you visit our website, our servers may automatically log the standard data 
 Additionally, if you encounter certain errors while using the site, we may automatically collect data about the error and the circumstances surrounding its occurrence. This data may include technical details about your device, what you were trying to do when the error happened, and other technical information relating to the problem. You may or may not receive notice of such errors, even in the moment they occur, that they have occurred, or what the nature of the error is.
 
 Please be aware that while this information may not be personally identifying by itself, it may be possible to combine it with other data to personally identify individual persons.
+
+### Information you provide through the Otto Capture service
+
+If you use Otto Capture, our document capture product, we also collect and store:
+
+- Documents you or your clients upload or forward to us, such as receipts, bills, and invoices, together with the financial data we extract from them.
+- Data we access from an accounting platform you choose to connect (see "[Connecting your accounting platform](#connecting-your-accounting-platform)" below).
+- Account and profile information for the people in your organisation who use Otto Capture.
+
+## How we process your documents
+
+To turn a document into structured data, the contents of that document are sent to a third-party large language model for extraction. We access these models through OpenRouter, which routes our requests to the model provider we have selected. The specific provider may change over time as we evaluate the best available models. We only use providers and models that operate under zero-data-retention terms, which means they do not keep the document contents we send them once they have returned the result, and no data is used for model training.
+
+Some documents that are not already PDFs are first converted using CloudConvert. Each provider named here processes the document contents only to perform the conversion or extraction, and all are listed under [Third parties we currently use](#disclosure-of-personal-information-to-third-parties) below.
+
+We also keep operational logs to monitor Otto Capture and to investigate and resolve problems, using AWS, PostHog, and Langfuse. Some of these logs include the requests we send for extraction, which can contain information from your documents.
+
+## Connecting your accounting platform
+
+Otto Capture connects to accounting platforms such as Xero and FreeAgent so it can match contacts and code, validate, and publish documents on your behalf.
+
+When you connect a platform, you authorise that access through the platform's own secure sign-in (OAuth). We never receive or store your accounting-platform username or password. We hold only the access tokens the platform issues, and we keep those tokens encrypted.
+
+Depending on how you use Otto Capture, the platform you connect may belong to your own business, or to a client you act for as an accountant or bookkeeper. Once connected, we access and store data from that platform, including its contacts (which may include the names and contact details of that business's suppliers and customers), its categories and tax rates, and its company details. We store this so we can provide the service to you.
+
+Some of this is personal data about third parties, such as the suppliers and customers of the connected business, who do not have a direct relationship with us. We act as the data controller for the platform data we store. Our lawful basis for processing it is our legitimate interest in providing the receipt capture service you have asked us to perform, together with the performance of our contract with you. If you, or one of those third parties, wishes to access or delete this data, please contact us using the details in the [Contact us](#contact-us) section, and we will handle the request as described under [Your data subject rights](#your-data-subject-rights).
+
+If you disconnect a platform, the data we have already synced is retained unless you ask us to delete it. You can request deletion at any time, and we will delete platform-sourced data that is no longer required.
 
 ## Security of your personal information
 
@@ -64,7 +92,13 @@ We may disclose personal information to:
 
 Third parties we currently use include:
 
-- PostHog
+- Amazon Web Services (AWS), for hosting, document storage, and operational logs
+- Supabase, for our database
+- OpenRouter, the gateway through which we access third-party large language model providers to extract data from your documents
+- CloudConvert, for converting some documents to PDF
+- Langfuse, for monitoring and debugging our document processing
+- Stripe, for processing payments
+- PostHog, for product analytics and monitoring
 
 ## International transfers of personal information
 
