@@ -67,11 +67,29 @@ Not rigid, but most product pages should contain most of these.
 
 ## Pricing copy
 
-Otto Capture pricing is not yet decided. It is being worked out with beta practices, balancing cost (AI usage favours per-document) against the predictability practices tend to prefer. Until it is settled:
+Otto Capture is priced per client per month, across three tiers, with the per-document rate for documents over a tier's allowance shown alongside. Practices do not choose a plan: each client is placed automatically on whichever tier is cheapest for the documents it published that month.
 
-- Do not state a model, a rate, or "no minimums" for Capture. No "25p per document", no tiers, no calculator with real numbers.
-- A "coming soon" treatment is the right call: explain that pricing will be transparent and that the details are being finalised with beta practices. Being open that pricing is still being shaped is more honest, and more on-brand, than a vague placeholder.
-- When the model is set, update this section together with the Capture differentiators in `withotto-app-products.md`.
+| Tier   | Per client, per month | Included published documents | Each extra document |
+| ------ | --------------------- | ---------------------------- | ------------------- |
+| Small  | £9                    | 50                           | 18p                 |
+| Medium | £15                   | 125                          | 12p                 |
+| Large  | £29                   | 350                          | 8p                  |
+
+Prices exclude VAT.
+
+Lead with these three positives, using these names for consistency across the site:
+
+- **No documents, no charge.** A client with no documents in a month is not charged, where many competitors bill per client regardless. A genuine differentiator; state it plainly.
+- **Always the cheapest tier.** Each client sits on whichever tier costs least for what it published that month, worked out automatically. No plan to choose up front, no moving clients between plans.
+- **No price cliffs.** Reaching a tier's allowance doesn't tip a client into the next tier and a much bigger bill. Extra documents are charged at the tier's per-document rate until the next tier works out cheaper, at which point the client moves up automatically. Above Large, documents continue at the Large rate.
+
+Other guidance:
+
+- Frame it as simple, predictable tiered pricing. Avoid "pay as you go"; practices associate that phrase with unpredictable bills.
+- The tier prices and per-document rates are public and shown on the pricing table. Explain the mechanism in plain terms and avoid the jargon word "overage". The exact document counts where one tier overtakes the next don't need to appear on the page.
+- Say only documents published to the accounting platform are charged: not duplicates, not discarded documents, not documents still to be reviewed. Avoid wording like "drafts aren't charged", which can be misread against a Draft document status.
+
+Still internal (kept out of the committed public website and support repos): the exact tier-selection breakpoints, and the reason the no-documents check is based on received rather than published documents. When the model changes, update this section together with the Capture pricing differentiators in `withotto-app-products.md` and the internal pricing notes.
 
 For Otto Bank Rec, pricing is established and the transparency rules apply: lead with the model in plain terms, show the pricing, no hidden "contact us" pricing, and a calculator or example where the model is non-trivial.
 

@@ -17,7 +17,7 @@ The non-voice decisions about how to describe Otto Capture, Otto Bank Rec, and W
 - **Otto Bank Rec** is the original product. Use this on new pages and in any prose where the product is the subject. "Bank Rec" alone is fine after first mention. The legacy framings "Bank Reconciliation Bot", "the Bank Reconciliation bot", and "the bot" still appear in older copy and in the support docs; leave them in place where they are, but don't introduce them in new writing. Future products won't be bots, and Otto-the-persona is a bookkeeper, not a robot.
 - **Otto** is the persona, not a product name. Don't use "Otto" alone to mean a product.
 
-Future products follow the "Otto [Verb-ish]" pattern, with planned names for month-end checks and data error discovery. Candidate names should avoid collisions with Apron Capture, Dext Precision, Xenon Connect, and other established competitor names.
+Future products follow the "Otto [Verb-ish]" pattern.
 
 ## Lifecycle status
 
@@ -72,7 +72,8 @@ A secondary audience is direct business users doing their own bookkeeping. If Ca
 
 ### Otto Capture
 
-The pricing model is not yet decided and is not a differentiator we can state. It is being worked out with beta practices (see the pricing guidance in `withotto-app-voice-marketing.md`), so do not present per-document pricing, "no minimums", or any specific model or rate as a current fact. Update this section once the model is settled.
+- **Pricing that never overpays.** Capture is priced per client per month across three tiers (Small, Medium, Large). Each client sits automatically on whichever tier is cheapest for the documents published that month, so a practice never has to choose a plan or move clients between tiers to get the best deal, and going over a tier's allowance is charged per document rather than jumping to the next price. Frame this as simple, predictable tiered pricing, never "pay as you go". See `withotto-app-voice-marketing.md` for the tiers, the per-document rates, and the brand names to use; the exact tier-selection breakpoints and the free-client rationale stay internal.
+- **Clients with no documents are free.** A connected client with no documents in a month is not charged. Many alternatives bill per client regardless of activity, so this is a genuine differentiator worth stating plainly.
 
 - **Line items extracted by default.** Most alternatives either don't extract line items or charge extra for it. Capture does it as standard.
 - **Historical learning.** Otto suggests account codes by learning from the practice's own past coding for that client, not from a generic model. Frame this as a suggestion the bookkeeper reviews, not as automatic correctness. Otto does not claim to know the "right" code, and the practice stays in control of the final coding.
@@ -99,9 +100,11 @@ Some competitors make these claims. Don't match them to keep up. The honest posi
 
 ### Extraction accuracy and eval figures
 
-Do not publish raw extraction-accuracy percentages or internal eval scores on product, pricing, or landing pages. The internal eval is deliberately strict (all-or-nothing per document, with judgement fields scored against a specific bookkeeper's choice), so the headline figure understates the experience a user actually gets and invites misreading out of context.
+Do not publish raw extraction-accuracy percentages or internal eval scores on product, pricing, or landing pages.
 
 On marketing pages, promise the workflow instead: Otto extracts, you review, you publish. It is fine to say extraction quality is measured rigorously and improves over time, without a number. Candid figures, with the methodology and context that make them meaningful, belong in building-in-public content (LinkedIn and the blog), not on the product pages.
+
+The evaluation set itself is opt-in only. By default no client documents are used; a document is included only when the practice has specifically given permission for it. This is a standing commitment and a sibling of the zero-data-retention claim. Copy that mentions the evaluation work should state it.
 
 ## Terminology
 

@@ -22,7 +22,7 @@ Write for people who are intelligent, time-poor, and sceptical of SaaS marketing
 
 Otto is a mascot: a friendly, veteran bookkeeper character used in illustrations and copy. Otto is not a real person. Otto doesn't attend events, write code, or send emails. When describing what Otto "does" in the product, keep it to what the software actually does: reading documents, matching transactions, suggesting codes, publishing bills.
 
-Otto is third person ("Otto reads each receipt", "Otto matches transactions") by default across the site. For the narrow exception where Otto speaks in first person, see `withotto-app-voice-marketing.md`.
+Otto is third person ("Otto reads each receipt", "Otto matches transactions") by default across the site, and takes male pronouns: he, him, his, himself. Never "it"; "he" is friendlier and more on brand. For the narrow exception where Otto speaks in first person, see `withotto-app-voice-marketing.md`.
 
 ## "We" (the team)
 
@@ -49,7 +49,7 @@ Do:
 
 - Address the reader as "you". Address practices as "your practice" or "your team".
 - Name specific problems the reader actually has ("chasing clients for missing receipts", "reconciling 400 transactions on the first of the month").
-- Cite concrete facts where we have them (line items by default, historical learning from the practice's own coding, zero data retention across every model we use). For Otto Capture, don't cite pricing as a fact until the model is decided.
+- Cite concrete facts where we have them (line items by default, historical learning from the practice's own coding, zero data retention across every model we use, an evaluation set that is opt-in only and uses no client documents by default).
 - Admit limitations honestly (Otto Capture beta status, Xero certification in progress).
 
 Avoid:

@@ -19,6 +19,7 @@ pnpm-debug.log*
 # macOS-specific files
 .DS_Store
 .claude/settings.local.json
+/.claude/rules/internal/
 /docs/
 /.idea/
 /.claude/skills/pr-feedback
