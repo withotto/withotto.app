@@ -11,7 +11,7 @@ import lineItemImg from "@assets/capture/line-item-extraction.png";
 
 const seo = {
   description:
-    "AI-powered receipt and bill capture for UK accounting practices. In beta. Currently integrates with Xero, with FreeAgent in development.",
+    "AI-powered receipt and bill capture for UK accounting practices. In beta. Integrates with Xero and FreeAgent.",
 };
 
 const howItWorksSteps: {
@@ -44,7 +44,7 @@ const howItWorksSteps: {
   },
   {
     name: "Publish",
-    intent: "Once you're happy, publish straight to Xero.",
+    intent: "Once you're happy, publish straight to your accounting platform.",
     image: null,
     imageAlt: "",
   },
@@ -173,7 +173,7 @@ const statusShipped: { icon: string; label: string }[] = [
   {
     icon: "hugeicons:checkmark-circle-02",
     label:
-      "Extraction and publishing of bills, receipts, and sales invoices to Xero",
+      "Extraction and publishing of bills, receipts, and sales invoices to Xero and FreeAgent",
   },
   {
     icon: "hugeicons:checkmark-circle-02",
@@ -191,10 +191,6 @@ const statusShipped: { icon: string; label: string }[] = [
   {
     icon: "hugeicons:progress-04",
     label: "Xero app certification (in progress)",
-  },
-  {
-    icon: "hugeicons:progress-02",
-    label: "FreeAgent integration (in progress)",
   },
 ];
 
@@ -229,7 +225,7 @@ const itemChip =
         <p class="mx-auto max-w-3xl py-6 text-xl leading-normal text-default">
           Otto extracts each document, suggests the coding from how you've
           handled that client before, and leaves you to review and publish to
-          Xero.
+          your accounting platform.
         </p>
         <div class="flex justify-center">
           <a
@@ -263,7 +259,8 @@ const itemChip =
           <p>
             So we built one, focused on what actually matters: accurate
             extraction, coding that learns from how you already work, and
-            getting documents into Xero with less manual effort.
+            getting documents into your accounting platform with less manual
+            effort.
           </p>
         </div>
       </div>
@@ -418,10 +415,10 @@ const itemChip =
         <div class="mt-8 space-y-4 text-lg text-primary-soft">
           <p>
             Otto reads each document and proposes the detail and coding. You
-            stay in control of what reaches Xero, reviewing and adjusting as
-            much as you need. Behind the scenes we measure accuracy rigorously
-            against real coding decisions, rather than asking you to take
-            quality on trust.
+            stay in control of what reaches your accounting platform, reviewing
+            and adjusting as much as you need. Behind the scenes we measure
+            accuracy rigorously against real coding decisions, rather than
+            asking you to take quality on trust.
           </p>
         </div>
       </div>
@@ -442,8 +439,9 @@ const itemChip =
         </div>
         <p class="mt-8 text-lg text-default">
           Otto Capture suits any practice that handles receipts and bills in
-          Xero, from a sole practitioner to a firm with a large client book.
-          What makes it useful tends to matter more as you grow, not less.
+          Xero or FreeAgent, from a sole practitioner to a firm with a large
+          client book. What makes it useful tends to matter more as you grow,
+          not less.
         </p>
         <p class="mt-8 space-y-4 text-lg text-default">
           Coding is learned for each client separately, so every client keeps
