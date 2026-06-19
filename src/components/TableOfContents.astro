@@ -1,6 +1,6 @@
 ---
 // This component generates a table of contents from the headings in the current page
-// It requires the headings to have IDs (which rehype-slug provides)
+// It requires the headings to have IDs, which Astro injects into Markdown/MDX headings automatically
 
 export interface Props {
   headings?: Array<{ depth: number; slug: string; text: string }>;

@@ -2,7 +2,6 @@ import { defineConfig } from "astro/config";
 import tailwindcss from "@tailwindcss/vite";
 import mdx from "@astrojs/mdx";
 import icon from "astro-icon";
-import slug from "rehype-slug";
 import sitemap from "@astrojs/sitemap";
 
 // https://astro.build/config
@@ -10,9 +9,7 @@ export default defineConfig({
   site: "https://withotto.app",
   trailingSlash: "always",
   integrations: [
-    mdx({
-      rehypePlugins: [slug],
-    }),
+    mdx(),
     sitemap({
       filter: (url) => !url.startsWith("https://withotto.app/notebook/"),
     }),
