@@ -109,6 +109,11 @@
       "minimumReleaseAge": "5 days"
     },
     {
+      "description": "Keep engines fields as ranges, never exact pins. engines declares the supported version range; the exact selectors are packageManager + mise.toml (still pinned by the global rangeStrategy:pin). Without this override, rangeStrategy:pin rewrites engines.pnpm to an exact version that drifts from the actual pinned pnpm. 'replace' leaves the range untouched while the installed version still satisfies it, and only bumps it on a new major.",
+      "matchDepTypes": ["engines"],
+      "rangeStrategy": "replace"
+    },
+    {
       "description": "Cross-file: collapse Deno bumps from mise.toml customManager into one PR; apply 5-day supply-chain floor",
       "matchPackageNames": ["denoland/deno"],
       "groupName": "deno",
