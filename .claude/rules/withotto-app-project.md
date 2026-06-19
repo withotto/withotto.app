@@ -1,6 +1,6 @@
 # Project: withotto.app (v2)
 
-**Last Updated:** 2026-06-05
+**Last Updated:** 2026-06-19
 
 ## Overview
 
@@ -17,14 +17,14 @@ Homepage and shared copy should lead with the brand (tools for accountants/bookk
 
 ## Technology Stack
 
-- **Framework:** Astro 5 (static site, `trailingSlash: "always"`)
+- **Framework:** Astro 6 (static site, `trailingSlash: "always"`)
 - **Language:** TypeScript (strictNullChecks) + `.astro` components
-- **Styling:** Tailwind CSS 3 via `@astrojs/tailwind` (+ `@tailwindcss/typography`)
+- **Styling:** Tailwind CSS 4 via `@tailwindcss/vite` (+ `@tailwindcss/typography`); theme tokens in `src/styles/global.css`
 - **Content:** MDX via `@astrojs/mdx`, Astro content collections
 - **Icons:** `astro-icon` + `@iconify-json/hugeicons`
 - **SEO:** `astro-seo`, `@astrojs/sitemap`
 - **Backend:** Supabase edge functions (Deno) in `supabase/functions/`
-- **Package manager:** pnpm 10.x (pinned via `packageManager` + `engines`; also installable via `mise`)
+- **Package manager:** pnpm 11.x (pinned via `packageManager` + `engines`; also installable via `mise`)
 - **Formatter:** Prettier 3 with `prettier-plugin-astro` + `prettier-plugin-tailwindcss` (2-space indent)
 - **Link checker:** `lychee` (via `check-links` script)
 - **Hosting:** Netlify (redirects in `_redirects`)
@@ -44,13 +44,12 @@ No test framework, no ESLint, no CI config in repo. Quality gate is `format:chec
 │   ├── assets/         # Images referenced from content/components (blog/, testimonials/)
 │   ├── utils/          # Pure TS helpers (blog.ts)
 │   ├── types/          # Shared TS types
-│   └── styles/
+│   └── styles/         # global.css — Tailwind 4 @theme brand tokens
 ├── public/             # Static assets served as-is
 ├── supabase/
 │   ├── functions/      # Deno edge functions (e.g. reconciliation-stats)
 │   └── config.toml
 ├── astro.config.mjs
-├── tailwind.config.cjs
 ├── prettier.config.mjs
 └── _redirects          # Netlify redirect rules
 ```
@@ -82,7 +81,7 @@ Use these aliases in imports. Do not write relative `../../` paths:
 | Raw Astro CLI      | `pnpm astro <cmd>`                                               |
 | Supabase CLI       | `pnpm supabase <cmd>` (dev dep, use via pnpm)                    |
 
-**Always use `pnpm`.** Do not introduce `npm` or `yarn` commands; the repo is pinned to pnpm 10.x.
+**Always use `pnpm`.** Do not introduce `npm` or `yarn` commands; the repo is pinned to pnpm 11.x.
 
 ## Conventions
 

@@ -71,7 +71,7 @@ import shot from "@assets/capture/step-01-capture.png";
 
 ## Tailwind: Project Tokens
 
-- **Brand colours** are defined in `tailwind.config.cjs`. Canonical palette and copy-friendly hex values live on the `/brand-kit/` page (`src/pages/brand-kit.astro`). Use semantic Tailwind utilities (`bg-primary`, `text-primary-strong`, `border-primary-accent`, `bg-terracotta-soft`, etc.); do not hardcode hex values in components. Token shape: each colour has `.soft / .DEFAULT / .strong` (some also `.accent / .medium`).
+- **Brand colours** are defined in `src/styles/global.css` (Tailwind 4 `@theme` block, e.g. `--color-primary`, `--color-terracotta`). Canonical palette and copy-friendly hex values live on the `/brand-kit/` page (`src/pages/brand-kit.astro`). Use semantic Tailwind utilities (`bg-primary`, `text-primary-strong`, `border-primary-accent`, `bg-terracotta-soft`, etc.); do not hardcode hex values in components. Token shape: each colour has `.soft / .DEFAULT / .strong` (some also `.accent / .medium`).
 - **Font:** `font-sans` is `"Rethink Sans Variable"` (loaded via `@fontsource-variable/rethink-sans` in `RootLayout`).
 - **Typography plugin:** Use `prose` / `md:prose-lg` for long-form text. Customise with `prose-li:mt-0` etc.
 - **Form validation pattern:** Forms add a `validated` class on first submit attempt, then CSS targets `[.validated_&]:invalid:...` to reveal error messages. Preserve this pattern when adding new forms.
@@ -97,5 +97,5 @@ All redirects use `301`. Any new removals should mirror this pattern.
 
 - **Trailing slashes are mandatory** (`trailingSlash: "always"`). Links to `/foo` get a redirect; write `/foo/`.
 - **`public/` vs `src/assets/`**: `public/` is copied verbatim and served from `/`; `src/assets/` goes through Astro's image pipeline. Blog images and anything needing responsive `srcset` must live in `src/assets/`.
-- **pnpm is pinned** (`engines.pnpm: 10.x`, `packageManager: pnpm@10.15.0`). Do not commit a `package-lock.json` or `yarn.lock`.
+- **pnpm is pinned** (`engines.pnpm: 11.x`, `packageManager: pnpm@11.5.1`). Do not commit a `package-lock.json` or `yarn.lock`.
 - **Deno runtime in `supabase/functions/`**: do not import Node-style packages; use `jsr:` / `npm:` / `https://esm.sh/...` imports only.
