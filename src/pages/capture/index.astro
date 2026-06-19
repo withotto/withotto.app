@@ -2,7 +2,6 @@
 import type { ImageMetadata } from "astro";
 import Layout from "@layouts/Layout.astro";
 import Container from "@components/container.astro";
-import Link from "@components/ui/link.astro";
 import Screenshot from "@components/Screenshot.astro";
 import { Icon } from "astro-icon/components";
 import captureImg from "@assets/capture/step-01-capture.png";
@@ -75,6 +74,7 @@ const emailAccent: Record<
 const differentiators: {
   title: string;
   intent: string;
+  icon: string;
   image: ImageMetadata | null;
   imageAlt: string;
   emailExample?: EmailAnatomy;
@@ -83,6 +83,7 @@ const differentiators: {
     title: "Historical learning",
     intent:
       "Otto looks at how you've coded that supplier for that specific client before, and suggests the same nominal code and tax rate for you to confirm. The history stays per client, so one client's coding is never mixed with another's, or with how that supplier is coded elsewhere on the system.",
+    icon: "hugeicons:ai-brain-01",
     image: historicalImg,
     imageAlt:
       "Otto suggesting a nominal code from the client's previous coding",
@@ -91,6 +92,7 @@ const differentiators: {
     title: "Line items extracted by default",
     intent:
       "Otto extracts line items as standard, not as a paid extra, so the detail is there when you need it.",
+    icon: "hugeicons:check-list",
     image: lineItemImg,
     imageAlt: "Line items extracted from a receipt",
   },
@@ -98,6 +100,7 @@ const differentiators: {
     title: "Practice-branded email submission addresses",
     intent:
       "Each client gets its own submission address, branded to your practice rather than a generic shared inbox. Use a subdomain we host, or point your practice's own domain at it.",
+    icon: "hugeicons:mail-account-01",
     image: null,
     imageAlt: "",
     emailExample: {
@@ -128,10 +131,82 @@ const differentiators: {
     title: "Transparency and zero data retention",
     intent:
       "Every model we use runs under a zero-data-retention policy, so your documents are not stored by the provider and are never used to train a model, and we're open about how the rest works.",
+    icon: "hugeicons:shield-01",
     image: null,
     imageAlt: "",
   },
 ];
+
+const pricingTiers: {
+  name: string;
+  price: string;
+  included: string;
+  extraDocument: string;
+}[] = [
+  { name: "Small", price: "£9", included: "Up to 50", extraDocument: "18p" },
+  { name: "Medium", price: "£15", included: "Up to 125", extraDocument: "12p" },
+  { name: "Large", price: "£29", included: "Up to 350", extraDocument: "8p" },
+];
+
+const pricingPromises: { label: string; intent: string; icon: string }[] = [
+  {
+    label: "No documents, no charge.",
+    intent:
+      "If a client has no documents in a month, you pay nothing for that client. You are only billed for the clients Otto is actually working on.",
+    icon: "hugeicons:invoice-01",
+  },
+  {
+    label: "Always the cheapest tier.",
+    intent:
+      "Each client sits on whichever tier costs least for what it published that month, worked out for you automatically. There is no plan to pick up front, and no need to move clients between plans to chase the best price.",
+    icon: "hugeicons:discount-tag-01",
+  },
+  {
+    label: "No price cliffs.",
+    intent:
+      "Reaching a tier's allowance doesn't tip you straight into the next tier and a much bigger bill. You simply pay the per-document rate for each extra document published, until the next tier works out cheaper, at which point Otto moves that client up for you. Clients busier than the Large tier carry on at the Large per-document rate, so even your highest-volume clients stay predictable.",
+    icon: "hugeicons:chart-up",
+  },
+];
+
+const statusShipped: { icon: string; label: string }[] = [
+  {
+    icon: "hugeicons:checkmark-circle-02",
+    label:
+      "Extraction and publishing of bills, receipts, and sales invoices to Xero",
+  },
+  {
+    icon: "hugeicons:checkmark-circle-02",
+    label: "Line item extraction as standard",
+  },
+  {
+    icon: "hugeicons:checkmark-circle-02",
+    label:
+      "Nominal code suggestions from each client's coding history, reviewed by you",
+  },
+  {
+    icon: "hugeicons:checkmark-circle-02",
+    label: "Email forwarding with practice-branded submission addresses",
+  },
+  {
+    icon: "hugeicons:progress-04",
+    label: "Xero app certification (in progress)",
+  },
+  {
+    icon: "hugeicons:progress-02",
+    label: "FreeAgent integration (in progress)",
+  },
+];
+
+// Section-heading icon chips (large circle, sits above the heading).
+const sectionChipLight =
+  "inline-flex size-16 shrink-0 items-center justify-center rounded-full bg-primary text-white shadow-sm md:size-20";
+const sectionChipDark =
+  "inline-flex size-16 shrink-0 items-center justify-center rounded-full bg-white/10 text-white ring-1 ring-white/20 md:size-20";
+const sectionChipIcon = "size-7 md:size-8";
+// Per-item icon chip (small, sits inline with the item heading).
+const itemChip =
+  "inline-flex size-12 shrink-0 items-center justify-center rounded-xl bg-primary-soft text-primary-strong";
 ---
 
 <Layout title="Otto Capture (beta)" seo={seo}>
@@ -139,15 +214,14 @@ const differentiators: {
   <div class="bg-primary-soft pt-10 md:pt-24">
     <Container>
       <div class="mx-auto max-w-screen-xl pb-16 text-center">
-        <div class="mb-4">
+        <div class="mb-6 flex justify-center">
           <span
-            class="inline-block rounded-full bg-white px-4 py-1 text-sm font-medium text-primary-strong">
+            class="inline-flex items-center gap-2.5 rounded-full bg-white px-4 py-1.5 text-sm font-medium text-primary-strong shadow-sm">
+            Otto Capture
+            <span class="size-1 rounded-full bg-primary-medium"></span>
             Beta
           </span>
         </div>
-        <p class="mb-3 text-sm font-semibold text-primary-strong">
-          Otto Capture
-        </p>
         <h1
           class="mx-auto max-w-4xl text-4xl font-bold text-primary-strong md:text-6xl">
           Receipt capture that learns how your practice codes
@@ -158,23 +232,30 @@ const differentiators: {
           Xero.
         </p>
         <div class="flex justify-center">
-          <Link href="#join-the-beta" style="primary" size="lg">
+          <a
+            href="#join-the-beta"
+            class="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-8 py-4 text-base font-semibold text-white shadow-lg shadow-primary/30 transition hover:-translate-y-0.5 hover:bg-primary-strong hover:shadow-xl focus-visible:ring-2 focus-visible:ring-primary-strong focus-visible:ring-offset-2 focus-visible:outline-none">
             Join the beta
-          </Link>
+            <Icon name="hugeicons:arrow-right-01" class="size-5" />
+          </a>
         </div>
       </div>
     </Container>
   </div>
 
-  <!-- What we're building -->
-  <div class="py-16">
+  <!-- What we're building (dark feature band) -->
+  <div class="bg-primary-strong py-20 text-white">
     <Container>
       <div class="mx-auto max-w-3xl">
-        <h2
-          class="text-center text-3xl font-bold text-primary-strong md:text-5xl">
-          What we're building
-        </h2>
-        <div class="mt-8 space-y-4 text-lg text-default">
+        <div class="flex flex-col items-center text-center">
+          <span class={sectionChipDark}>
+            <Icon name="hugeicons:tools" class={sectionChipIcon} />
+          </span>
+          <h2 class="mt-5 text-3xl font-bold md:text-5xl">
+            What we're building
+          </h2>
+        </div>
+        <div class="mt-8 space-y-4 text-lg text-primary-soft">
           <p>
             We run our own accounting practice, and we'd never found a receipt
             capture tool that ticked all the boxes.
@@ -190,46 +271,36 @@ const differentiators: {
   </div>
 
   <!-- How it works -->
-  <div class="py-16">
+  <div class="bg-primary-soft py-16">
     <Container>
-      <h2
-        class="text-center text-3xl font-bold text-primary-strong md:text-5xl">
-        How it works
-      </h2>
-      <div class="mx-auto mt-12 max-w-4xl space-y-16">
-        {
-          howItWorksSteps.map((step, index) => (
-            <div>
-              <div class="flex items-center gap-4">
-                <div class="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary-soft font-semibold text-primary-strong">
-                  {index + 1}
+      <div class="mx-auto max-w-4xl">
+        <div class="flex flex-col items-center text-center">
+          <span class={sectionChipLight}>
+            <Icon name="hugeicons:route-01" class={sectionChipIcon} />
+          </span>
+          <h2 class="mt-5 text-3xl font-bold text-primary-strong md:text-5xl">
+            How it works
+          </h2>
+        </div>
+        <div class="mt-12 space-y-16">
+          {
+            howItWorksSteps.map((step, index) => (
+              <div>
+                <div class="flex items-center gap-4">
+                  <div class="flex size-10 shrink-0 items-center justify-center rounded-full bg-white font-semibold text-primary-strong">
+                    {index + 1}
+                  </div>
+                  <h3 class="text-2xl font-semibold text-primary-strong">
+                    {step.name}
+                  </h3>
                 </div>
-                <h3 class="text-2xl font-semibold text-primary-strong">
-                  {step.name}
-                </h3>
+                <p class="mt-3 text-lg text-default">{step.intent}</p>
+                {step.image && (
+                  <Screenshot src={step.image} alt={step.imageAlt} />
+                )}
               </div>
-              <p class="mt-3 text-lg text-default">{step.intent}</p>
-              {step.image && (
-                <Screenshot src={step.image} alt={step.imageAlt} />
-              )}
-            </div>
-          ))
-        }
-      </div>
-
-      <!-- Teaser video -->
-      <div class="mx-auto mt-16 max-w-4xl">
-        <div
-          class="overflow-hidden rounded-xl border border-muted-strong bg-white shadow-lg">
-          <div
-            class="flex aspect-video items-center justify-center bg-muted-soft">
-            <video controls preload="metadata" class="w-full rounded-lg">
-              <source src="/videos/otto-capture-teaser.mp4" type="video/mp4" />
-              Your browser doesn't support video playback.
-              <a href="/videos/otto-capture-teaser.mp4">Download the video</a>
-              instead.
-            </video>
-          </div>
+            ))
+          }
         </div>
       </div>
     </Container>
@@ -238,87 +309,113 @@ const differentiators: {
   <!-- What makes it different -->
   <div class="py-16">
     <Container>
-      <h2
-        class="text-center text-3xl font-bold text-primary-strong md:text-5xl">
-        What makes it different
-      </h2>
-      <div class="mx-auto mt-12 max-w-5xl space-y-16">
-        {
-          differentiators.map((item, index) =>
-            item.image ? (
-              <div class="grid items-center gap-10 md:grid-cols-2">
-                <div class:list={[index % 2 === 1 && "md:order-last"]}>
-                  <h3 class="text-2xl font-semibold text-primary-strong">
-                    {item.title}
-                  </h3>
-                  <p class="mt-3 text-lg text-default">{item.intent}</p>
-                </div>
-                <Screenshot src={item.image} alt={item.imageAlt} />
-              </div>
-            ) : (
-              <div class="mx-auto max-w-3xl">
-                <h3 class="text-2xl font-semibold text-primary-strong">
-                  {item.title}
-                </h3>
-                <p class="mt-3 text-lg text-default">{item.intent}</p>
-                {item.emailExample && (
-                  <div class="mt-6 rounded-xl border border-muted-strong bg-muted-soft p-5 md:p-6">
-                    <div class="flex flex-wrap items-start gap-x-1.5 gap-y-4">
-                      {item.emailExample.segments.map((seg) => (
-                        <Fragment>
-                          <span class="flex flex-col">
-                            <span class="font-mono text-sm text-default md:text-base">
-                              {seg.value}
-                            </span>
-                            <span
-                              class:list={[
-                                "mt-1.5 h-0.5 rounded-full",
-                                emailAccent[seg.accent].bar,
-                              ]}
-                            />
-                            <span
-                              class:list={[
-                                "mt-1.5 text-xs font-medium",
-                                emailAccent[seg.accent].label,
-                              ]}>
-                              {seg.label}
-                            </span>
-                          </span>
-                          {seg.sep && (
-                            <span class="font-mono text-sm text-default-soft md:text-base">
-                              {seg.sep}
-                            </span>
-                          )}
-                        </Fragment>
-                      ))}
+      <div class="mx-auto max-w-5xl">
+        <div class="flex flex-col items-center text-center">
+          <span class={sectionChipLight}>
+            <Icon name="hugeicons:sparkles" class={sectionChipIcon} />
+          </span>
+          <h2 class="mt-5 text-3xl font-bold text-primary-strong md:text-5xl">
+            What makes it different
+          </h2>
+        </div>
+        <div class="mt-12 space-y-16">
+          {
+            differentiators.map((item, index) =>
+              item.image ? (
+                <div class="grid items-start gap-10 md:grid-cols-2">
+                  {/* md:mt-8 lines the heading up with the top of the
+                      Screenshot, which carries a 2rem flow margin. */}
+                  <div
+                    class:list={[
+                      "md:mt-8",
+                      index % 2 === 1 && "md:order-last",
+                    ]}>
+                    <div class="flex items-center gap-3">
+                      <span class={itemChip}>
+                        <Icon name={item.icon} class="size-6" />
+                      </span>
+                      <h3 class="text-2xl font-semibold text-primary-strong">
+                        {item.title}
+                      </h3>
                     </div>
-                    <div class="mt-5 border-t border-muted-strong pt-4">
-                      <p class="text-sm text-default-soft">
-                        Prefer your own domain? Point it at Otto instead:
-                      </p>
-                      <p class="mt-2 font-mono text-sm text-default md:text-base">
-                        {item.emailExample.ownDomain}
-                      </p>
-                    </div>
+                    <p class="mt-4 text-lg text-default">{item.intent}</p>
                   </div>
-                )}
-              </div>
-            ),
-          )
-        }
+                  <Screenshot src={item.image} alt={item.imageAlt} />
+                </div>
+              ) : (
+                <div class="mx-auto max-w-3xl">
+                  <div class="flex items-center gap-3">
+                    <span class={itemChip}>
+                      <Icon name={item.icon} class="size-6" />
+                    </span>
+                    <h3 class="text-2xl font-semibold text-primary-strong">
+                      {item.title}
+                    </h3>
+                  </div>
+                  <p class="mt-4 text-lg text-default">{item.intent}</p>
+                  {item.emailExample && (
+                    <div class="mt-6 rounded-xl border border-muted-strong bg-muted-soft p-5 md:p-6">
+                      <div class="flex flex-wrap items-start gap-x-1.5 gap-y-4">
+                        {item.emailExample.segments.map((seg) => (
+                          <Fragment>
+                            <span class="flex flex-col">
+                              <span class="font-mono text-sm text-default md:text-base">
+                                {seg.value}
+                              </span>
+                              <span
+                                class:list={[
+                                  "mt-1.5 h-0.5 rounded-full",
+                                  emailAccent[seg.accent].bar,
+                                ]}
+                              />
+                              <span
+                                class:list={[
+                                  "mt-1.5 text-xs font-medium",
+                                  emailAccent[seg.accent].label,
+                                ]}>
+                                {seg.label}
+                              </span>
+                            </span>
+                            {seg.sep && (
+                              <span class="font-mono text-sm text-default-soft md:text-base">
+                                {seg.sep}
+                              </span>
+                            )}
+                          </Fragment>
+                        ))}
+                      </div>
+                      <div class="mt-5 border-t border-muted-strong pt-4">
+                        <p class="text-sm text-default-soft">
+                          Prefer your own domain? Point it at Otto instead:
+                        </p>
+                        <p class="mt-2 font-mono text-sm text-default md:text-base">
+                          {item.emailExample.ownDomain}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ),
+            )
+          }
+        </div>
       </div>
     </Container>
   </div>
 
-  <!-- Accuracy and staying in control -->
-  <div class="py-16">
+  <!-- Accuracy and staying in control (dark feature band) -->
+  <div class="bg-primary-strong py-20 text-white">
     <Container>
       <div class="mx-auto max-w-3xl">
-        <h2
-          class="text-center text-3xl font-bold text-primary-strong md:text-5xl">
-          Accuracy and staying in control
-        </h2>
-        <div class="mt-8 space-y-4 text-lg text-default">
+        <div class="flex flex-col items-center text-center">
+          <span class={sectionChipDark}>
+            <Icon name="hugeicons:target-01" class={sectionChipIcon} />
+          </span>
+          <h2 class="mt-5 text-3xl font-bold md:text-5xl">
+            Accuracy and staying in control
+          </h2>
+        </div>
+        <div class="mt-8 space-y-4 text-lg text-primary-soft">
           <p>
             Otto reads each document and proposes the detail and coding. You
             stay in control of what reaches Xero, reviewing and adjusting as
@@ -335,10 +432,14 @@ const differentiators: {
   <div class="py-16">
     <Container>
       <div class="mx-auto max-w-3xl">
-        <h2
-          class="text-center text-3xl font-bold text-primary-strong md:text-5xl">
-          Who it's for
-        </h2>
+        <div class="flex flex-col items-center text-center">
+          <span class={sectionChipLight}>
+            <Icon name="hugeicons:user-multiple" class={sectionChipIcon} />
+          </span>
+          <h2 class="mt-5 text-3xl font-bold text-primary-strong md:text-5xl">
+            Who it's for
+          </h2>
+        </div>
         <p class="mt-8 text-lg text-default">
           Otto Capture is for any practice that handles receipts and bills in
           Xero, whether you're a sole practitioner or a larger firm. The
@@ -349,25 +450,98 @@ const differentiators: {
     </Container>
   </div>
 
-  <!-- Pricing (coming soon) -->
-  <div class="py-16">
+  <!-- Pricing -->
+  <div class="bg-primary-soft py-16">
     <Container>
-      <div class="mx-auto max-w-3xl">
-        <h2
-          class="text-center text-3xl font-bold text-primary-strong md:text-5xl">
-          Pricing
-        </h2>
-        <div class="mt-4 flex justify-center">
-          <span
-            class="inline-block rounded-full bg-primary-soft px-4 py-1 text-sm font-medium text-primary-strong">
-            Coming soon
+      <div class="mx-auto max-w-5xl">
+        <div class="flex flex-col items-center text-center">
+          <span class={sectionChipLight}>
+            <Icon name="hugeicons:coins-01" class={sectionChipIcon} />
           </span>
+          <h2 class="mt-5 text-3xl font-bold text-primary-strong md:text-5xl">
+            Pricing
+          </h2>
         </div>
-        <p class="mt-8 text-lg text-default">
-          We're finalising pricing with our beta practices. It will be
-          transparent and straightforward when it's published, with no hidden
-          extras.
+        <p class="mx-auto mt-8 max-w-3xl text-lg text-default">
+          Otto Capture is priced per client, per month, and you only pay for the
+          documents Otto publishes. There are three tiers, and each client is
+          always placed on the one that costs least.
         </p>
+
+        <div class="mt-12 grid gap-6 md:grid-cols-3">
+          {
+            pricingTiers.map((tier) => (
+              <div class="flex flex-col rounded-xl border border-muted-strong bg-white p-6 shadow-sm">
+                <h3 class="text-lg font-semibold text-primary-strong">
+                  {tier.name}
+                </h3>
+                <p class="mt-3 flex items-baseline gap-1.5">
+                  <span class="text-4xl font-bold text-primary-strong">
+                    {tier.price}
+                  </span>
+                  <span class="text-sm text-default-soft">
+                    per client, per month
+                  </span>
+                </p>
+                <dl class="mt-6 space-y-4 border-t border-muted-strong pt-6 text-sm">
+                  <div>
+                    <dt class="text-default-soft">
+                      Included published documents
+                    </dt>
+                    <dd class="mt-0.5 text-base font-semibold text-default">
+                      {tier.included}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt class="text-default-soft">Each extra document</dt>
+                    <dd class="mt-0.5 text-base font-semibold text-default">
+                      {tier.extraDocument}
+                    </dd>
+                  </div>
+                </dl>
+              </div>
+            ))
+          }
+        </div>
+        <p class="mt-6 text-center text-sm text-default-soft">
+          Prices exclude VAT.
+        </p>
+
+        <div class="mt-16 space-y-4">
+          {
+            pricingPromises.map((promise) => (
+              <div class="flex items-start gap-4 rounded-xl border border-muted-strong bg-white p-5 md:p-6">
+                <span class="inline-flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary-soft text-primary-strong">
+                  <Icon name={promise.icon} class="size-6" />
+                </span>
+                <p class="text-default">
+                  <span class="font-semibold text-primary-strong">
+                    {promise.label}
+                  </span>{" "}
+                  {promise.intent}
+                </p>
+              </div>
+            ))
+          }
+        </div>
+
+        <div class="mx-auto mt-12 max-w-3xl space-y-4 text-lg text-default">
+          <p>
+            Only documents published to your accounting platform are charged:
+            not duplicates, not documents you've discarded, and not documents
+            still waiting to be reviewed.
+          </p>
+          <p>
+            Capture is in beta today and free to use during the beta. The prices
+            above apply from general availability.{" "}
+            <a
+              href="#join-the-beta"
+              class="font-semibold text-primary-strong underline underline-offset-2 hover:text-primary">
+              Join the beta
+            </a>{" "}
+            to start using it with your clients.
+          </p>
+        </div>
       </div>
     </Container>
   </div>
@@ -378,65 +552,32 @@ const differentiators: {
       <div class="mx-auto max-w-3xl">
         <div
           class="rounded-lg border-l-4 border-terracotta bg-terracotta-soft p-6">
-          <h2 class="mb-3 text-2xl font-semibold text-default">
-            Where we are now
-          </h2>
+          <div class="mb-3 flex items-center gap-3">
+            <Icon
+              name="hugeicons:navigation-03"
+              class="size-6 shrink-0 text-terracotta-strong"
+            />
+            <h2 class="text-2xl font-semibold text-default">
+              Where we are now
+            </h2>
+          </div>
           <p class="mb-4 text-default">
             Otto Capture is in beta. The core workflow is in daily use, with
             practices joining as we work through Xero app certification. Here's
             what's shipped and what's next:
           </p>
           <ul class="space-y-2 text-default-soft">
-            <li class="flex items-start gap-2">
-              <Icon
-                name="hugeicons:checkmark-circle-02"
-                class="mt-0.5 size-5 shrink-0 text-primary"
-              />
-              <span
-                >Extraction and publishing of bills, receipts, and sales
-                invoices to Xero</span
-              >
-            </li>
-            <li class="flex items-start gap-2">
-              <Icon
-                name="hugeicons:checkmark-circle-02"
-                class="mt-0.5 size-5 shrink-0 text-primary"
-              />
-              <span>Line item extraction as standard</span>
-            </li>
-            <li class="flex items-start gap-2">
-              <Icon
-                name="hugeicons:checkmark-circle-02"
-                class="mt-0.5 size-5 shrink-0 text-primary"
-              />
-              <span
-                >Nominal code suggestions from each client's coding history,
-                reviewed by you</span
-              >
-            </li>
-            <li class="flex items-start gap-2">
-              <Icon
-                name="hugeicons:checkmark-circle-02"
-                class="mt-0.5 size-5 shrink-0 text-primary"
-              />
-              <span
-                >Email forwarding with practice-branded submission addresses</span
-              >
-            </li>
-            <li class="flex items-start gap-2">
-              <Icon
-                name="hugeicons:progress-04"
-                class="mt-0.5 size-5 shrink-0 text-primary"
-              />
-              <span>Xero app certification (in progress)</span>
-            </li>
-            <li class="flex items-start gap-2">
-              <Icon
-                name="hugeicons:progress-02"
-                class="mt-0.5 size-5 shrink-0 text-primary"
-              />
-              <span>FreeAgent integration (in progress)</span>
-            </li>
+            {
+              statusShipped.map((s) => (
+                <li class="flex items-start gap-2">
+                  <Icon
+                    name={s.icon}
+                    class="mt-0.5 size-5 shrink-0 text-primary"
+                  />
+                  <span>{s.label}</span>
+                </li>
+              ))
+            }
           </ul>
           <p class="mt-4 border-t border-terracotta-medium pt-4 text-default">
             <span class="font-semibold">What's coming:</span> requesting missing documents
@@ -449,12 +590,14 @@ const differentiators: {
   </div>
 
   <!-- Join the beta -->
-  <div class="py-16" id="join-the-beta">
+  <div class="bg-primary-soft py-16" id="join-the-beta">
     <Container>
       <div class="mx-auto max-w-3xl">
-        <div class="mb-8 text-center">
-          <h2
-            class="text-center text-3xl font-bold text-primary-strong md:text-5xl">
+        <div class="mb-8 flex flex-col items-center text-center">
+          <span class={sectionChipLight}>
+            <Icon name="hugeicons:user-add-01" class={sectionChipIcon} />
+          </span>
+          <h2 class="mt-5 text-3xl font-bold text-primary-strong md:text-5xl">
             Join the beta
           </h2>
           <p class="mt-6 text-lg text-default-soft">
@@ -502,17 +645,19 @@ const differentiators: {
   </div>
 
   <!-- Beta honesty note -->
-  <div class="pb-16">
+  <div class="py-16">
     <Container>
       <div class="mx-auto max-w-3xl">
-        <div class="rounded-lg bg-primary-soft p-8">
-          <div class="space-y-3 text-default">
-            <p>
-              This is beta software. There will be edge cases we haven't seen
-              yet, and some features will change as we learn from how practices
-              use it.
-            </p>
-          </div>
+        <div
+          class="flex items-start gap-4 rounded-lg border-l-4 border-primary bg-primary-soft p-6">
+          <Icon
+            name="hugeicons:information-circle"
+            class="mt-0.5 size-6 shrink-0 text-primary-strong"
+          />
+          <p class="text-default">
+            This is beta software. There will be edge cases we haven't seen yet,
+            and some features will change as we learn from how practices use it.
+          </p>
         </div>
       </div>
     </Container>
