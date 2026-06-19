@@ -16,17 +16,17 @@
   "dependencies": {
     "@astrojs/mdx": "5.0.4",
     "@astrojs/sitemap": "3.7.2",
-    "@tailwindcss/vite": "^4",
+    "@tailwindcss/vite": "4.3.1",
     "@fontsource-variable/rethink-sans": "5.2.8",
     "@iconify-json/hugeicons": "1.2.23",
-    "@tailwindcss/typography": "^0.5.19",
+    "@tailwindcss/typography": "0.5.20",
     "astro": "6.4.6",
     "astro-icon": "1.1.5",
     "astro-navbar": "2.4.0",
     "astro-seo": "1.1.0",
     "rehype-slug": "6.0.0",
     "sharp": "0.35.1",
-    "tailwindcss": "^4"
+    "tailwindcss": "4.3.1"
   },
   "devDependencies": {
     "prettier": "3.8.1",
