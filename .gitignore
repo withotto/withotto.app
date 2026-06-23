@@ -6,6 +6,10 @@ dist/
 # dependencies
 node_modules/
 
+# deno - lockfile disabled via supabase/functions/**/deno.json ("lock": false);
+# ignore any stray deno.lock so Renovate jsr bumps can't leave a stale one committed
+deno.lock
+
 # logs
 npm-debug.log*
 yarn-debug.log*
@@ -26,3 +30,4 @@ pnpm-debug.log*
 /.claude/skills/review-upgrades
 .playwright-cli
 .codegraph/daemon.pid
+.worktrees/
