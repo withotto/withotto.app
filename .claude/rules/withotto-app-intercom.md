@@ -7,7 +7,7 @@ How the public site's Intercom integration works in code, and the checklist for 
 The website embeds the Intercom Messenger for anonymous visitors via `src/components/IntercomWidget.astro`, rendered once in `src/layouts/RootLayout.astro` (so it appears on every page, both `.astro` pages and `.mdx` legal pages). The code handles:
 
 - Loading the Messenger for anonymous visitors (no logged-in user, so no Identity Verification secret is needed).
-- The EU data region (`api_base` is `https://api-iam.eu.intercom.io`).
+- The US data region (`api_base` is `https://api-iam.intercom.io`).
 - The brand colour as a hint (`#02ac8a`, the `--color-primary` token).
 - A `product` attribute set from the page path ("Otto Capture" on `/capture/`, "Otto Bank Rec" on `/bank-reconciliation/`, "Website (general)" elsewhere), so a sales rep sees which product a visitor was looking at.
 - Deferred loading: the external widget script is fetched on browser idle or first interaction, so it does not block the initial render.
@@ -19,7 +19,7 @@ The website is more likely to bring sales enquiries than the tech-support conver
 ## Before you start
 
 - **Workspace:** the website uses the same Intercom workspace as the Bank Rec portal and the Otto Capture app, so conversations land in the existing inbox. There is no second workspace to manage.
-- **Region:** the workspace is on Intercom's EU data region. The code already points at `https://api-iam.eu.intercom.io`.
+- **Region:** the workspace is on Intercom's US data region. The code already points at `https://api-iam.intercom.io`.
 - **App ID:** set `PUBLIC_INTERCOM_APP_ID` to the workspace ID (the string after `apps/` in the Intercom URL). Add it to `.env.development` for local work and to the Netlify build environment variables for production. The widget renders nothing until this is set, so the site is safe to ship before the value is in place.
 
 ## Greeting and prompts
@@ -39,7 +39,7 @@ The existing integrations greet people with a support framing. Give the website 
 ## Appearance
 
 - Set the Messenger action colour to the brand primary `#02ac8a` and add the With Otto logo. The dashboard appearance is what actually controls the launcher colour, so set it here even though the code also passes the colour as a hint.
-- Confirm the Messenger is using the EU data region.
+- Confirm the Messenger is using the US data region.
 
 ## Availability and expectations
 

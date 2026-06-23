@@ -8,12 +8,12 @@ export interface Props {
 
 const { appId } = Astro.props;
 
-// EU data region (confirmed with the workspace owner).
-const apiBase = "https://api-iam.eu.intercom.io";
+// US data region.
+const apiBase = "https://api-iam.intercom.io";
 
 // Brand --color-primary (src/styles/global.css). Intercom's JS config needs a
-// literal hex; the authoritative launcher colour is set in the Intercom
-// dashboard (see docs/intercom-messenger-setup.md).
+// literal hex; the launcher colour is ultimately controlled in the Intercom
+// dashboard.
 const actionColor = "#02ac8a";
 
 // Give sales the page context. Trailing slashes are intentional:
