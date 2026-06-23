@@ -32,8 +32,12 @@ Deno.serve(async (req) => {
     const cacheMinutes = 30;
     return new Response(
       JSON.stringify({
-        ...data,
-        timestamp: new Date().toISOString(),
+        bank_rule: data.bank_rule,
+        smart_match: data.smart_match,
+        error_rate_percentage: data.error_rate_percentage,
+        // last_updated reflects when the materialized view was refreshed, so the
+        // "last updated" detail shows data freshness rather than request time.
+        timestamp: data.last_updated ?? new Date().toISOString(),
       }),
       {
         status: 200,
