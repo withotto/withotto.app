@@ -1,0 +1,89 @@
+---
+// Intercom Messenger for anonymous website visitors, tuned for sales enquiries.
+// Rendered by RootLayout only when PUBLIC_INTERCOM_APP_ID is set, so appId is
+// always a non-empty string here. The app id is public and ships in the HTML.
+export interface Props {
+  appId: string;
+}
+
+const { appId } = Astro.props;
+
+// EU data region (confirmed with the workspace owner).
+const apiBase = "https://api-iam.eu.intercom.io";
+
+// Brand --color-primary (src/styles/global.css). Intercom's JS config needs a
+// literal hex; the authoritative launcher colour is set in the Intercom
+// dashboard (see docs/intercom-messenger-setup.md).
+const actionColor = "#02ac8a";
+
+// Give sales the page context. Trailing slashes are intentional:
+// trailingSlash:"always" guarantees every path ends in "/", so "/capture/"
+// cannot collide with e.g. "/capture-foo/".
+const pathname = Astro.url.pathname;
+const product = pathname.startsWith("/capture/")
+  ? "Otto Capture"
+  : pathname.startsWith("/bank-reconciliation/")
+    ? "Otto Bank Rec"
+    : "Website (general)";
+---
+
+<script is:inline define:vars={{ appId, apiBase, actionColor, product }}>
+  window.intercomSettings = {
+    app_id: appId,
+    api_base: apiBase,
+    action_color: actionColor,
+    background_color: actionColor,
+    product: product,
+  };
+  (function () {
+    var w = window;
+    var ic = w.Intercom;
+    if (typeof ic === "function") {
+      ic("reattach_activator");
+      ic("update", w.intercomSettings);
+      return;
+    }
+    var d = document;
+    var i = function () {
+      i.c(arguments);
+    };
+    i.q = [];
+    i.c = function (args) {
+      i.q.push(args);
+    };
+    w.Intercom = i;
+    var loaded = false;
+    function load() {
+      if (loaded) return;
+      loaded = true;
+      var s = d.createElement("script");
+      s.type = "text/javascript";
+      s.async = true;
+      s.src = "https://widget.intercom.io/widget/" + appId;
+      var x = d.getElementsByTagName("script")[0];
+      x.parentNode.insertBefore(s, x);
+    }
+    // Defer the external widget fetch to protect page-speed: load on the first
+    // user interaction or when the browser is idle, whichever comes first.
+    var events = ["mousemove", "scroll", "touchstart", "keydown", "click"];
+    function onInteract() {
+      load();
+      events.forEach(function (e) {
+        w.removeEventListener(e, onInteract);
+      });
+    }
+    events.forEach(function (e) {
+      w.addEventListener(e, onInteract, { once: true, passive: true });
+    });
+    if ("requestIdleCallback" in w) {
+      w.requestIdleCallback(load, { timeout: 6000 });
+    } else if (d.readyState === "complete") {
+      // load event already fired (script sits at end of body): schedule directly
+      setTimeout(load, 3000);
+    } else {
+      w.addEventListener("load", function () {
+        setTimeout(load, 3000);
+      });
+    }
+  })();
+</script>

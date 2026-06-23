@@ -1,6 +1,7 @@
 ---
 import { SEO } from "astro-seo";
 import type { SEOProps } from "astro-seo";
+import IntercomWidget from "@components/IntercomWidget.astro";
 import "@fontsource-variable/rethink-sans";
 import "../styles/global.css";
 
@@ -11,6 +12,8 @@ export interface Props {
 }
 
 const { title, affiliateProgramId, seo = {} } = Astro.props;
+
+const intercomAppId = import.meta.env.PUBLIC_INTERCOM_APP_ID;
 
 const makeTitle = title
   ? title + " — " + "With Otto"
@@ -78,5 +81,6 @@ const defaultDescription =
   </head>
   <body class="flex min-h-full flex-col font-sans antialiased">
     <slot />
+    {intercomAppId && <IntercomWidget appId={intercomAppId} />}
   </body>
 </html>
