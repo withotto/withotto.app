@@ -11,7 +11,7 @@ import lineItemImg from "@assets/capture/line-item-extraction.png";
 
 const seo = {
   description:
-    "AI-powered receipt and bill capture for UK accounting practices. In beta. Integrates with Xero and FreeAgent.",
+    "AI-powered receipt and bill capture for UK accounting practices. Integrates with Xero and FreeAgent.",
 };
 
 const howItWorksSteps: {
@@ -99,7 +99,7 @@ const differentiators: {
   {
     title: "Practice-branded email submission addresses",
     intent:
-      "Each client gets its own submission address, branded to your practice rather than a generic shared inbox. Use a subdomain we host, or point your practice's own domain at it.",
+      "Each client gets its own submission address on a subdomain dedicated to your practice. Because that subdomain is yours, you can use a clear, consistent alias for each client, rather than competing for names on a shared address where the obvious ones are often already taken.",
     icon: "hugeicons:mail-account-01",
     image: null,
     imageAlt: "",
@@ -169,31 +169,6 @@ const pricingPromises: { label: string; intent: string; icon: string }[] = [
   },
 ];
 
-const statusShipped: { icon: string; label: string }[] = [
-  {
-    icon: "hugeicons:checkmark-circle-02",
-    label:
-      "Extraction and publishing of bills, receipts, and sales invoices to Xero and FreeAgent",
-  },
-  {
-    icon: "hugeicons:checkmark-circle-02",
-    label: "Line item extraction as standard",
-  },
-  {
-    icon: "hugeicons:checkmark-circle-02",
-    label:
-      "Nominal code suggestions from each client's coding history, reviewed by you",
-  },
-  {
-    icon: "hugeicons:checkmark-circle-02",
-    label: "Email forwarding with practice-branded submission addresses",
-  },
-  {
-    icon: "hugeicons:progress-04",
-    label: "Xero app certification (in progress)",
-  },
-];
-
 // Section-heading icon chips (large circle, sits above the heading).
 const sectionChipLight =
   "inline-flex size-16 shrink-0 items-center justify-center rounded-full bg-primary text-white shadow-sm md:size-20";
@@ -205,7 +180,7 @@ const itemChip =
   "inline-flex size-12 shrink-0 items-center justify-center rounded-xl bg-primary-soft text-primary-strong";
 ---
 
-<Layout title="Otto Capture (beta)" seo={seo}>
+<Layout title="Otto Capture" seo={seo}>
   <!-- Hero -->
   <div class="bg-primary-soft pt-10 md:pt-24">
     <Container>
@@ -215,7 +190,7 @@ const itemChip =
             class="inline-flex items-center gap-2.5 rounded-full bg-white px-4 py-1.5 text-sm font-medium text-primary-strong shadow-sm">
             Otto Capture
             <span class="size-1 rounded-full bg-primary-medium"></span>
-            Beta
+            Now available
           </span>
         </div>
         <h1
@@ -229,17 +204,20 @@ const itemChip =
         </p>
         <div class="flex justify-center">
           <a
-            href="#join-the-beta"
+            href="https://capture.withotto.app/register/"
             class="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-8 py-4 text-base font-semibold text-white shadow-lg shadow-primary/30 transition hover:-translate-y-0.5 hover:bg-primary-strong hover:shadow-xl focus-visible:ring-2 focus-visible:ring-primary-strong focus-visible:ring-offset-2 focus-visible:outline-none">
-            Join the beta
+            Start your free trial
             <Icon name="hugeicons:arrow-right-01" class="size-5" />
           </a>
         </div>
+        <p class="mt-6 text-sm font-medium text-default-soft">
+          Works with Xero and FreeAgent
+        </p>
       </div>
     </Container>
   </div>
 
-  <!-- What we're building (dark feature band) -->
+  <!-- Why we built it (dark feature band) -->
   <div class="bg-primary-strong py-20 text-white">
     <Container>
       <div class="mx-auto max-w-3xl">
@@ -248,7 +226,7 @@ const itemChip =
             <Icon name="hugeicons:tools" class={sectionChipIcon} />
           </span>
           <h2 class="mt-5 text-3xl font-bold md:text-5xl">
-            What we're building
+            Why we built it
           </h2>
         </div>
         <div class="mt-8 space-y-4 text-lg text-primary-soft">
@@ -539,119 +517,74 @@ const itemChip =
             still waiting to be reviewed.
           </p>
           <p>
-            Capture is in beta today and free to use during the beta. The prices
-            above apply from general availability.{" "}
+            Otto Capture is free to trial for 30 days, extended to 60 for
+            practices joining during our Xero App Store launch. After the trial,
+            the prices above apply.{" "}
             <a
-              href="#join-the-beta"
+              href="https://capture.withotto.app/register/"
               class="font-semibold text-primary-strong underline underline-offset-2 hover:text-primary">
-              Join the beta
+              Start your free trial
             </a>{" "}
-            to start using it with your clients.
+            to begin.
           </p>
         </div>
       </div>
     </Container>
   </div>
 
-  <!-- Where we are now -->
+  <!-- What's next -->
   <div class="py-16">
     <Container>
       <div class="mx-auto max-w-3xl">
-        <div
-          class="rounded-lg border-l-4 border-terracotta bg-terracotta-soft p-6">
+        <div class="rounded-xl border border-muted-strong bg-white p-6">
           <div class="mb-3 flex items-center gap-3">
             <Icon
-              name="hugeicons:navigation-03"
-              class="size-6 shrink-0 text-terracotta-strong"
+              name="hugeicons:route-01"
+              class="size-6 shrink-0 text-primary-strong"
             />
-            <h2 class="text-2xl font-semibold text-default">
-              Where we are now
+            <h2 class="text-2xl font-semibold text-primary-strong">
+              What's next
             </h2>
           </div>
-          <p class="mb-4 text-default">
-            Otto Capture is in beta. The core workflow is in daily use, with
-            practices joining as we work through Xero app certification. Here's
-            what's shipped and what's next:
-          </p>
-          <ul class="space-y-2 text-default-soft">
-            {
-              statusShipped.map((s) => (
-                <li class="flex items-start gap-2">
-                  <Icon
-                    name={s.icon}
-                    class="mt-0.5 size-5 shrink-0 text-primary"
-                  />
-                  <span>{s.label}</span>
-                </li>
-              ))
-            }
-          </ul>
-          <p class="mt-4 border-t border-terracotta-medium pt-4 text-default">
-            <span class="font-semibold">What's coming:</span> requesting missing documents
-            from your clients is next, with WhatsApp submission to follow. We'll add
-            features here as they ship.
+          <p class="text-default">
+            Requesting missing documents from your clients is next, followed by
+            WhatsApp submission. We'll add features here as they ship.
           </p>
         </div>
       </div>
     </Container>
   </div>
 
-  <!-- Join the beta -->
-  <div class="bg-primary-soft py-16" id="join-the-beta">
+  <!-- Get started -->
+  <div class="bg-primary-soft py-16" id="get-started">
     <Container>
       <div class="mx-auto max-w-3xl">
-        <div class="mb-8 flex flex-col items-center text-center">
+        <div class="flex flex-col items-center text-center">
           <span class={sectionChipLight}>
             <Icon name="hugeicons:user-add-01" class={sectionChipIcon} />
           </span>
           <h2 class="mt-5 text-3xl font-bold text-primary-strong md:text-5xl">
-            Join the beta
+            Get started
           </h2>
           <p class="mt-6 text-lg text-default-soft">
-            The beta is open to UK accounting and bookkeeping practices. If
-            you'd like to try Otto Capture with your clients, let us know.
+            Otto Capture is open to UK accounting and bookkeeping practices.
+            Create your account, connect your first client's Xero, and start
+            your free trial. It takes a few minutes.
           </p>
-        </div>
-
-        <!-- Tally Form Embed -->
-        <div
-          class="rounded-xl border border-muted-strong bg-white p-8 shadow-sm">
-          <iframe
-            data-tally-src="https://tally.so/embed/44xdK5?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1"
-            loading="lazy"
-            width="100%"
-            height="1638"
-            frameborder="0"
-            marginheight="0"
-            marginwidth="0"
-            title="Otto Capture early access"></iframe>
-          <script is:inline>
-            var d = document,
-              w = "https://tally.so/widgets/embed.js",
-              v = function () {
-                "undefined" != typeof Tally
-                  ? Tally.loadEmbeds()
-                  : d
-                      .querySelectorAll("iframe[data-tally-src]:not([src])")
-                      .forEach(function (e) {
-                        e.src = e.dataset.tallySrc;
-                      });
-              };
-            if ("undefined" != typeof Tally) v();
-            else if (d.querySelector('script[src="' + w + '"]') == null) {
-              var s = d.createElement("script");
-              ((s.src = w),
-                (s.onload = v),
-                (s.onerror = v),
-                d.body.appendChild(s));
-            }
-          </script>
+          <div class="mt-8 flex justify-center">
+            <a
+              href="https://capture.withotto.app/register/"
+              class="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-8 py-4 text-base font-semibold text-white shadow-lg shadow-primary/30 transition hover:-translate-y-0.5 hover:bg-primary-strong hover:shadow-xl focus-visible:ring-2 focus-visible:ring-primary-strong focus-visible:ring-offset-2 focus-visible:outline-none">
+              Start your free trial
+              <Icon name="hugeicons:arrow-right-01" class="size-5" />
+            </a>
+          </div>
         </div>
       </div>
     </Container>
   </div>
 
-  <!-- Beta honesty note -->
+  <!-- Honesty note -->
   <div class="py-16">
     <Container>
       <div class="mx-auto max-w-3xl">
@@ -662,8 +595,9 @@ const itemChip =
             class="mt-0.5 size-6 shrink-0 text-primary-strong"
           />
           <p class="text-default">
-            This is beta software. There will be edge cases we haven't seen yet,
-            and some features will change as we learn from how practices use it.
+            Otto Capture is a newer product and we're developing it actively. If
+            something isn't right, or there's a feature you'd like to see, tell
+            us. Support comes direct from the team that builds it.
           </p>
         </div>
       </div>
