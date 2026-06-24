@@ -47,6 +47,8 @@ Tribal knowledge not obvious from reading a single file. Read before touching la
 
 Swap embed URLs here; they are not configurable via env var.
 
+**Intercom (live chat)** is a third-party hosted integration (not a self-hosted subdomain): `IntercomWidget.astro`, rendered once in `RootLayout.astro` and gated on the `PUBLIC_INTERCOM_APP_ID` env var. See `.claude/rules/withotto-app-intercom.md` for how it works and the sales-oriented dashboard checklist.
+
 ## Icons
 
 - **Remote set:** `astro-icon` + `@iconify-json/hugeicons`. Example: `<Icon name="hugeicons:calendar-03" size={32} class="..." />`
