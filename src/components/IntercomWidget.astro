@@ -53,24 +53,26 @@ const product = pathname.startsWith("/capture/")
     };
     w.Intercom = i;
     var loaded = false;
+    // Defer the external widget fetch to protect page-speed: load on the first
+    // user interaction or when the browser is idle, whichever comes first.
+    var events = ["mousemove", "scroll", "touchstart", "keydown", "click"];
+    function onInteract() {
+      load();
+    }
     function load() {
       if (loaded) return;
       loaded = true;
+      // Detach the interaction listeners up front so an idle- or load-triggered
+      // load does not leave them attached waiting to fire a no-op.
+      events.forEach(function (e) {
+        w.removeEventListener(e, onInteract);
+      });
       var s = d.createElement("script");
       s.type = "text/javascript";
       s.async = true;
       s.src = "https://widget.intercom.io/widget/" + appId;
       var x = d.getElementsByTagName("script")[0];
       x.parentNode.insertBefore(s, x);
-    }
-    // Defer the external widget fetch to protect page-speed: load on the first
-    // user interaction or when the browser is idle, whichever comes first.
-    var events = ["mousemove", "scroll", "touchstart", "keydown", "click"];
-    function onInteract() {
-      load();
-      events.forEach(function (e) {
-        w.removeEventListener(e, onInteract);
-      });
     }
     events.forEach(function (e) {
       w.addEventListener(e, onInteract, { once: true, passive: true });
