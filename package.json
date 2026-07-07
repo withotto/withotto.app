@@ -16,7 +16,7 @@
   "dependencies": {
     "@astrojs/mdx": "7.0.1",
     "@astrojs/sitemap": "3.7.3",
-    "@tailwindcss/vite": "4.3.1",
+    "@tailwindcss/vite": "4.3.2",
     "@fontsource-variable/rethink-sans": "5.2.8",
     "@iconify-json/hugeicons": "1.2.29",
     "@tailwindcss/typography": "0.5.20",
@@ -25,7 +25,7 @@
     "astro-navbar": "2.4.0",
     "astro-seo": "1.1.0",
     "sharp": "0.35.1",
-    "tailwindcss": "4.3.1"
+    "tailwindcss": "4.3.2"
   },
   "devDependencies": {
     "prettier": "3.8.4",
