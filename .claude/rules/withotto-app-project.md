@@ -17,7 +17,7 @@ Homepage and shared copy should lead with the brand (tools for accountants/bookk
 
 ## Technology Stack
 
-- **Framework:** Astro 6 (static site, `trailingSlash: "always"`)
+- **Framework:** Astro 7 (static site, `trailingSlash: "always"`)
 - **Language:** TypeScript (strictNullChecks) + `.astro` components
 - **Styling:** Tailwind CSS 4 via `@tailwindcss/vite` (+ `@tailwindcss/typography`); theme tokens in `src/styles/global.css`
 - **Content:** MDX via `@astrojs/mdx`, Astro content collections
