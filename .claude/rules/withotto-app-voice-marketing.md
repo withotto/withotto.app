@@ -79,7 +79,7 @@ Prices exclude VAT.
 
 Lead with these three positives, using these names for consistency across the site:
 
-- **No documents, no charge.** A client with no documents in a month is not charged, where many competitors bill per client regardless. A genuine differentiator; state it plainly.
+- **No documents, no charge.** A client with no published documents in a month is not charged, where many competitors bill per client regardless. A genuine differentiator; state it plainly.
 - **Always the cheapest tier.** Each client sits on whichever tier costs least for what it published that month, worked out automatically. No plan to choose up front, no moving clients between plans.
 - **No price cliffs.** Reaching a tier's allowance doesn't tip a client into the next tier and a much bigger bill. Extra documents are charged at the tier's per-document rate until the next tier works out cheaper, at which point the client moves up automatically. Above Large, documents continue at the Large rate.
 
@@ -89,7 +89,7 @@ Other guidance:
 - The tier prices and per-document rates are public and shown on the pricing table. Explain the mechanism in plain terms and avoid the jargon word "overage". The exact document counts where one tier overtakes the next don't need to appear on the page.
 - Say only documents published to the accounting platform are charged: not duplicates, not discarded documents, not documents still to be reviewed. Avoid wording like "drafts aren't charged", which can be misread against a Draft document status.
 
-Still internal (kept out of the committed public website and support repos): the exact tier-selection breakpoints, and the reason the no-documents check is based on received rather than published documents. When the model changes, update this section together with the Capture pricing differentiators in `withotto-app-products.md` and the internal pricing notes.
+Still internal (kept out of the committed public website and support repos): the exact tier-selection breakpoints. When the model changes, update this section together with the Capture pricing differentiators in `withotto-app-products.md` and the internal pricing notes.
 
 For Otto Bank Rec, pricing is established and the transparency rules apply: lead with the model in plain terms, show the pricing, no hidden "contact us" pricing, and a calculator or example where the model is non-trivial.
 
