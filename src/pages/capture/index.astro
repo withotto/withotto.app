@@ -8,6 +8,7 @@ import captureImg from "@assets/capture/step-01-capture.png";
 import reviewImg from "@assets/capture/step-03-review.png";
 import historicalImg from "@assets/capture/historical-learning.png";
 import lineItemImg from "@assets/capture/line-item-extraction.png";
+import whatsappImg from "@assets/capture/whatsapp-submission.png";
 
 const seo = {
   description:
@@ -47,6 +48,25 @@ const howItWorksSteps: {
     intent: "Once you're happy, publish straight to your accounting platform.",
     image: null,
     imageAlt: "",
+  },
+];
+
+// The document types Otto handles, grouped by side of the ledger so credit
+// notes sit alongside the bills and invoices they relate to.
+const documentGroups: {
+  side: string;
+  icon: string;
+  documents: string[];
+}[] = [
+  {
+    side: "Purchases",
+    icon: "hugeicons:invoice-01",
+    documents: ["Bills and receipts", "Purchase credit notes"],
+  },
+  {
+    side: "Sales",
+    icon: "hugeicons:coins-01",
+    documents: ["Sales invoices", "Sales credit notes"],
   },
 ];
 
@@ -279,6 +299,63 @@ const itemChip =
     </Container>
   </div>
 
+  <!-- Documents Otto handles -->
+  <div class="py-16">
+    <Container>
+      <div class="mx-auto max-w-5xl">
+        <div class="flex flex-col items-center text-center">
+          <span class={sectionChipLight}>
+            <Icon name="hugeicons:check-list" class={sectionChipIcon} />
+          </span>
+          <h2 class="mt-5 text-3xl font-bold text-primary-strong md:text-5xl">
+            The documents Otto handles
+          </h2>
+          <p class="mx-auto mt-6 max-w-2xl text-left text-lg text-default">
+            Otto reads and codes the everyday documents a practice works with,
+            on both the purchase and the sales side.
+          </p>
+        </div>
+        <div class="mt-12 grid gap-6 md:grid-cols-2">
+          {
+            documentGroups.map((group) => (
+              <div class="rounded-xl border border-muted-strong bg-white p-6 shadow-sm md:p-8">
+                <div class="flex items-center gap-3">
+                  <span class={itemChip}>
+                    <Icon name={group.icon} class="size-6" />
+                  </span>
+                  <h3 class="text-xl font-semibold text-primary-strong">
+                    {group.side}
+                  </h3>
+                </div>
+                <ul class="mt-6 space-y-4">
+                  {group.documents.map((doc) => (
+                    <li class="flex items-center gap-3">
+                      <span class="size-2 shrink-0 rounded-full bg-primary-medium" />
+                      <span class="text-lg font-medium text-default">
+                        {doc}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </Container>
+  </div>
+
+  <!-- Divider: an edge-faded hairline sitting exactly between the two white
+       sections. It carries no vertical padding of its own, so the equal py-16
+       of the sections above and below frame it with identical spacing. -->
+  <div>
+    <Container>
+      <div
+        class="mx-auto h-px max-w-5xl bg-[linear-gradient(90deg,transparent,var(--color-muted-strong)_22%,var(--color-muted-strong)_78%,transparent)]">
+      </div>
+    </Container>
+  </div>
+
   <!-- What makes it different -->
   <div class="py-16">
     <Container>
@@ -371,6 +448,49 @@ const itemChip =
               ),
             )
           }
+        </div>
+      </div>
+    </Container>
+  </div>
+
+  <!-- Send receipts over WhatsApp -->
+  <div class="bg-primary-soft py-16">
+    <Container>
+      <div class="mx-auto max-w-5xl">
+        <div class="flex flex-col items-center text-center">
+          <span class={sectionChipLight}>
+            <Icon name="hugeicons:whatsapp" class={sectionChipIcon} />
+          </span>
+          <h2 class="mt-5 text-3xl font-bold text-primary-strong md:text-5xl">
+            Send receipts over WhatsApp
+          </h2>
+        </div>
+        <div class="mt-12 grid items-start gap-10 md:grid-cols-2">
+          <div class="space-y-4 text-lg text-default md:mt-8">
+            <p>
+              The people holding the receipts are often not the ones who deal
+              with you, and they rarely want to set up another account. So your
+              clients can send receipts and invoices to Otto over WhatsApp, with
+              no new app to install and nothing to sign in to.
+            </p>
+            <p>
+              You share an invite with whoever needs it, and they connect their
+              own WhatsApp by tapping it. There is no phone number to register
+              in advance. You can see who is connected, remove access when
+              someone leaves, and change the invite if it should no longer be
+              used.
+            </p>
+            <p>
+              Whoever sends a document can add a short note with it, such as
+              client entertainment, so the context reaches you along with the
+              receipt.
+            </p>
+          </div>
+          <Screenshot
+            src={whatsappImg}
+            alt="A WhatsApp chat on an iPhone, where a client sends photos of receipts to Otto and Otto replies to confirm each one has been received"
+            class="mx-auto max-w-[280px]"
+          />
         </div>
       </div>
     </Container>
@@ -545,8 +665,8 @@ const itemChip =
             </h2>
           </div>
           <p class="text-default">
-            Requesting missing documents from your clients is next, followed by
-            WhatsApp submission. We'll add features here as they ship.
+            Requesting missing documents from your clients is next. We'll add
+            features here as they ship.
           </p>
         </div>
       </div>
