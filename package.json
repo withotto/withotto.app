@@ -17,7 +17,7 @@
     "@astrojs/mdx": "7.0.3",
     "@astrojs/sitemap": "3.7.3",
     "@tailwindcss/vite": "4.3.2",
-    "@fontsource-variable/rethink-sans": "5.2.8",
+    "@fontsource-variable/rethink-sans": "5.3.0",
     "@iconify-json/hugeicons": "1.2.30",
     "@tailwindcss/typography": "0.5.20",
     "astro": "7.0.7",
