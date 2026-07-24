@@ -15,8 +15,8 @@ importers:
         specifier: 3.7.3
         version: 3.7.3
       '@fontsource-variable/rethink-sans':
-        specifier: 5.2.8
-        version: 5.2.8
+        specifier: 5.3.0
+        version: 5.3.0
       '@iconify-json/hugeicons':
         specifier: 1.2.30
         version: 1.2.30
@@ -458,8 +458,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@fontsource-variable/rethink-sans@5.2.8':
-    resolution: {integrity: sha512-al4seUEA9sN3D7//lASAPUWPtehLIkKHQRxskZwTUHd3hOpfyjJWmXLOXYQwYAS5h4OhZ2D9S/3N73MzTJ5ecg==}
+  '@fontsource-variable/rethink-sans@5.3.0':
+    resolution: {integrity: sha512-TxcGrNeylZZ3eL5WuNxvm1OLOMOrmYTRZcqMUoYhOfpcMgvE6PhssC6JGkPHhN93phU569RLD8cSykOjyHCuxg==}
 
   '@iconify-json/hugeicons@1.2.30':
     resolution: {integrity: sha512-L38YPId/uZ8xZJL+rdwB5/uI/jpnbzqXetfo1b0wbBi6h2pnyEy6HpQouCJXMBUOkp2iVWu8C1VdFRG+JRFwpg==}
@@ -3000,7 +3000,7 @@ snapshots:
   '@esbuild/win32-x64@0.28.1':
     optional: true
 
-  '@fontsource-variable/rethink-sans@5.2.8': {}
+  '@fontsource-variable/rethink-sans@5.3.0': {}
 
   '@iconify-json/hugeicons@1.2.30':
     dependencies:
