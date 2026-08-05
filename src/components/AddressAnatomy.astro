@@ -1,0 +1,60 @@
+---
+// A colour-coded address, broken into its meaningful parts.
+//
+// Shared by the email address and the submission page URL so the two read as
+// the same idea in a different order: the client and the practice carry the
+// brand accents, and everything Otto supplies stays neutral.
+export type AddressSegment = {
+  value: string;
+  label: string;
+  accent: "client" | "practice" | "hosted" | "code";
+  // Rendered after the segment, between it and the next one. Empty on the last.
+  sep: string;
+};
+
+const accent: Record<AddressSegment["accent"], { bar: string; label: string }> =
+  {
+    client: { bar: "bg-primary", label: "text-primary-strong" },
+    practice: { bar: "bg-terracotta", label: "text-terracotta-strong" },
+    // Neutral for the parts a practice doesn't choose. The code is neutral for
+    // the same reason, even though it isn't ours: it isn't branding either, and
+    // a third accent would imply it ranks alongside the practice and client.
+    hosted: { bar: "bg-default-soft", label: "text-default-soft" },
+    code: { bar: "bg-default-soft", label: "text-default-soft" },
+  };
+
+interface Props {
+  segments: AddressSegment[];
+}
+
+const { segments } = Astro.props;
+---
+
+<div class="flex flex-wrap items-start gap-x-1.5 gap-y-4">
+  {
+    segments.map((seg) => (
+      <Fragment>
+        <span class="flex flex-col">
+          <span class="font-mono text-sm text-default md:text-base">
+            {seg.value}
+          </span>
+          <span
+            class:list={["mt-1.5 h-0.5 rounded-full", accent[seg.accent].bar]}
+          />
+          <span
+            class:list={[
+              "mt-1.5 text-xs font-medium",
+              accent[seg.accent].label,
+            ]}>
+            {seg.label}
+          </span>
+        </span>
+        {seg.sep && (
+          <span class="font-mono text-sm text-default-soft md:text-base">
+            {seg.sep}
+          </span>
+        )}
+      </Fragment>
+    ))
+  }
+</div>

@@ -3,12 +3,15 @@ import type { ImageMetadata } from "astro";
 import Layout from "@layouts/Layout.astro";
 import Container from "@components/container.astro";
 import Screenshot from "@components/Screenshot.astro";
+import AddressAnatomy from "@components/AddressAnatomy.astro";
+import type { AddressSegment } from "@components/AddressAnatomy.astro";
 import { Icon } from "astro-icon/components";
 import captureImg from "@assets/capture/step-01-capture.png";
 import reviewImg from "@assets/capture/step-03-review.png";
 import historicalImg from "@assets/capture/historical-learning.png";
 import lineItemImg from "@assets/capture/line-item-extraction.png";
 import whatsappImg from "@assets/capture/whatsapp-submission.png";
+import submissionPageImg from "@assets/capture/client-submission-page.png";
 
 const seo = {
   description:
@@ -24,7 +27,7 @@ const howItWorksSteps: {
   {
     name: "Capture",
     intent:
-      "Receipts and invoices arrive by upload or email, to an address branded to your practice.",
+      "Receipts and invoices arrive by upload, by email to an address branded to your practice, over WhatsApp, or through a client's own submission page.",
     image: captureImg,
     imageAlt: "A receipt being submitted to Otto Capture by email",
   },
@@ -71,24 +74,17 @@ const documentGroups: {
 ];
 
 type EmailAnatomy = {
-  segments: {
-    value: string;
-    label: string;
-    accent: "client" | "practice" | "hosted";
-    sep: string;
-  }[];
+  segments: AddressSegment[];
   ownDomain: string;
 };
 
-// Colour-codes each address segment: the two meaningful parts (the client and
-// the practice) get the brand accents; the hosted domain stays neutral.
-const emailAccent: Record<
-  EmailAnatomy["segments"][number]["accent"],
-  { bar: string; label: string }
-> = {
-  client: { bar: "bg-primary", label: "text-primary-strong" },
-  practice: { bar: "bg-terracotta", label: "text-terracotta-strong" },
-  hosted: { bar: "bg-default-soft", label: "text-default-soft" },
+// The submission page address, introduced and shown after the email anatomy.
+// Its own lead-in, so the paragraph above stays about email and each example
+// is introduced by the sentence directly above it.
+type PageAnatomy = {
+  intro: string;
+  segments: AddressSegment[];
+  note: string;
 };
 
 const differentiators: {
@@ -98,6 +94,7 @@ const differentiators: {
   image: ImageMetadata | null;
   imageAlt: string;
   emailExample?: EmailAnatomy;
+  pageExample?: PageAnatomy;
 }[] = [
   {
     title: "Historical learning",
@@ -117,7 +114,7 @@ const differentiators: {
     imageAlt: "Line items extracted from a receipt",
   },
   {
-    title: "Practice-branded email submission addresses",
+    title: "Practice-branded submission addresses",
     intent:
       "Each client gets its own submission address on a subdomain dedicated to your practice. Because that subdomain is yours, you can use a clear, consistent alias for each client, rather than competing for names on a shared address where the obvious ones are often already taken.",
     icon: "hugeicons:mail-account-01",
@@ -145,6 +142,37 @@ const differentiators: {
         },
       ],
       ownDomain: "flower-power@receipts.topaccountant.com",
+    },
+    pageExample: {
+      intro:
+        "Each client also gets a submission page: a link you share with whoever holds their receipts, so they can send documents in from any device without an account. Your practice and client names lead that address too.",
+      segments: [
+        {
+          value: "top-accountant-limited",
+          label: "your practice",
+          accent: "practice",
+          sep: ".",
+        },
+        {
+          value: "capture.withotto.app",
+          label: "hosted by Otto",
+          accent: "hosted",
+          sep: "/",
+        },
+        {
+          value: "flower-power",
+          label: "the client",
+          accent: "client",
+          sep: "/",
+        },
+        {
+          value: "n7Qw2ZKp",
+          label: "a unique code",
+          accent: "code",
+          sep: "",
+        },
+      ],
+      note: "The code at the end is what makes the link work, so you can replace it at any time to stop an old link being used.",
     },
   },
   {
@@ -198,6 +226,9 @@ const sectionChipIcon = "size-7 md:size-8";
 // Per-item icon chip (small, sits inline with the item heading).
 const itemChip =
   "inline-flex size-12 shrink-0 items-center justify-center rounded-xl bg-primary-soft text-primary-strong";
+// The same chip on a primary-soft band, where the soft fill would disappear.
+const itemChipOnSoft =
+  "inline-flex size-12 shrink-0 items-center justify-center rounded-xl bg-white text-primary-strong";
 ---
 
 <Layout title="Otto Capture" seo={seo}>
@@ -405,35 +436,7 @@ const itemChip =
                   <p class="mt-4 text-lg text-default">{item.intent}</p>
                   {item.emailExample && (
                     <div class="mt-6 rounded-xl border border-muted-strong bg-muted-soft p-5 md:p-6">
-                      <div class="flex flex-wrap items-start gap-x-1.5 gap-y-4">
-                        {item.emailExample.segments.map((seg) => (
-                          <Fragment>
-                            <span class="flex flex-col">
-                              <span class="font-mono text-sm text-default md:text-base">
-                                {seg.value}
-                              </span>
-                              <span
-                                class:list={[
-                                  "mt-1.5 h-0.5 rounded-full",
-                                  emailAccent[seg.accent].bar,
-                                ]}
-                              />
-                              <span
-                                class:list={[
-                                  "mt-1.5 text-xs font-medium",
-                                  emailAccent[seg.accent].label,
-                                ]}>
-                                {seg.label}
-                              </span>
-                            </span>
-                            {seg.sep && (
-                              <span class="font-mono text-sm text-default-soft md:text-base">
-                                {seg.sep}
-                              </span>
-                            )}
-                          </Fragment>
-                        ))}
-                      </div>
+                      <AddressAnatomy segments={item.emailExample.segments} />
                       <div class="mt-5 border-t border-muted-strong pt-4">
                         <p class="text-sm text-default-soft">
                           Prefer your own domain? Point it at Otto instead:
@@ -444,6 +447,21 @@ const itemChip =
                       </div>
                     </div>
                   )}
+                  {item.pageExample && (
+                    <Fragment>
+                      <p class="mt-6 text-lg text-default">
+                        {item.pageExample.intro}
+                      </p>
+                      <div class="mt-4 rounded-xl border border-muted-strong bg-muted-soft p-5 md:p-6">
+                        <AddressAnatomy segments={item.pageExample.segments} />
+                        <div class="mt-5 border-t border-muted-strong pt-4">
+                          <p class="text-sm text-default-soft">
+                            {item.pageExample.note}
+                          </p>
+                        </div>
+                      </div>
+                    </Fragment>
+                  )}
                 </div>
               ),
             )
@@ -453,42 +471,94 @@ const itemChip =
     </Container>
   </div>
 
-  <!-- Send receipts over WhatsApp -->
+  <!-- Getting receipts from the people who hold them -->
   <div class="bg-primary-soft py-16">
     <Container>
       <div class="mx-auto max-w-5xl">
         <div class="flex flex-col items-center text-center">
           <span class={sectionChipLight}>
-            <Icon name="hugeicons:whatsapp" class={sectionChipIcon} />
+            <Icon name="hugeicons:inbox-upload" class={sectionChipIcon} />
           </span>
           <h2 class="mt-5 text-3xl font-bold text-primary-strong md:text-5xl">
-            Send receipts over WhatsApp
+            Getting receipts from the people who hold them
           </h2>
+          <p class="mx-auto mt-6 max-w-3xl text-left text-lg text-default">
+            The people holding the receipts are often not the ones who deal with
+            you, and they rarely want to set up another account. So Otto gives
+            them two ways to send documents straight through to you, with no new
+            app to install and nothing to sign in to.
+          </p>
         </div>
-        <div class="mt-12 grid items-start gap-10 md:grid-cols-2">
-          <div class="space-y-4 text-lg text-default md:mt-8">
-            <p>
-              The people holding the receipts are often not the ones who deal
-              with you, and they rarely want to set up another account. So your
-              clients can send receipts and invoices to Otto over WhatsApp, with
-              no new app to install and nothing to sign in to.
-            </p>
-            <p>
-              You share an invite with whoever needs it, and they connect their
-              own WhatsApp by tapping it. There is no phone number to register
-              in advance. You can see who is connected, remove access when
-              someone leaves, and change the invite if it should no longer be
-              used.
-            </p>
-            <p>
-              Whoever sends a document can add a short note with it, such as
-              client entertainment, so the context reaches you along with the
-              receipt.
-            </p>
+        <div
+          class="mt-12 grid items-start gap-10 md:grid-cols-2 md:items-center">
+          <div>
+            <div class="flex items-center gap-3">
+              <span class={itemChipOnSoft}>
+                <Icon name="hugeicons:whatsapp" class="size-6" />
+              </span>
+              <h3 class="text-2xl font-semibold text-primary-strong">
+                WhatsApp
+              </h3>
+            </div>
+            <div class="mt-4 space-y-4 text-lg text-default">
+              <p>
+                Your clients can send receipts and invoices to Otto over
+                WhatsApp, from the phone they already carry.
+              </p>
+              <p>
+                You share an invite with whoever needs it, and they connect
+                their own WhatsApp by tapping it. There is no phone number to
+                register in advance. You can see who is connected, remove access
+                when someone leaves, and change the invite if it should no
+                longer be used.
+              </p>
+              <p>
+                Whoever sends a document can add a short note with it, such as
+                client entertainment, so the context reaches you along with the
+                receipt.
+              </p>
+            </div>
           </div>
           <Screenshot
             src={whatsappImg}
             alt="A WhatsApp chat on an iPhone, where a client sends photos of receipts to Otto and Otto replies to confirm each one has been received"
+            class="mx-auto max-w-[280px]"
+          />
+        </div>
+        <div
+          class="mt-16 grid items-start gap-10 md:grid-cols-2 md:items-center">
+          {
+            /* Image leads on desktop, so the two rows alternate rather than
+              stacking both screenshots down the same edge. */
+          }
+          <div class="md:order-last">
+            <div class="flex items-center gap-3">
+              <span class={itemChipOnSoft}>
+                <Icon name="hugeicons:link-01" class="size-6" />
+              </span>
+              <h3 class="text-2xl font-semibold text-primary-strong">
+                A submission page for each client
+              </h3>
+            </div>
+            <div class="mt-4 space-y-4 text-lg text-default">
+              <p>
+                Every client also gets its own page for sending documents in.
+                You share the link, and anyone holding it can take a photo or
+                choose files they already have and send them straight into that
+                client's review queue, with nothing to download and no account
+                to create.
+              </p>
+              <p>
+                Because the link is all anyone needs, it is worth sharing with
+                the care you would give a key. You can replace it whenever you
+                like, which stops the old one working, or switch the page off
+                for a client who has no use for it.
+              </p>
+            </div>
+          </div>
+          <Screenshot
+            src={submissionPageImg}
+            alt="A client's submission page on a phone, headed 'Send documents to The Number Ninja', with an area to choose files and a short note explaining what happens after they are sent"
             class="mx-auto max-w-[280px]"
           />
         </div>
