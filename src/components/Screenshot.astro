@@ -132,8 +132,12 @@ const titleId = `title-${screenshotId}`;
       </button>
     </div>
 
-    <!-- Modal Content -->
-    <div class="overflow-auto p-6">
+    <!-- Modal Content. Flex-centred rather than relying on margins: the reset
+         block below sets `margin: 0 !important` on everything inside the
+         modal, so `mx-auto` on the image would be overridden. The panel's
+         width is set by the header (which carries the full alt text), so a
+         narrow portrait image would otherwise sit against the left edge. -->
+    <div class="flex items-center justify-center overflow-auto p-6">
       <Image
         src={src}
         alt={alt}
