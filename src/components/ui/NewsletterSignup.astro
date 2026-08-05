@@ -14,7 +14,7 @@
         practices
       </p>
     </div>
-    <div class="w-1 rounded-full bg-primary-medium/20"></div>
+    <div class="hidden w-1 rounded-full bg-primary-medium/50 md:block"></div>
   </div>
 
   <div id="noJsMessage" class="flex items-center">
@@ -47,19 +47,25 @@
       role="group"
       aria-label="Personal information">
       <div class="w-full">
-        <label for="name" class="text-s inline-block font-medium text-default">
+        <label
+          for="name"
+          class="mb-1.5 inline-block text-sm font-medium text-default">
           Your name
+          <span class="ml-1 font-normal text-default-soft">(optional)</span>
         </label>
         <input
           type="text"
           id="name"
           name="name"
-          class="mt-1 w-full rounded-lg border-2 border-white px-6 py-4 text-sm text-default focus:border-primary focus:outline-none"
+          autocomplete="name"
+          class="w-full rounded-lg border border-muted/40 bg-white px-4 py-3.5 text-base text-default shadow-sm transition-colors hover:border-muted/60 focus:border-primary-strong focus:ring-1 focus:ring-primary-strong focus:outline-none"
           aria-required="false"
         />
       </div>
       <div class="w-full">
-        <label for="email" class="text-s inline-block font-medium text-default">
+        <label
+          for="email"
+          class="mb-1.5 inline-block text-sm font-medium text-default">
           Email address
         </label>
         <input
@@ -67,14 +73,15 @@
           id="email"
           name="email"
           required
-          class="mt-1 w-full rounded-lg border-2 border-white px-6 py-4 text-sm text-default focus:border-primary focus:outline-none"
+          autocomplete="email"
+          class="w-full rounded-lg border border-muted/40 bg-white px-4 py-3.5 text-base text-default shadow-sm transition-colors hover:border-muted/60 focus:border-primary-strong focus:ring-1 focus:ring-primary-strong focus:outline-none"
           aria-required="true"
         />
       </div>
     </div>
     <button
       type="submit"
-      class="text-md rounded-lg border border-transparent bg-primary px-8 py-5 font-semibold text-white shadow transition-colors hover:bg-primary-strong focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:outline-none lg:w-full"
+      class="rounded-lg border border-transparent bg-primary px-8 py-4 text-base font-semibold text-white shadow-sm transition-colors hover:bg-primary-strong focus:ring-2 focus:ring-primary-strong focus:ring-offset-2 focus:ring-offset-primary-soft focus:outline-none"
       aria-label="Subscribe to newsletter">
       Subscribe
     </button>
