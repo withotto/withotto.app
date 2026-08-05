@@ -21,6 +21,3 @@ allowBuilds:
   esbuild: true
   sharp: true
   supabase: true
-minimumReleaseAgeExclude:
-  # Renovate security update: astro@6.4.6 || 7.1.0
-  - astro@6.4.6 || 7.1.0
