@@ -11,11 +11,11 @@ const { withIcon = true, message = "Error loading data" } = Astro.props;
 
 {
   withIcon ? (
-    <span class="text-error inline-flex items-center gap-1">
-      <Icon name="hugeicons:alert-02" size={16} class="h-4 w-4 text-danger" />
+    <span class="inline-flex items-center gap-1 text-danger-strong">
+      <Icon name="hugeicons:alert-02" size={16} class="h-4 w-4" />
       <span>{message}</span>
     </span>
   ) : (
-    <span class="text-error">—</span>
+    <span class="text-danger-strong">&mdash;</span>
   )
 }
