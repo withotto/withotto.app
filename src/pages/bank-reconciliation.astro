@@ -5,6 +5,7 @@ import FeaturesCol from "@components/features-col.astro";
 import StatsGrid from "@components/StatsGrid.astro";
 import Pricing from "@components/pricing.astro";
 import BookingForm from "@components/BookingForm.astro";
+import Link from "@components/ui/link.astro";
 
 const seo = {
   title: "Otto Bank Rec - With Otto",
@@ -29,11 +30,7 @@ const seo = {
           cases where you need more.
         </p>
         <div class="mb-12 flex justify-center">
-          <a
-            href="#start-a-trial"
-            class="rounded-lg bg-primary px-6 py-3 font-medium text-white shadow transition hover:bg-primary-strong">
-            Start a trial
-          </a>
+          <Link href="#start-a-trial">Start a trial</Link>
         </div>
         <StatsGrid />
       </div>

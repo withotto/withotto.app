@@ -1,6 +1,21 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
+/*
+ * Tailwind 4's preflight sets `cursor: default` on buttons to match the raw
+ * browser behaviour, which leaves a <button> CTA with a different cursor from
+ * a visually identical <a> CTA. Put the pointer back so every interactive
+ * control agrees. Utilities still win, so `cursor-zoom-in` on the screenshot
+ * trigger and `disabled:cursor-not-allowed` both keep working.
+ */
+@layer base {
+  button:not(:disabled),
+  summary,
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
 @theme {
   --font-sans:
     "Rethink Sans Variable", ui-sans-serif, system-ui, -apple-system,

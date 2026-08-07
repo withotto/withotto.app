@@ -1,9 +1,12 @@
 ---
+import { buttonClasses } from "./buttonStyles";
+import type { ButtonSize, ButtonVariant } from "./buttonStyles";
+
 interface Props {
   href: string;
-  size?: "md" | "lg";
+  size?: ButtonSize;
   block?: boolean;
-  style?: "outline" | "primary" | "inverted" | "muted";
+  variant?: ButtonVariant;
   class?: string;
   [x: string]: any;
 }
@@ -11,36 +14,16 @@ interface Props {
 const {
   href,
   block,
-  size = "lg",
-  style = "primary",
+  size = "md",
+  variant = "primary",
   class: className,
   ...rest
 } = Astro.props;
-
-const sizes = {
-  lg: "px-5 py-2.5",
-  md: "px-4 py-2",
-};
-
-const styles = {
-  outline: "bg-white border-2 border-black hover:bg-gray-100 text-black ",
-  primary:
-    "bg-primary text-white hover:bg-primary-strong  border-2 border-transparent",
-  inverted: "bg-white text-black   border-2 border-transparent",
-  muted:
-    "bg-white text-primary-strong hover:bg-primary border-2 border-transparent hover:text-white",
-};
 ---
 
 <a
   href={href}
   {...rest}
-  class:list={[
-    "rounded-md text-center shadow ring-gray-200 ring-offset-2 transition focus-visible:ring-2",
-    block && "w-full",
-    sizes[size],
-    styles[style],
-    className,
-  ]}>
+  class:list={[buttonClasses(variant, size), block && "w-full", className]}>
   <slot />
 </a>

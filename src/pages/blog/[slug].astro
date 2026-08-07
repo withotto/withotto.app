@@ -5,6 +5,7 @@ import Container from "@components/container.astro";
 import { Picture } from "astro:assets";
 import { Icon } from "astro-icon/components";
 import AudioPlayer from "@components/AudioPlayer.astro";
+import Link from "@components/ui/link.astro";
 import { getBlogSlug } from "@utils/blog";
 
 // Generate a new path for every collection entry
@@ -141,12 +142,8 @@ const { Content } = await render(entry);
         }
       </div>
     </div>
-    <div class="mt-8 mb-16 text-center">
-      <a
-        href="/blog/"
-        class="rounded-md bg-gray-100 px-5 py-3 transition hover:bg-gray-200">
-        ← Back to Blog
-      </a>
+    <div class="mt-8 mb-16 flex justify-center">
+      <Link href="/blog/" variant="subtle">&larr; Back to Blog</Link>
     </div>
   </Container>
 </Layout>

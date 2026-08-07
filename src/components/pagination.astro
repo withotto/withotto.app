@@ -1,26 +1,22 @@
 ---
+import Link from "@components/ui/link.astro";
+
 const { url } = Astro.props;
 ---
 
 <div class="mt-10 flex items-center justify-center gap-4">
   {
     url.prev && (
-      <a
-        class="rounded-md bg-gray-100 px-5 py-2 transition hover:bg-gray-200"
-        href={url.prev}
-        title="Go to Previous">
+      <Link variant="subtle" size="sm" href={url.prev} title="Go to Previous">
         &larr; Prev
-      </a>
+      </Link>
     )
   }
   {
     url.next && (
-      <a
-        class="rounded-md bg-gray-100 px-5 py-2 transition hover:bg-gray-200"
-        href={url.next}
-        title="Go to Next">
+      <Link variant="subtle" size="sm" href={url.next} title="Go to Next">
         Next &rarr;
-      </a>
+      </Link>
     )
   }
 </div>

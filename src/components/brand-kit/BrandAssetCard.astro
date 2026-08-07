@@ -1,4 +1,6 @@
 ---
+import Link from "@components/ui/link.astro";
+
 const { asset } = Astro.props;
 ---
 
@@ -25,10 +27,7 @@ const { asset } = Astro.props;
 
   <!-- Download Buttons -->
   <div class="mt-auto space-y-2">
-    <a
-      href={asset.pngPath}
-      download
-      class="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-strong">
+    <Link href={asset.pngPath} download size="sm" block>
       <svg
         class="h-4 w-4"
         fill="none"
@@ -42,12 +41,9 @@ const { asset } = Astro.props;
         ></path>
       </svg>
       Download PNG
-    </a>
+    </Link>
 
-    <a
-      href={asset.svgPath}
-      download
-      class="flex w-full items-center justify-center gap-2 rounded-lg border border-primary px-4 py-2 text-sm font-medium text-primary transition-colors hover:bg-primary-soft">
+    <Link href={asset.svgPath} download variant="outline" size="sm" block>
       <svg
         class="h-4 w-4"
         fill="none"
@@ -61,6 +57,6 @@ const { asset } = Astro.props;
         ></path>
       </svg>
       Download SVG
-    </a>
+    </Link>
   </div>
 </div>

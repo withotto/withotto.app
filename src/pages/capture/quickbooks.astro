@@ -1,6 +1,7 @@
 ---
 import Layout from "@layouts/Layout.astro";
 import Container from "@components/container.astro";
+import Button from "@components/ui/button.astro";
 import { Icon } from "astro-icon/components";
 import { Image } from "astro:assets";
 import Avatar from "@assets/avatar.svg";
@@ -264,11 +265,9 @@ const fieldClass =
                   </div>
 
                   <div>
-                    <button
-                      type="submit"
-                      class="rounded-lg border border-transparent bg-primary px-8 py-4 text-base font-semibold text-white shadow-sm transition-colors hover:bg-primary-strong focus:ring-2 focus:ring-primary-strong focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60">
+                    <Button type="submit" size="lg">
                       Join the waitlist
-                    </button>
+                    </Button>
                     <p class="mt-4 text-sm text-default-soft">
                       We will only email you about QuickBooks Online support in
                       Otto Capture. You can unsubscribe at any time.

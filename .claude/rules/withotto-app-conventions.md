@@ -99,6 +99,38 @@ import shot from "@assets/capture/step-01-capture.png";
 - **Typography plugin:** Use `prose` / `md:prose-lg` for long-form text. Customise with `prose-li:mt-0` etc.
 - **Form validation pattern:** Forms add a `validated` class on first submit attempt, then CSS targets `[.validated_&]:invalid:...` to reveal error messages. Preserve this pattern when adding new forms.
 
+## Buttons
+
+**Never hand-roll button classes.** Every button and button-styled link on the site goes through one of two components, which share their styling via `src/components/ui/buttonStyles.ts`:
+
+| Component                      | Renders    | Use for                               |
+| ------------------------------ | ---------- | ------------------------------------- |
+| `ui/link.astro` (`<Link>`)     | `<a href>` | Navigation and CTAs that go somewhere |
+| `ui/button.astro` (`<Button>`) | `<button>` | Form submits and in-page actions      |
+
+Both take the same `variant` and `size`, so a `<Link>` and a `<Button>` with matching props are visually identical. Extra props (`type`, `download`, `data-*`, `aria-*`) pass through to the element.
+
+| `variant`  | Look                                             | Where it fits                                           |
+| ---------- | ------------------------------------------------ | ------------------------------------------------------- |
+| `primary`  | Solid `bg-primary`, white text (**the default**) | The main CTA on a page or in a form                     |
+| `outline`  | `border-primary`, primary text, transparent fill | A second choice next to a primary                       |
+| `inverted` | White fill, `text-primary-strong`                | On the brand-coloured bands, where solid green vanishes |
+| `subtle`   | Neutral fill and border                          | Navigation rather than conversion (pagination, dismiss) |
+
+| `size` | Padding     | Where it fits                       |
+| ------ | ----------- | ----------------------------------- |
+| `sm`   | `px-4 py-2` | Inside a card                       |
+| `md`   | `px-6 py-3` | Standard page CTA (**the default**) |
+| `lg`   | `px-8 py-4` | Hero CTAs and primary form submits  |
+
+`block` makes it full width. One-off emphasis goes through the `class` prop rather than a new variant: `src/pages/capture/index.astro` does this for the two lifted hero CTAs (`heroCta`), which are deliberately the only lifted buttons on the site.
+
+**Cursor:** Tailwind 4's preflight sets `cursor: default` on `<button>`, which would leave a `<button>` CTA behaving differently from a visually identical `<a>` CTA. A base-layer rule in `src/styles/global.css` restores `cursor: pointer` for every enabled `button`, `summary`, and `[role="button"]`. Utilities still override it, so `cursor-zoom-in` (the screenshot trigger) and `disabled:cursor-not-allowed` both work. Do not add `cursor-pointer` to individual buttons.
+
+**Focus rings** are `focus-visible:` throughout, never `focus:`, so a ring appears on keyboard focus but not on mouse click. Match this in any new interactive control.
+
+Dead components not on this system (`pricing-compare.astro`, `clients.astro`, `clients-alt.astro`, `solutions.astro`, `highlights.astro`) are imported nowhere. Migrate them if they are ever brought back into use.
+
 ## Redirects & Legacy URLs
 
 Managed in `_redirects` (Netlify). Do **not** create pages for these paths; redirects will not fire if a real page exists:

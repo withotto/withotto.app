@@ -2,6 +2,7 @@
 import Layout from "@layouts/Layout.astro";
 import Container from "@components/container.astro";
 import BrandAssetCard from "@components/brand-kit/BrandAssetCard.astro";
+import Link from "@components/ui/link.astro";
 import { Icon } from "astro-icon/components";
 
 const brandAssets = [
@@ -97,17 +98,14 @@ const brandColours = [
           <p class="mb-6 text-default-soft">
             Get all our brand assets in one convenient package
           </p>
-          <a
-            href="/brand-kit/With Otto brand kit.zip"
-            download
-            class="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 font-medium text-white transition-colors hover:bg-primary-strong">
+          <Link href="/brand-kit/With Otto brand kit.zip" download>
             <Icon
               name="hugeicons:download-square-02"
               size={16}
-              class="size-5 text-white"
+              class="size-5"
             />
             Download complete brand kit
-          </a>
+          </Link>
         </div>
       </div>
 
@@ -216,12 +214,10 @@ const brandColours = [
           Can't find what you're looking for? We're happy to help with
           additional assets or answer any questions about brand usage.
         </p>
-        <a
-          href="mailto:support@withotto.app"
-          class="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 font-medium text-white transition-colors hover:bg-primary-strong">
-          <Icon name="hugeicons:mail-01" size={16} class="size-5 text-white" />
+        <Link href="mailto:support@withotto.app">
+          <Icon name="hugeicons:mail-01" size={16} class="size-5" />
           Get in touch
-        </a>
+        </Link>
       </div>
     </div>
   </div>
