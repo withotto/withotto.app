@@ -6,7 +6,7 @@ import { corsHeaders } from "../_shared/cors.ts";
 //   1. listmonk's public subscription endpoint binds only email, name, and
 //      list UUIDs (cmd/public.go, processSubForm). Anything else in the body is
 //      silently dropped, so the practice name and the answers about client
-//      count, sales documents, and early testing would never be stored.
+//      count, sales documents, and getting started would never be stored.
 //      Attributes are only reachable through the authenticated admin API.
 //   2. listmonk sends no CORS headers, so browser JavaScript cannot read its
 //      response and could not tell a success from a failure.
@@ -38,9 +38,9 @@ function configProblems(): string[] {
   return problems;
 }
 
-// The select options the form offers. Anything else is discarded rather than
-// stored, so a hand-crafted request cannot write arbitrary values onto a
-// subscriber record.
+// The answers the form offers. Anything else is discarded rather than stored,
+// so a hand-crafted request cannot write arbitrary values onto a subscriber
+// record.
 const CLIENT_COUNTS = ["1 to 5", "6 to 15", "16 to 50", "51 or more"];
 const SALES_DOCUMENTS = [
   "Yes, for most clients",
@@ -48,6 +48,9 @@ const SALES_DOCUMENTS = [
   "No, purchases only",
   "Not sure",
 ];
+// The radio group's values rather than its labels, so the stored answer
+// survives a rewording of the options on the page.
+const START_PREFERENCES = ["early", "listed"];
 
 const MAX_TEXT_LENGTH = 200;
 
@@ -148,6 +151,16 @@ Deno.serve(async (req) => {
       return json({ error: "A practice name is required" }, 400);
     }
 
+    // The form marks this one required too, and the browser cannot submit
+    // without it, so a request arriving without a valid answer did not come
+    // from the form.
+    const startPreference = START_PREFERENCES.includes(payload.startPreference)
+      ? payload.startPreference
+      : null;
+    if (!startPreference) {
+      return json({ error: "A start preference is required" }, 400);
+    }
+
     const clientCount = CLIENT_COUNTS.includes(payload.clientCount)
       ? payload.clientCount
       : null;
@@ -160,7 +173,7 @@ Deno.serve(async (req) => {
         practice,
         client_count: clientCount,
         sales_documents: salesDocuments,
-        early_testing: payload.earlyTesting === true,
+        start_preference: startPreference,
       },
     };
 

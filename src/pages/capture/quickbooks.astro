@@ -6,11 +6,10 @@ import { Icon } from "astro-icon/components";
 import { Image } from "astro:assets";
 import Avatar from "@assets/avatar.svg";
 
-// The brief fixes this title exactly, so it overrides the site's
-// "<title> - With Otto" suffix. openGraph.basic is set alongside it, otherwise
-// the shared card title would fall back to the site default and disagree.
-const pageTitle =
-  "QuickBooks Online receipt capture for accountants and bookkeepers | Otto Capture";
+// This title is set in full, so it overrides the site's "<title> - With Otto"
+// suffix. openGraph.basic is set alongside it, otherwise the shared card title
+// would fall back to the site default and disagree.
+const pageTitle = "Receipt capture for QuickBooks Online | Otto Capture";
 const description =
   "QuickBooks Online support for Otto Capture is in development. Join the waitlist to hear when it is available, or to help test it early.";
 
@@ -43,6 +42,22 @@ const salesDocuments = [
   "Not sure",
 ];
 
+// Required, and a radio group rather than a checkbox: an unticked box could
+// mean either "not interested" or "did not read it", and the size of the
+// early access group is the most useful thing this form collects.
+const startPreferences = [
+  {
+    value: "early",
+    label:
+      "I would like early access to test Otto Capture with QuickBooks Online",
+  },
+  {
+    value: "listed",
+    label:
+      "I would rather wait until it is finished and listed on the QuickBooks App Store",
+  },
+];
+
 // Section-heading icon chip, matching the Capture landing page.
 const sectionChipLight =
   "inline-flex size-16 shrink-0 items-center justify-center rounded-full bg-primary text-white shadow-sm md:size-20";
@@ -55,7 +70,6 @@ const fieldClass =
 ---
 
 <Layout seo={seo}>
-  <!-- Heading and introduction -->
   <div class="bg-primary-soft pt-10 md:pt-24">
     <Container>
       <div class="mx-auto max-w-3xl pb-16">
@@ -74,25 +88,83 @@ const fieldClass =
         <div class="mt-6 space-y-4 text-lg leading-relaxed text-default">
           <p>
             Otto Capture works with Xero and FreeAgent today, and QuickBooks
-            Online is in development. It will start with bills, receipts, and
-            purchase credit notes: Otto reads the document, suggests how it
-            should be coded based on that client's history with the same
-            supplier, and the practice reviews everything before it is
-            published.
+            Online is in development. The first release will cover bills,
+            receipts, and purchase credit notes.
           </p>
           <p>
-            Sales invoices and sales credit notes will follow, and there is a
-            question on the form below about whether you need them. QuickBooks
-            Online handles the sales side differently, and we would rather
-            understand what practices actually need before we build it than
-            guess and get it wrong.
+            Sales invoices and sales credit notes are not in the first release.
+            QuickBooks Online handles the sales side differently from Xero and
+            FreeAgent, and we do not have the day-to-day experience of it yet to
+            know what a sensible approach looks like.
+          </p>
+          <p>
+            We do want to build it, but we need input from practices working in
+            QuickBooks Online first. There is a question about it on the form
+            below, and the answers will decide where it sits in the queue.
           </p>
         </div>
       </div>
     </Container>
   </div>
 
-  <!-- What happens next -->
+  <div class="py-16">
+    <Container>
+      <div class="mx-auto max-w-3xl">
+        <div class="flex flex-col items-center text-center">
+          <span class={sectionChipLight}>
+            <Icon name="hugeicons:sparkles" class={sectionChipIcon} />
+          </span>
+          <h2 class="mt-5 text-3xl font-bold text-primary-strong md:text-5xl">
+            What Otto Capture does
+          </h2>
+        </div>
+        <div class="mt-8 space-y-4 text-lg leading-relaxed text-default">
+          <p>
+            We run our own accounting practice, and we built Otto Capture
+            because we could not find a receipt capture tool that did everything
+            we wanted.
+          </p>
+          <p>
+            Documents reach Otto however suits the person holding them:
+            uploaded, emailed to an address branded to your practice, sent over
+            WhatsApp, or through a page each client can use with no app and no
+            account. Otto reads each one, pulls out the supplier, dates, totals,
+            and line items, and suggests the nominal code and tax rate from how
+            that client's documents from that supplier were coded before. You
+            review and adjust, and nothing reaches the accounting platform until
+            you publish it.
+          </p>
+          <p>
+            Line items are extracted on every document rather than sold as an
+            extra. Every AI model Otto uses runs under a zero-data-retention
+            policy, so your documents are not kept by the provider and are never
+            used to train a model.
+          </p>
+          <p>
+            Pricing is per client, per month across three tiers, and only the
+            documents you actually publish are counted, so a client with nothing
+            published in a month costs nothing.
+          </p>
+        </div>
+        <p class="mt-8 text-lg">
+          <a
+            href="/capture/"
+            class="font-semibold text-primary-strong underline underline-offset-2 hover:text-primary">
+            Read more about Otto Capture
+          </a>
+        </p>
+      </div>
+    </Container>
+  </div>
+
+  <div>
+    <Container>
+      <div
+        class="mx-auto h-px max-w-3xl bg-[linear-gradient(90deg,transparent,var(--color-muted-strong)_22%,var(--color-muted-strong)_78%,transparent)]">
+      </div>
+    </Container>
+  </div>
+
   <div class="py-16">
     <Container>
       <div class="mx-auto max-w-3xl">
@@ -104,19 +176,23 @@ const fieldClass =
             What happens next
           </h2>
         </div>
-        <p class="mt-8 text-lg leading-relaxed text-default">
-          Once the integration is ready, it has to go through Intuit's review
-          process before it can be listed. We would rather not guess at how long
-          that takes, or exactly what will be possible at each stage, so we will
-          tell you when we know. If there is an opportunity to connect a small
-          number of accounts before then, the people on this list will hear
-          about it first.
-        </p>
+        <div class="mt-8 space-y-4 text-lg leading-relaxed text-default">
+          <p>
+            When the integration is ready it goes to Intuit for review before it
+            can be listed. That is a few weeks at least, and sometimes longer,
+            depending on how the review goes. We will keep you updated as the
+            review progresses.
+          </p>
+          <p>
+            We are hoping to offer access to a small number of practices before
+            the listing is live. The form below asks whether you would like to
+            be one of them.
+          </p>
+        </div>
       </div>
     </Container>
   </div>
 
-  <!-- Join the waitlist -->
   <div class="bg-primary-soft py-16">
     <Container>
       <div class="mx-auto max-w-3xl">
@@ -232,17 +308,30 @@ const fieldClass =
                     </select>
                   </div>
 
-                  <div class="flex items-start gap-3">
-                    <input
-                      type="checkbox"
-                      id="earlyTesting"
-                      name="earlyTesting"
-                      class="mt-0.5 size-5 shrink-0 rounded border-muted/40 accent-primary focus:ring-2 focus:ring-primary-strong focus:ring-offset-2 focus:outline-none"
-                    />
-                    <label for="earlyTesting" class="text-base text-default">
-                      I would be happy to help test the integration early
-                    </label>
-                  </div>
+                  <fieldset>
+                    <legend class={labelClass}>
+                      How would you like to get started?
+                    </legend>
+                    <div class="mt-1 flex flex-col gap-3">
+                      {startPreferences.map((preference) => (
+                        <div class="flex items-start gap-3">
+                          <input
+                            type="radio"
+                            id={`startPreference-${preference.value}`}
+                            name="startPreference"
+                            value={preference.value}
+                            required
+                            class="mt-0.5 size-5 shrink-0 border-muted/40 accent-primary focus:ring-2 focus:ring-primary-strong focus:ring-offset-2 focus:outline-none"
+                          />
+                          <label
+                            for={`startPreference-${preference.value}`}
+                            class="text-base text-default">
+                            {preference.label}
+                          </label>
+                        </div>
+                      ))}
+                    </div>
+                  </fieldset>
 
                   <div
                     id="waitlistError"
@@ -312,7 +401,6 @@ const fieldClass =
     </Container>
   </div>
 
-  <!-- Already on a supported platform -->
   <div class="py-16">
     <Container>
       <div class="mx-auto max-w-3xl">
@@ -324,11 +412,12 @@ const fieldClass =
           />
           <p class="text-default">
             Already using Xero or FreeAgent? Otto Capture is available now, with
-            a 60 day free trial.{" "}
+            a 60-day free trial, extended from the usual 30 for a limited
+            period.{" "}
             <a
-              href="/capture/"
+              href="https://capture.withotto.app/register/"
               class="font-semibold text-primary-strong underline underline-offset-2 hover:text-primary">
-              See what Otto Capture does
+              Start your free trial
             </a>
           </p>
         </div>
@@ -390,7 +479,8 @@ const fieldClass =
         practice: String(data.get("practice") ?? "").trim(),
         clientCount: String(data.get("clientCount") ?? ""),
         salesDocuments: String(data.get("salesDocuments") ?? ""),
-        earlyTesting: data.get("earlyTesting") !== null,
+        // Required, so this is always one of the startPreferences values.
+        startPreference: String(data.get("startPreference") ?? ""),
       };
 
       try {
