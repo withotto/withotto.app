@@ -30,7 +30,9 @@ Xero's bank rules feature works well for straightforward transactions, but many 
 
 **Handling truncated and abbreviated payee names:** Bank feeds often show "AMZN Mktplace" instead of "Amazon Marketplace", or "GSUITE_companyname IRELAND" instead of "Google Workspace." Otto learns these variations for each client.
 
-**Managing subsidiary and trading name variations:** The same supplier might appear as "AMAZON.CO.UK", "AMZNMktplace", or "WWW.AMAZON.\*" depending on whether the purchase is made directly from Amazon, a third-party supplier, or an Amazon site from a different country, creating matching challenges that Otto's trained models can resolve.
+<!-- The <span> splits the literal "WWW." so remark-gfm does not autolink it into a broken http:// link. Do not remove. -->
+
+**Managing subsidiary and trading name variations:** The same supplier might appear as "AMAZON.CO.UK", "AMZNMktplace", or "<span>WWW</span>.AMAZON.\*" depending on whether the purchase is made directly from Amazon, a third-party supplier, or an Amazon site from a different country, creating matching challenges that Otto's trained models can resolve.
 
 **Reference number mismatches and missing references:** When clients pay invoices but use different reference formats, or when bank descriptions don't include references at all, Otto uses historical patterns to make accurate connections.
 
