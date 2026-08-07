@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
+    "dev:all": "supabase start && astro dev --background && supabase functions serve",
+    "dev:stop": "astro dev stop; supabase stop",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",

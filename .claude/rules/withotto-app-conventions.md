@@ -39,13 +39,34 @@ Tribal knowledge not obvious from reading a single file. Read before touching la
 
 ## Third-Party Integrations: Self-Hosted Subdomains
 
-| Service    | Endpoint                                                             | Component                                  |
-| ---------- | -------------------------------------------------------------------- | ------------------------------------------ |
-| Bookings   | `https://bookings.withotto.app` (+ `/embed.js`)                      | `BookingForm.astro`                        |
-| Newsletter | `https://newsletter.withotto.app/subscription/form` (Listmonk-style) | `ui/NewsletterSignup.astro`                |
-| Stats API  | `PUBLIC_STATS_API_URL` → Supabase edge fn `reconciliation-stats`     | `StatsContainer.astro` + `StatsGrid.astro` |
+| Service                    | Endpoint                                                                                           | Component                                  |
+| -------------------------- | -------------------------------------------------------------------------------------------------- | ------------------------------------------ |
+| Bookings                   | `https://bookings.withotto.app` (+ `/embed.js`)                                                    | `BookingForm.astro`                        |
+| Newsletter                 | `https://newsletter.withotto.app/subscription/form` (Listmonk-style)                               | `ui/NewsletterSignup.astro`                |
+| Stats API                  | `PUBLIC_STATS_API_URL` → Supabase edge fn `reconciliation-stats`                                   | `StatsContainer.astro` + `StatsGrid.astro` |
+| QuickBooks Online waitlist | `PUBLIC_QUICKBOOKS_WAITLIST_API_URL` → Supabase edge fn `quickbooks-waitlist` → Listmonk admin API | `pages/capture/quickbooks.astro`           |
 
 Swap embed URLs here; they are not configurable via env var.
+
+**Listmonk's public subscription endpoint takes only `email`, `name`, and list UUIDs** (`processSubForm` in listmonk's `cmd/public.go`), and sends no CORS headers. Any form that needs to store extra answers, or to show its own success and error states, has to go through a Supabase edge function that calls the authenticated admin API and writes the answers as subscriber `attribs`. `quickbooks-waitlist` is the worked example.
+
+### Listmonk API user permissions
+
+The `website` API user needs exactly this. Each line is load-bearing; all four user permissions and the list role were established by failing live calls, not guessed.
+
+| Where     | Grant                                                          | Why                                                                                                                                                                                                                      |
+| --------- | -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| User role | `subscribers:get`                                              | Read a subscriber record.                                                                                                                                                                                                |
+| User role | `subscribers:get_all`                                          | The email lookup searches across all lists. Without it, someone on the newsletter list only comes back as new, and the create call then fails with a 409.                                                                |
+| User role | `subscribers:manage`                                           | Create, PATCH attribs, add to a list, send opt-in.                                                                                                                                                                       |
+| User role | `lists:get_all`                                                | Every subscriber write passes through `hasSubPerm`, which denies unless the subscriber already belongs to a permitted list. This short-circuits it, so a subscriber on some other list can still be updated. Read-only.  |
+| List role | list `Otto Capture x QBO waitlist`: `list:get` + `list:manage` | `ManageSubscriberLists` filters target lists with `FilterListsByPerm(PermTypeManage, ...)`, so manage on that specific list is what permits the add. Not redundant with `lists:get_all`, which is a get-type permission. |
+
+Deliberately withheld:
+
+- **`lists:manage_all`** would satisfy `hasSubPerm` too, but also allows creating, updating, and deleting lists (`POST /api/lists` requires it). A public form endpoint should not be able to delete lists.
+- **`subscribers:sql_query`** grants arbitrary SQL against the subscriber table. The `?query=` lookup needs it; `?search=` with a regex-escaped term does not, which is why the function uses `search` and narrows to an exact address in code.
+- Everything under Campaigns, Bounces, Media, Templates, Users, and Settings, plus `subscribers:import` and `tx:send`, is unused.
 
 **Intercom (live chat)** is a third-party hosted integration (not a self-hosted subdomain): `IntercomWidget.astro`, rendered once in `RootLayout.astro` and gated on the `PUBLIC_INTERCOM_APP_ID` env var. See `.claude/rules/withotto-app-intercom.md` for how it works and the sales-oriented dashboard checklist.
 

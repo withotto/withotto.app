@@ -69,17 +69,19 @@ Use these aliases in imports. Do not write relative `../../` paths:
 
 ## Development Commands
 
-| Task               | Command                                                          |
-| ------------------ | ---------------------------------------------------------------- |
-| Install deps       | `pnpm install`                                                   |
-| Dev server         | `pnpm dev` (or `pnpm start`)                                     |
-| Build              | `pnpm build`                                                     |
-| Preview build      | `pnpm preview`                                                   |
-| Format (write)     | `pnpm format`                                                    |
-| Format (check)     | `pnpm format:check`                                              |
-| Check broken links | `pnpm check-links` (builds then runs lychee on `dist/**/*.html`) |
-| Raw Astro CLI      | `pnpm astro <cmd>`                                               |
-| Supabase CLI       | `pnpm supabase <cmd>` (dev dep, use via pnpm)                    |
+| Task                  | Command                                                                                                                                                                   |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Install deps          | `pnpm install`                                                                                                                                                            |
+| Dev server            | `pnpm dev` (or `pnpm start`)                                                                                                                                              |
+| Dev server + Supabase | `pnpm dev:all`: starts the local Supabase stack, backgrounds Astro, then holds the terminal on `supabase functions serve` (hot reload, edge function logs). Needs Docker. |
+| Stop both             | `pnpm dev:stop`                                                                                                                                                           |
+| Build                 | `pnpm build`                                                                                                                                                              |
+| Preview build         | `pnpm preview`                                                                                                                                                            |
+| Format (write)        | `pnpm format`                                                                                                                                                             |
+| Format (check)        | `pnpm format:check`                                                                                                                                                       |
+| Check broken links    | `pnpm check-links` (builds then runs lychee on `dist/**/*.html`)                                                                                                          |
+| Raw Astro CLI         | `pnpm astro <cmd>`                                                                                                                                                        |
+| Supabase CLI          | `pnpm supabase <cmd>` (dev dep, use via pnpm)                                                                                                                             |
 
 **Always use `pnpm`.** Do not introduce `npm` or `yarn` commands; the repo is pinned to pnpm 11.x.
 
@@ -107,6 +109,8 @@ Use these aliases in imports. Do not write relative `../../` paths:
 
 - `.env.development` holds local dev values. Never commit `.env.production` or secret keys.
 - Public stats endpoint: `PUBLIC_STATS_API_URL` (browser-exposed; `PUBLIC_` prefix required by Astro).
+- QuickBooks Online waitlist endpoint: `PUBLIC_QUICKBOOKS_WAITLIST_API_URL` (browser-exposed). Unset, `/capture/quickbooks/` renders a "please email support" card instead of the form, so the page is safe to ship before the function is deployed.
+- Listmonk admin credentials for the `quickbooks-waitlist` function are Supabase function secrets, never site env vars: `LISTMONK_API_URL`, `LISTMONK_API_USER`, `LISTMONK_API_TOKEN`, `LISTMONK_QBO_LIST_ID` (the numeric list ID, not the UUID).
 - Supabase: `PROD_SUPABASE_URL`, `PROD_SUPABASE_ANON_KEY` (anon key only; never ship service-role keys to the site bundle).
 
 ## Redirects

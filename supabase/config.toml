@@ -70,7 +70,7 @@ openai_api_key = "env(OPENAI_API_KEY)"
 
 # Email testing server. Emails sent with the local dev setup are not actually sent - rather, they
 # are monitored, and you can view the emails that would have been sent from the web interface.
-[inbucket]
+[local_smtp]
 enabled = true
 # Port to use for the email testing server web interface.
 port = 54324
@@ -273,6 +273,11 @@ inspector_port = 8083
 # Public stats endpoint for the website (StatsContainer.astro fetches it with no
 # Authorization header), so JWT verification must stay disabled.
 [functions.reconciliation-stats]
+verify_jwt = false
+
+# Public waitlist endpoint for /capture/quickbooks/, posted to by anonymous
+# visitors with no Authorization header, so JWT verification must stay disabled.
+[functions.quickbooks-waitlist]
 verify_jwt = false
 
 [analytics]
