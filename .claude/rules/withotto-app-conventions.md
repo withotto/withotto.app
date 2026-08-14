@@ -42,6 +42,7 @@ Tribal knowledge not obvious from reading a single file. Read before touching la
 | Service                    | Endpoint                                                                                           | Component                                  |
 | -------------------------- | -------------------------------------------------------------------------------------------------- | ------------------------------------------ |
 | Bookings                   | `https://bookings.withotto.app` (+ `/embed.js`)                                                    | `BookingForm.astro`                        |
+| Live chat                  | `https://chat.withotto.app` (+ `/packs/js/sdk.js`)                                                 | `ChatwootWidget.astro`                     |
 | Newsletter                 | `https://newsletter.withotto.app/subscription/form` (Listmonk-style)                               | `ui/NewsletterSignup.astro`                |
 | Stats API                  | `PUBLIC_STATS_API_URL` → Supabase edge fn `reconciliation-stats`                                   | `StatsContainer.astro` + `StatsGrid.astro` |
 | QuickBooks Online waitlist | `PUBLIC_QUICKBOOKS_WAITLIST_API_URL` → Supabase edge fn `quickbooks-waitlist` → Listmonk admin API | `pages/capture/quickbooks.astro`           |
@@ -68,7 +69,7 @@ Deliberately withheld:
 - **`subscribers:sql_query`** grants arbitrary SQL against the subscriber table. The `?query=` lookup needs it; `?search=` with a regex-escaped term does not, which is why the function uses `search` and narrows to an exact address in code.
 - Everything under Campaigns, Bounces, Media, Templates, Users, and Settings, plus `subscribers:import` and `tx:send`, is unused.
 
-**Intercom (live chat)** is a third-party hosted integration (not a self-hosted subdomain): `IntercomWidget.astro`, rendered once in `RootLayout.astro` and gated on the `PUBLIC_INTERCOM_APP_ID` env var. See `.claude/rules/withotto-app-intercom.md` for how it works and the sales-oriented dashboard checklist.
+**Chatwoot (live chat)** is rendered once in `RootLayout.astro` for every page, with no env-var gate: both the endpoint and the public website token live in `ChatwootWidget.astro`. See `.claude/rules/withotto-app-chatwoot.md` for how it works and the sales-oriented dashboard checklist. It replaced Intercom in August 2026.
 
 ## Icons
 

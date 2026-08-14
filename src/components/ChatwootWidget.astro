@@ -1,20 +1,12 @@
 ---
-// Intercom Messenger for anonymous website visitors, tuned for sales enquiries.
-// Rendered by RootLayout only when PUBLIC_INTERCOM_APP_ID is set, so appId is
-// always a non-empty string here. The app id is public and ships in the HTML.
-export interface Props {
-  appId: string;
-}
-
-const { appId } = Astro.props;
-
-// US data region.
-const apiBase = "https://api-iam.intercom.io";
-
-// Brand --color-primary (src/styles/global.css). Intercom's JS config needs a
-// literal hex; the launcher colour is ultimately controlled in the Intercom
-// dashboard.
-const actionColor = "#02ac8a";
+// Chatwoot live chat for anonymous website visitors, tuned for sales enquiries.
+// Rendered once by RootLayout, so it appears on every page.
+//
+// Chatwoot is self-hosted on our own subdomain, like bookings and newsletter,
+// so the endpoint lives here rather than in an env var. The website token is
+// public and ships in the HTML of every page.
+const baseUrl = "https://chat.withotto.app";
+const websiteToken = "ZTetUiDAt7LYxzXNNKHPyEXY";
 
 // Give sales the page context. Trailing slashes are intentional:
 // trailingSlash:"always" guarantees every path ends in "/", so "/capture/"
@@ -27,31 +19,20 @@ const product = pathname.startsWith("/capture/")
     : "Website (general)";
 ---
 
-<script is:inline define:vars={{ appId, apiBase, actionColor, product }}>
-  window.intercomSettings = {
-    app_id: appId,
-    api_base: apiBase,
-    action_color: actionColor,
-    background_color: actionColor,
-    product: product,
+<script is:inline define:vars={{ baseUrl, websiteToken, product }}>
+  window.chatwootSettings = {
+    position: "right",
+    type: "standard",
   };
+  // Tag the contact with the page context once the SDK is up. The listener is
+  // registered before the SDK loads, so it cannot miss the event. `product`
+  // must exist as a custom attribute in Chatwoot for it to show in the inbox.
+  window.addEventListener("chatwoot:ready", function () {
+    window.$chatwoot.setCustomAttributes({ product: product });
+  });
   (function () {
     var w = window;
-    var ic = w.Intercom;
-    if (typeof ic === "function") {
-      ic("reattach_activator");
-      ic("update", w.intercomSettings);
-      return;
-    }
     var d = document;
-    var i = function () {
-      i.c(arguments);
-    };
-    i.q = [];
-    i.c = function (args) {
-      i.q.push(args);
-    };
-    w.Intercom = i;
     var loaded = false;
     // Defer the external widget fetch to protect page-speed: load on the first
     // user interaction or when the browser is idle, whichever comes first.
@@ -67,12 +48,14 @@ const product = pathname.startsWith("/capture/")
       events.forEach(function (e) {
         w.removeEventListener(e, onInteract);
       });
-      var s = d.createElement("script");
-      s.type = "text/javascript";
-      s.async = true;
-      s.src = "https://widget.intercom.io/widget/" + appId;
-      var x = d.getElementsByTagName("script")[0];
-      x.parentNode.insertBefore(s, x);
+      var g = d.createElement("script");
+      g.src = baseUrl + "/packs/js/sdk.js";
+      g.async = true;
+      g.onload = function () {
+        w.chatwootSDK.run({ websiteToken: websiteToken, baseUrl: baseUrl });
+      };
+      var s = d.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(g, s);
     }
     events.forEach(function (e) {
       w.addEventListener(e, onInteract, { once: true, passive: true });
