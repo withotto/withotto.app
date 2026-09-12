@@ -1,4 +1,4 @@
-import { createClient } from "jsr:@supabase/supabase-js@2.112.4";
+import { createClient } from "jsr:@supabase/supabase-js@2.116.0";
 import { corsHeaders } from "../_shared/cors.ts";
 
 Deno.serve(async (req) => {
