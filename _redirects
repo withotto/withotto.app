@@ -11,6 +11,10 @@ https://withotto-v2.netlify.app/* https://withotto.app/:splat 301!
 /notebook/the-accountants-mastermind /bank-reconciliation/ 301
 /notebook/the-automated-practice /bank-reconciliation/ 301
 
+# QuickBooks Online waitlist, retired once the integration shipped. 302 rather
+# than 301, so browsers don't cache it and the path stays free to reuse.
+/capture/quickbooks/ /capture/ 302
+
 # Legal redirects
 /privacy-and-security/ /bank-rec-security-and-privacy/ 301
 /bank-rec-privacy-and-security/ /bank-rec-security-and-privacy/ 301
