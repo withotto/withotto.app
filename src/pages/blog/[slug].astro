@@ -28,24 +28,20 @@ const { Content } = await render(entry);
       <span class="text-sm font-medium tracking-wider text-primary uppercase">
         {entry.data.category}
       </span>
-      <h1
-        class="mt-1 text-4xl font-bold lg:text-5xl lg:leading-tight lg:tracking-tight">
+      <h1 class="mt-1 text-4xl font-bold lg:text-5xl lg:leading-tight lg:tracking-tight">
         {entry.data.title}
       </h1>
-      <div
-        class="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-primary-soft pt-6 md:flex-nowrap">
+      <div class="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-primary-soft pt-6 md:flex-nowrap">
         <div class="flex items-center gap-2">
           <time
             class="text-default-soft"
             datetime={entry.data.publishDate.toISOString()}>
-            {
-              entry.data.publishDate.toLocaleString("en-GB", {
-                weekday: "long",
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-              })
-            }
+            {entry.data.publishDate.toLocaleString("en-GB", {
+              weekday: "long",
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            })}
           </time>
         </div>
         <div class="flex flex-wrap items-center gap-3">
@@ -75,75 +71,70 @@ const { Content } = await render(entry);
         </div>
       </div>
       <div class="mt-6">
-        {
-          entry.data.image && (
-            <div class="relative mt-6">
-              <figure>
-                <Picture
-                  src={entry.data.image}
-                  alt={entry.data.imageAlt}
-                  widths={[400, 768, 1024, 2040]}
-                  width={1200}
-                  height={800}
-                  layout="constrained"
-                  fit="cover"
-                  position="center"
-                  sizes="(max-width: 767px) 400px, (max-width: 1023px) 768px, (max-width: 2039px) 1024px, 2040px"
-                  loading="eager"
-                  format="avif"
-                  class="w-full rounded-md"
-                  aria-describedby="image-description"
-                />
-                <figcaption class="sr-only" id="image-description">
-                  {entry.data.imageDescription}
-                </figcaption>
-              </figure>
-              {entry.data.imageCredit && (
-                <p class="mt-2 text-center text-sm text-gray-500">
-                  Photo by
-                  {entry.data.imageCreditUrl ? (
-                    <a
-                      href={entry.data.imageCreditUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      class="text-primary hover:underline">
-                      {entry.data.imageCredit}
-                    </a>
-                  ) : (
-                    entry.data.imageCredit
-                  )}
-                </p>
-              )}
-            </div>
-          )
-        }
+        {entry.data.image && (
+          <div class="relative mt-6">
+            <figure>
+              <Picture
+                src={entry.data.image}
+                alt={entry.data.imageAlt}
+                widths={[400, 768, 1024, 2040]}
+                width={1200}
+                height={800}
+                layout="constrained"
+                fit="cover"
+                position="center"
+                sizes="(max-width: 767px) 400px, (max-width: 1023px) 768px, (max-width: 2039px) 1024px, 2040px"
+                loading="eager"
+                format="avif"
+                class="w-full rounded-md"
+                aria-describedby="image-description"
+              />
+              <figcaption class="sr-only" id="image-description">
+                {entry.data.imageDescription}
+              </figcaption>
+            </figure>
+            {entry.data.imageCredit && (
+              <p class="mt-2 text-center text-sm text-gray-500">
+                Photo by
+                {entry.data.imageCreditUrl ? (
+                  <a
+                    href={entry.data.imageCreditUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="text-primary hover:underline">
+                    {entry.data.imageCredit}
+                  </a>
+                ) : (
+                  entry.data.imageCredit
+                )}
+              </p>
+            )}
+          </div>
+        )}
       </div>
     </div>
 
-    {
-      entry.data.audioFile && (
-        <div class="mx-auto max-w-3xl">
-          <AudioPlayer
-            audioFile={entry.data.audioFile}
-            title={entry.data.title}
-          />
-        </div>
-      )
-    }
+    {entry.data.audioFile && (
+      <div class="mx-auto max-w-3xl">
+        <AudioPlayer
+          audioFile={entry.data.audioFile}
+          title={entry.data.title}
+        />
+      </div>
+    )}
 
-    <div
-      class="mx-auto prose prose-lg mt-8 max-w-3xl prose-blockquote:rounded-md prose-blockquote:border prose-blockquote:border-primary-accent prose-blockquote:bg-primary-soft prose-blockquote:px-10 prose-blockquote:py-6 prose-blockquote:text-2xl prose-blockquote:not-italic">
+    <div class="mx-auto prose prose-lg mt-8 max-w-3xl prose-blockquote:rounded-md prose-blockquote:border prose-blockquote:border-primary-accent prose-blockquote:bg-primary-soft prose-blockquote:px-10 prose-blockquote:py-6 prose-blockquote:text-2xl prose-blockquote:not-italic">
       <Content />
       <div class="mx-auto mt-6 flex max-w-3xl flex-wrap gap-3">
-        {
-          entry.data.tags.map((tag) => (
-            <span class="text-sm text-gray-500">#{tag}</span>
-          ))
-        }
+        {entry.data.tags.map((tag) => (
+          <span class="text-sm text-gray-500">#{tag}</span>
+        ))}
       </div>
     </div>
     <div class="mt-8 mb-16 flex justify-center">
-      <Link href="/blog/" variant="subtle">&larr; Back to Blog</Link>
+      <Link href="/blog/" variant="subtle">
+        &larr; Back to Blog
+      </Link>
     </div>
   </Container>
 </Layout>

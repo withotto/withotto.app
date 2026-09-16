@@ -5,18 +5,14 @@ const { url } = Astro.props;
 ---
 
 <div class="mt-10 flex items-center justify-center gap-4">
-  {
-    url.prev && (
-      <Link variant="subtle" size="sm" href={url.prev} title="Go to Previous">
-        &larr; Prev
-      </Link>
-    )
-  }
-  {
-    url.next && (
-      <Link variant="subtle" size="sm" href={url.next} title="Go to Next">
-        Next &rarr;
-      </Link>
-    )
-  }
+  {url.prev && (
+    <Link variant="subtle" size="sm" href={url.prev} title="Go to Previous">
+      &larr; Prev
+    </Link>
+  )}
+  {url.next && (
+    <Link variant="subtle" size="sm" href={url.next} title="Go to Next">
+      Next &rarr;
+    </Link>
+  )}
 </div>

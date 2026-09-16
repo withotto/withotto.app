@@ -49,13 +49,10 @@ const { title, subtitle, affiliateProgramId, seo } = frontmatter;
   <div class="py-12">
     <Container>
       <div class="z-10 mx-auto mb-14 max-w-3xl">
-        <h2
-          class="mx-auto max-w-3xl text-center text-3xl font-bold text-primary-strong md:text-5xl">
+        <h2 class="mx-auto max-w-3xl text-center text-3xl font-bold text-primary-strong md:text-5xl">
           {title}
         </h2>
-        <p class="pt-8 text-lg">
-          {subtitle}
-        </p>
+        <p class="pt-8 text-lg">{subtitle}</p>
         <div class="content-wrapper">
           <slot />
         </div>

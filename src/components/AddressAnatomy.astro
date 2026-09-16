@@ -31,30 +31,25 @@ const { segments } = Astro.props;
 ---
 
 <div class="flex flex-wrap items-start gap-x-1.5 gap-y-4">
-  {
-    segments.map((seg) => (
-      <Fragment>
-        <span class="flex flex-col">
-          <span class="font-mono text-sm text-default md:text-base">
-            {seg.value}
-          </span>
-          <span
-            class:list={["mt-1.5 h-0.5 rounded-full", accent[seg.accent].bar]}
-          />
-          <span
-            class:list={[
-              "mt-1.5 text-xs font-medium",
-              accent[seg.accent].label,
-            ]}>
-            {seg.label}
-          </span>
+  {segments.map((seg) => (
+    <Fragment>
+      <span class="flex flex-col">
+        <span class="font-mono text-sm text-default md:text-base">
+          {seg.value}
         </span>
-        {seg.sep && (
-          <span class="font-mono text-sm text-default-soft md:text-base">
-            {seg.sep}
-          </span>
-        )}
-      </Fragment>
-    ))
-  }
+        <span
+          class:list={["mt-1.5 h-0.5 rounded-full", accent[seg.accent].bar]}
+        />
+        <span
+          class:list={["mt-1.5 text-xs font-medium", accent[seg.accent].label]}>
+          {seg.label}
+        </span>
+      </span>
+      {seg.sep && (
+        <span class="font-mono text-sm text-default-soft md:text-base">
+          {seg.sep}
+        </span>
+      )}
+    </Fragment>
+  ))}
 </div>

@@ -15,24 +15,22 @@ const filteredHeadings = headings.filter(
 );
 ---
 
-{
-  filteredHeadings.length > 0 && (
-    <nav class="toc-list" aria-labelledby="toc-heading">
-      <h2 id="toc-heading" class="sr-only">
-        Table of Contents
-      </h2>
-      <ol class="toc-items">
-        {filteredHeadings.map((heading) => (
-          <li class={`toc-level-${heading.depth}`}>
-            <a href={`#${heading.slug}`} class="toc-link">
-              {heading.text}
-            </a>
-          </li>
-        ))}
-      </ol>
-    </nav>
-  )
-}
+{filteredHeadings.length > 0 && (
+  <nav class="toc-list" aria-labelledby="toc-heading">
+    <h2 id="toc-heading" class="sr-only">
+      Table of Contents
+    </h2>
+    <ol class="toc-items">
+      {filteredHeadings.map((heading) => (
+        <li class={`toc-level-${heading.depth}`}>
+          <a href={`#${heading.slug}`} class="toc-link">
+            {heading.text}
+          </a>
+        </li>
+      ))}
+    </ol>
+  </nav>
+)}
 
 <style>
   @reference "../styles/global.css";

@@ -114,7 +114,9 @@ const brandColours = [
           Logo assets
         </h2>
         <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {brandAssets.map((asset) => <BrandAssetCard asset={asset} />)}
+          {brandAssets.map((asset) => (
+            <BrandAssetCard asset={asset} />
+          ))}
         </div>
       </div>
 
@@ -123,38 +125,34 @@ const brandColours = [
           Brand colours
         </h2>
         <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {
-            brandColours.map((colour) => (
-              <div class="rounded-lg border border-muted-strong bg-white p-6">
-                <div
-                  class="mb-4 h-20 w-full rounded-lg border border-muted-strong"
-                  style={`background-color: ${colour.hex}`}
-                />
-                <h3 class="mb-2 font-semibold text-default">{colour.name}</h3>
-                <p class="mb-3 text-sm text-default-soft">
-                  {colour.description}
-                </p>
-                <div class="space-y-1 text-sm">
-                  <div class="flex justify-between">
-                    <span class="text-default-soft">HEX:</span>
-                    <button
-                      class="cursor-pointer font-mono text-default hover:text-primary"
-                      onclick={`navigator.clipboard.writeText('${colour.hex}'); this.textContent = 'Copied!'; setTimeout(() => this.textContent = '${colour.hex}', 1000)`}>
-                      {colour.hex}
-                    </button>
-                  </div>
-                  <div class="flex justify-between">
-                    <span class="text-default-soft">RGB:</span>
-                    <button
-                      class="cursor-pointer font-mono text-default hover:text-primary"
-                      onclick={`navigator.clipboard.writeText('${colour.rgb}'); this.textContent = 'Copied!'; setTimeout(() => this.textContent = '${colour.rgb}', 1000)`}>
-                      {colour.rgb}
-                    </button>
-                  </div>
+          {brandColours.map((colour) => (
+            <div class="rounded-lg border border-muted-strong bg-white p-6">
+              <div
+                class="mb-4 h-20 w-full rounded-lg border border-muted-strong"
+                style={`background-color: ${colour.hex}`}
+              />
+              <h3 class="mb-2 font-semibold text-default">{colour.name}</h3>
+              <p class="mb-3 text-sm text-default-soft">{colour.description}</p>
+              <div class="space-y-1 text-sm">
+                <div class="flex justify-between">
+                  <span class="text-default-soft">HEX:</span>
+                  <button
+                    class="cursor-pointer font-mono text-default hover:text-primary"
+                    onclick={`navigator.clipboard.writeText('${colour.hex}'); this.textContent = 'Copied!'; setTimeout(() => this.textContent = '${colour.hex}', 1000)`}>
+                    {colour.hex}
+                  </button>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-default-soft">RGB:</span>
+                  <button
+                    class="cursor-pointer font-mono text-default hover:text-primary"
+                    onclick={`navigator.clipboard.writeText('${colour.rgb}'); this.textContent = 'Copied!'; setTimeout(() => this.textContent = '${colour.rgb}', 1000)`}>
+                    {colour.rgb}
+                  </button>
                 </div>
               </div>
-            ))
-          }
+            </div>
+          ))}
         </div>
       </div>
 

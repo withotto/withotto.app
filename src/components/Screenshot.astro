@@ -69,10 +69,8 @@ const titleId = `title-${screenshotId}`;
     />
 
     <!-- Hover overlay with zoom icon -->
-    <div
-      class="absolute inset-0 flex items-center justify-center bg-black/0 transition-all group-hover:bg-black/10">
-      <div
-        class="flex h-12 w-12 items-center justify-center rounded-full bg-white/0 text-white opacity-0 shadow-lg transition-all group-hover:bg-white/90 group-hover:text-primary group-hover:opacity-100">
+    <div class="absolute inset-0 flex items-center justify-center bg-black/0 transition-all group-hover:bg-black/10">
+      <div class="flex h-12 w-12 items-center justify-center rounded-full bg-white/0 text-white opacity-0 shadow-lg transition-all group-hover:bg-white/90 group-hover:text-primary group-hover:opacity-100">
         <svg
           class="h-6 w-6"
           fill="none"
@@ -82,20 +80,17 @@ const titleId = `title-${screenshotId}`;
             stroke-linecap="round"
             stroke-linejoin="round"
             stroke-width="2"
-            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"
-          ></path>
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path>
         </svg>
       </div>
     </div>
   </button>
 
-  {
-    caption && (
-      <figcaption class="mt-2 text-center text-sm text-gray-600">
-        {caption}
-      </figcaption>
-    )
-  }
+  {caption && (
+    <figcaption class="mt-2 text-center text-sm text-gray-600">
+      {caption}
+    </figcaption>
+  )}
 </figure>
 
 <!-- Modal for full-size view -->
@@ -105,11 +100,9 @@ const titleId = `title-${screenshotId}`;
   role="dialog"
   aria-labelledby={titleId}
   aria-modal="true">
-  <div
-    class="relative max-h-[92vh] max-w-[92vw] overflow-hidden rounded-xl bg-white shadow-2xl">
+  <div class="relative max-h-[92vh] max-w-[92vw] overflow-hidden rounded-xl bg-white shadow-2xl">
     <!-- Modal Header -->
-    <div
-      class="flex items-center justify-between border-b border-gray-200 px-6 py-4">
+    <div class="flex items-center justify-between border-b border-gray-200 px-6 py-4">
       <h3 id={titleId} class="pr-4 text-xl font-semibold text-gray-900">
         {alt}
       </h3>
@@ -149,13 +142,11 @@ const titleId = `title-${screenshotId}`;
       />
     </div>
 
-    {
-      caption && (
-        <div class="border-t border-gray-200 bg-gray-50 px-6 py-4">
-          <p class="text-sm leading-relaxed text-gray-600">{caption}</p>
-        </div>
-      )
-    }
+    {caption && (
+      <div class="border-t border-gray-200 bg-gray-50 px-6 py-4">
+        <p class="text-sm leading-relaxed text-gray-600">{caption}</p>
+      </div>
+    )}
   </div>
 </div>
 

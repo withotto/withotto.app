@@ -242,15 +242,13 @@ const heroCta =
     <Container>
       <div class="mx-auto max-w-screen-xl pb-16 text-center">
         <div class="mb-6 flex justify-center">
-          <span
-            class="inline-flex items-center gap-2.5 rounded-full bg-white px-4 py-1.5 text-sm font-medium text-primary-strong shadow-sm">
+          <span class="inline-flex items-center gap-2.5 rounded-full bg-white px-4 py-1.5 text-sm font-medium text-primary-strong shadow-sm">
             Otto Capture
             <span class="size-1 rounded-full bg-primary-medium"></span>
             Now available
           </span>
         </div>
-        <h1
-          class="mx-auto max-w-4xl text-4xl font-bold text-primary-strong md:text-6xl">
+        <h1 class="mx-auto max-w-4xl text-4xl font-bold text-primary-strong md:text-6xl">
           Receipt capture that learns how your practice codes
         </h1>
         <p class="mx-auto max-w-3xl py-6 text-xl leading-normal text-default">
@@ -318,24 +316,22 @@ const heroCta =
           </h2>
         </div>
         <div class="mt-12 space-y-16">
-          {
-            howItWorksSteps.map((step, index) => (
-              <div>
-                <div class="flex items-center gap-4">
-                  <div class="flex size-10 shrink-0 items-center justify-center rounded-full bg-white font-semibold text-primary-strong">
-                    {index + 1}
-                  </div>
-                  <h3 class="text-2xl font-semibold text-primary-strong">
-                    {step.name}
-                  </h3>
+          {howItWorksSteps.map((step, index) => (
+            <div>
+              <div class="flex items-center gap-4">
+                <div class="flex size-10 shrink-0 items-center justify-center rounded-full bg-white font-semibold text-primary-strong">
+                  {index + 1}
                 </div>
-                <p class="mt-3 text-lg text-default">{step.intent}</p>
-                {step.image && (
-                  <Screenshot src={step.image} alt={step.imageAlt} />
-                )}
+                <h3 class="text-2xl font-semibold text-primary-strong">
+                  {step.name}
+                </h3>
               </div>
-            ))
-          }
+              <p class="mt-3 text-lg text-default">{step.intent}</p>
+              {step.image && (
+                <Screenshot src={step.image} alt={step.imageAlt} />
+              )}
+            </div>
+          ))}
         </div>
       </div>
     </Container>
@@ -358,30 +354,26 @@ const heroCta =
           </p>
         </div>
         <div class="mt-12 grid gap-6 md:grid-cols-2">
-          {
-            documentGroups.map((group) => (
-              <div class="rounded-xl border border-muted-strong bg-white p-6 shadow-sm md:p-8">
-                <div class="flex items-center gap-3">
-                  <span class={itemChip}>
-                    <Icon name={group.icon} class="size-6" />
-                  </span>
-                  <h3 class="text-xl font-semibold text-primary-strong">
-                    {group.side}
-                  </h3>
-                </div>
-                <ul class="mt-6 space-y-4">
-                  {group.documents.map((doc) => (
-                    <li class="flex items-center gap-3">
-                      <span class="size-2 shrink-0 rounded-full bg-primary-medium" />
-                      <span class="text-lg font-medium text-default">
-                        {doc}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
+          {documentGroups.map((group) => (
+            <div class="rounded-xl border border-muted-strong bg-white p-6 shadow-sm md:p-8">
+              <div class="flex items-center gap-3">
+                <span class={itemChip}>
+                  <Icon name={group.icon} class="size-6" />
+                </span>
+                <h3 class="text-xl font-semibold text-primary-strong">
+                  {group.side}
+                </h3>
               </div>
-            ))
-          }
+              <ul class="mt-6 space-y-4">
+                {group.documents.map((doc) => (
+                  <li class="flex items-center gap-3">
+                    <span class="size-2 shrink-0 rounded-full bg-primary-medium" />
+                    <span class="text-lg font-medium text-default">{doc}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
       </div>
     </Container>
@@ -392,9 +384,7 @@ const heroCta =
        of the sections above and below frame it with identical spacing. -->
   <div>
     <Container>
-      <div
-        class="mx-auto h-px max-w-5xl bg-[linear-gradient(90deg,transparent,var(--color-muted-strong)_22%,var(--color-muted-strong)_78%,transparent)]">
-      </div>
+      <div class="mx-auto h-px max-w-5xl bg-[linear-gradient(90deg,transparent,var(--color-muted-strong)_22%,var(--color-muted-strong)_78%,transparent)]"></div>
     </Container>
   </div>
 
@@ -411,31 +401,13 @@ const heroCta =
           </h2>
         </div>
         <div class="mt-12 space-y-16">
-          {
-            differentiators.map((item, index) =>
-              item.image ? (
-                <div class="grid items-start gap-10 md:grid-cols-2">
-                  {/* md:mt-8 lines the heading up with the top of the
+          {differentiators.map((item, index) =>
+            item.image ? (
+              <div class="grid items-start gap-10 md:grid-cols-2">
+                {/* md:mt-8 lines the heading up with the top of the
                       Screenshot, which carries a 2rem flow margin. */}
-                  <div
-                    class:list={[
-                      "md:mt-8",
-                      index % 2 === 1 && "md:order-last",
-                    ]}>
-                    <div class="flex items-center gap-3">
-                      <span class={itemChip}>
-                        <Icon name={item.icon} class="size-6" />
-                      </span>
-                      <h3 class="text-2xl font-semibold text-primary-strong">
-                        {item.title}
-                      </h3>
-                    </div>
-                    <p class="mt-4 text-lg text-default">{item.intent}</p>
-                  </div>
-                  <Screenshot src={item.image} alt={item.imageAlt} />
-                </div>
-              ) : (
-                <div class="mx-auto max-w-3xl">
+                <div
+                  class:list={["md:mt-8", index % 2 === 1 && "md:order-last"]}>
                   <div class="flex items-center gap-3">
                     <span class={itemChip}>
                       <Icon name={item.icon} class="size-6" />
@@ -445,38 +417,51 @@ const heroCta =
                     </h3>
                   </div>
                   <p class="mt-4 text-lg text-default">{item.intent}</p>
-                  {item.emailExample && (
-                    <div class="mt-6 rounded-xl border border-muted-strong bg-muted-soft p-5 md:p-6">
-                      <AddressAnatomy segments={item.emailExample.segments} />
+                </div>
+                <Screenshot src={item.image} alt={item.imageAlt} />
+              </div>
+            ) : (
+              <div class="mx-auto max-w-3xl">
+                <div class="flex items-center gap-3">
+                  <span class={itemChip}>
+                    <Icon name={item.icon} class="size-6" />
+                  </span>
+                  <h3 class="text-2xl font-semibold text-primary-strong">
+                    {item.title}
+                  </h3>
+                </div>
+                <p class="mt-4 text-lg text-default">{item.intent}</p>
+                {item.emailExample && (
+                  <div class="mt-6 rounded-xl border border-muted-strong bg-muted-soft p-5 md:p-6">
+                    <AddressAnatomy segments={item.emailExample.segments} />
+                    <div class="mt-5 border-t border-muted-strong pt-4">
+                      <p class="text-sm text-default-soft">
+                        Prefer your own domain? Point it at Otto instead:
+                      </p>
+                      <p class="mt-2 font-mono text-sm text-default md:text-base">
+                        {item.emailExample.ownDomain}
+                      </p>
+                    </div>
+                  </div>
+                )}
+                {item.pageExample && (
+                  <Fragment>
+                    <p class="mt-6 text-lg text-default">
+                      {item.pageExample.intro}
+                    </p>
+                    <div class="mt-4 rounded-xl border border-muted-strong bg-muted-soft p-5 md:p-6">
+                      <AddressAnatomy segments={item.pageExample.segments} />
                       <div class="mt-5 border-t border-muted-strong pt-4">
                         <p class="text-sm text-default-soft">
-                          Prefer your own domain? Point it at Otto instead:
-                        </p>
-                        <p class="mt-2 font-mono text-sm text-default md:text-base">
-                          {item.emailExample.ownDomain}
+                          {item.pageExample.note}
                         </p>
                       </div>
                     </div>
-                  )}
-                  {item.pageExample && (
-                    <Fragment>
-                      <p class="mt-6 text-lg text-default">
-                        {item.pageExample.intro}
-                      </p>
-                      <div class="mt-4 rounded-xl border border-muted-strong bg-muted-soft p-5 md:p-6">
-                        <AddressAnatomy segments={item.pageExample.segments} />
-                        <div class="mt-5 border-t border-muted-strong pt-4">
-                          <p class="text-sm text-default-soft">
-                            {item.pageExample.note}
-                          </p>
-                        </div>
-                      </div>
-                    </Fragment>
-                  )}
-                </div>
-              ),
-            )
-          }
+                  </Fragment>
+                )}
+              </div>
+            ),
+          )}
         </div>
       </div>
     </Container>
@@ -500,8 +485,7 @@ const heroCta =
             app to install and nothing to sign in to.
           </p>
         </div>
-        <div
-          class="mt-12 grid items-start gap-10 md:grid-cols-2 md:items-center">
+        <div class="mt-12 grid items-start gap-10 md:grid-cols-2 md:items-center">
           <div>
             <div class="flex items-center gap-3">
               <span class={itemChipOnSoft}>
@@ -536,12 +520,9 @@ const heroCta =
             class="mx-auto max-w-[280px]"
           />
         </div>
-        <div
-          class="mt-16 grid items-start gap-10 md:grid-cols-2 md:items-center">
-          {
-            /* Image leads on desktop, so the two rows alternate rather than
-              stacking both screenshots down the same edge. */
-          }
+        <div class="mt-16 grid items-start gap-10 md:grid-cols-2 md:items-center">
+          {/* Image leads on desktop, so the two rows alternate rather than
+              stacking both screenshots down the same edge. */}
           <div class="md:order-last">
             <div class="flex items-center gap-3">
               <span class={itemChipOnSoft}>
@@ -653,60 +634,56 @@ const heroCta =
         </p>
 
         <div class="mt-12 grid gap-6 md:grid-cols-3">
-          {
-            pricingTiers.map((tier) => (
-              <div class="flex flex-col rounded-xl border border-muted-strong bg-white p-6 shadow-sm">
-                <h3 class="text-lg font-semibold text-primary-strong">
-                  {tier.name}
-                </h3>
-                <p class="mt-3 flex items-baseline gap-1.5">
-                  <span class="text-4xl font-bold text-primary-strong">
-                    {tier.price}
-                  </span>
-                  <span class="text-sm text-default-soft">
-                    per client, per month
-                  </span>
-                </p>
-                <dl class="mt-6 space-y-4 border-t border-muted-strong pt-6 text-sm">
-                  <div>
-                    <dt class="text-default-soft">
-                      Included published documents
-                    </dt>
-                    <dd class="mt-0.5 text-base font-semibold text-default">
-                      {tier.included}
-                    </dd>
-                  </div>
-                  <div>
-                    <dt class="text-default-soft">Each extra document</dt>
-                    <dd class="mt-0.5 text-base font-semibold text-default">
-                      {tier.extraDocument}
-                    </dd>
-                  </div>
-                </dl>
-              </div>
-            ))
-          }
+          {pricingTiers.map((tier) => (
+            <div class="flex flex-col rounded-xl border border-muted-strong bg-white p-6 shadow-sm">
+              <h3 class="text-lg font-semibold text-primary-strong">
+                {tier.name}
+              </h3>
+              <p class="mt-3 flex items-baseline gap-1.5">
+                <span class="text-4xl font-bold text-primary-strong">
+                  {tier.price}
+                </span>
+                <span class="text-sm text-default-soft">
+                  per client, per month
+                </span>
+              </p>
+              <dl class="mt-6 space-y-4 border-t border-muted-strong pt-6 text-sm">
+                <div>
+                  <dt class="text-default-soft">
+                    Included published documents
+                  </dt>
+                  <dd class="mt-0.5 text-base font-semibold text-default">
+                    {tier.included}
+                  </dd>
+                </div>
+                <div>
+                  <dt class="text-default-soft">Each extra document</dt>
+                  <dd class="mt-0.5 text-base font-semibold text-default">
+                    {tier.extraDocument}
+                  </dd>
+                </div>
+              </dl>
+            </div>
+          ))}
         </div>
         <p class="mt-6 text-center text-sm text-default-soft">
           Prices exclude VAT.
         </p>
 
         <div class="mt-16 space-y-4">
-          {
-            pricingPromises.map((promise) => (
-              <div class="flex items-start gap-4 rounded-xl border border-muted-strong bg-white p-5 md:p-6">
-                <span class="inline-flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary-soft text-primary-strong">
-                  <Icon name={promise.icon} class="size-6" />
-                </span>
-                <p class="text-default">
-                  <span class="font-semibold text-primary-strong">
-                    {promise.label}
-                  </span>{" "}
-                  {promise.intent}
-                </p>
-              </div>
-            ))
-          }
+          {pricingPromises.map((promise) => (
+            <div class="flex items-start gap-4 rounded-xl border border-muted-strong bg-white p-5 md:p-6">
+              <span class="inline-flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary-soft text-primary-strong">
+                <Icon name={promise.icon} class="size-6" />
+              </span>
+              <p class="text-default">
+                <span class="font-semibold text-primary-strong">
+                  {promise.label}
+                </span>{" "}
+                {promise.intent}
+              </p>
+            </div>
+          ))}
         </div>
 
         <div class="mx-auto mt-12 max-w-3xl space-y-4 text-lg text-default">
@@ -717,9 +694,7 @@ const heroCta =
           </p>
           <p>
             Otto Capture is free to trial for 60 days, extended from the usual
-            30 for a limited period. After the trial, the prices above apply.{
-              " "
-            }
+            30 for a limited period. After the trial, the prices above apply.{" "}
             <a
               href="https://capture.withotto.app/register/"
               class="font-semibold text-primary-strong underline underline-offset-2 hover:text-primary">
@@ -790,8 +765,7 @@ const heroCta =
   <div class="py-16">
     <Container>
       <div class="mx-auto max-w-3xl">
-        <div
-          class="flex items-start gap-4 rounded-lg border-l-4 border-primary bg-primary-soft p-6">
+        <div class="flex items-start gap-4 rounded-lg border-l-4 border-primary bg-primary-soft p-6">
           <Icon
             name="hugeicons:information-circle"
             class="mt-0.5 size-6 shrink-0 text-primary-strong"
