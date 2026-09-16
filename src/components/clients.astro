@@ -35,17 +35,15 @@ const clients = [
 <div class="border-t py-24">
   <Container>
     <div class="flex flex-wrap items-center justify-center gap-10">
-      {
-        clients.map((client) => (
-          <div>
-            <Image
-              src={client.logo}
-              alt={client.alt}
-              class="opacity-50 transition-opacity hover:opacity-100"
-            />
-          </div>
-        ))
-      }
+      {clients.map((client) => (
+        <div>
+          <Image
+            src={client.logo}
+            alt={client.alt}
+            class="opacity-50 transition-opacity hover:opacity-100"
+          />
+        </div>
+      ))}
     </div>
   </Container>
 </div>

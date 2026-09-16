@@ -46,16 +46,13 @@ const defaultDescription =
     <meta name="generator" content={Astro.generator} />
     <link rel="sitemap" href="/sitemap-index.xml" />
 
-    {
-      affiliateProgramId && (
-        <script
-          src="https://pushlapgrowth.com/affiliate-tracker.js"
-          data-affiliate
-          data-program-id={affiliateProgramId}
-          async
-        />
-      )
-    }
+    {affiliateProgramId && (
+      <script
+        src="https://pushlapgrowth.com/affiliate-tracker.js"
+        data-affiliate
+        data-program-id={affiliateProgramId}
+        async></script>
+    )}
 
     <SEO
       charset="UTF-8"

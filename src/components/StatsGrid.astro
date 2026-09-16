@@ -48,28 +48,26 @@ const stats: Stat[] = [
 <StatsContainer class="mb-16">
   <div data-state="loading" class="mt-16">
     <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-      {
-        stats.map((stat) => (
-          <div class="rounded-xl bg-white shadow">
-            <div class="grid h-full grid-cols-[120px_1fr]">
-              <div class="flex items-center justify-center border-r border-gray-100 bg-primary-soft/10 p-4">
-                <Icon name={stat.icon} size={32} class="size-20 text-primary" />
-              </div>
-              <div class="p-6">
-                <p class="font-medium text-default-soft">{stat.label}</p>
-                <p class="mt-2 flex flex-col">
-                  <span class="w-full animate-pulse rounded bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 p-2 text-4xl md:text-6xl">
-                    &nbsp;
-                  </span>
-                  <span class="mt-1 text-right text-sm text-default-soft">
-                    {stat.subtext}
-                  </span>
-                </p>
-              </div>
+      {stats.map((stat) => (
+        <div class="rounded-xl bg-white shadow">
+          <div class="grid h-full grid-cols-[120px_1fr]">
+            <div class="flex items-center justify-center border-r border-gray-100 bg-primary-soft/10 p-4">
+              <Icon name={stat.icon} size={32} class="size-20 text-primary" />
+            </div>
+            <div class="p-6">
+              <p class="font-medium text-default-soft">{stat.label}</p>
+              <p class="mt-2 flex flex-col">
+                <span class="w-full animate-pulse rounded bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 p-2 text-4xl md:text-6xl">
+                  &nbsp;
+                </span>
+                <span class="mt-1 text-right text-sm text-default-soft">
+                  {stat.subtext}
+                </span>
+              </p>
             </div>
           </div>
-        ))
-      }
+        </div>
+      ))}
     </div>
     <p class="mx-auto my-4 flex items-center">
       <Icon
@@ -83,63 +81,57 @@ const stats: Stat[] = [
 
   <div data-state="error" hidden class="mt-16">
     <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-      {
-        stats.map((stat) => (
-          <div class="rounded-xl bg-white shadow">
-            <div class="grid h-full grid-cols-[120px_1fr]">
-              <div class="flex items-center justify-center border-r border-gray-100 bg-primary-soft/10 p-4">
-                <Icon name={stat.icon} size={32} class="size-20 text-primary" />
-              </div>
-              <div class="p-6">
-                <p class="font-medium text-default-soft">{stat.label}</p>
-                <p class="mt-2 flex flex-col">
-                  <span class="p-2 text-center text-4xl font-bold text-primary md:text-6xl">
-                    <StatError withIcon={false} />
-                  </span>
-                  <span class="mt-1 text-right text-sm text-default-soft">
-                    {stat.subtext}
-                  </span>
-                </p>
-              </div>
+      {stats.map((stat) => (
+        <div class="rounded-xl bg-white shadow">
+          <div class="grid h-full grid-cols-[120px_1fr]">
+            <div class="flex items-center justify-center border-r border-gray-100 bg-primary-soft/10 p-4">
+              <Icon name={stat.icon} size={32} class="size-20 text-primary" />
+            </div>
+            <div class="p-6">
+              <p class="font-medium text-default-soft">{stat.label}</p>
+              <p class="mt-2 flex flex-col">
+                <span class="p-2 text-center text-4xl font-bold text-primary md:text-6xl">
+                  <StatError withIcon={false} />
+                </span>
+                <span class="mt-1 text-right text-sm text-default-soft">
+                  {stat.subtext}
+                </span>
+              </p>
             </div>
           </div>
-        ))
-      }
+        </div>
+      ))}
     </div>
     <p class="mx-auto my-4">
-      <StatError
-        message="There was an error loading the statistics. Please try again later"
-      />
+      <StatError message="There was an error loading the statistics. Please try again later" />
     </p>
   </div>
 
   <div data-state="content" hidden class="mt-16">
     <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-      {
-        stats.map((stat) => (
-          <div class="rounded-xl bg-white shadow">
-            <div class="grid h-full grid-cols-[120px_1fr]">
-              <div class="flex items-center justify-center border-r border-gray-100 bg-primary-soft/10 p-4">
-                <Icon name={stat.icon} size={32} class="size-20 text-primary" />
-              </div>
-              <div class="p-6">
-                <p class="font-medium text-default-soft">{stat.label}</p>
-                <p class="mt-2 flex flex-col">
-                  <span
-                    class="p-2 text-center text-4xl font-bold text-primary md:text-6xl"
-                    data-stat={stat.key}
-                    data-options={JSON.stringify(stat.localeOptions)}>
-                    &mdash;
-                  </span>
-                  <span class="mt-1 text-right text-sm text-default-soft">
-                    {stat.subtext}
-                  </span>
-                </p>
-              </div>
+      {stats.map((stat) => (
+        <div class="rounded-xl bg-white shadow">
+          <div class="grid h-full grid-cols-[120px_1fr]">
+            <div class="flex items-center justify-center border-r border-gray-100 bg-primary-soft/10 p-4">
+              <Icon name={stat.icon} size={32} class="size-20 text-primary" />
+            </div>
+            <div class="p-6">
+              <p class="font-medium text-default-soft">{stat.label}</p>
+              <p class="mt-2 flex flex-col">
+                <span
+                  class="p-2 text-center text-4xl font-bold text-primary md:text-6xl"
+                  data-stat={stat.key}
+                  data-options={JSON.stringify(stat.localeOptions)}>
+                  &mdash;
+                </span>
+                <span class="mt-1 text-right text-sm text-default-soft">
+                  {stat.subtext}
+                </span>
+              </p>
             </div>
           </div>
-        ))
-      }
+        </div>
+      ))}
     </div>
     <p class="mx-auto my-4" data-last-updated></p>
   </div>

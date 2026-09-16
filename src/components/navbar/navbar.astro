@@ -71,41 +71,39 @@ const menuItems = [
         </div>
         <MenuItems class="mt-2 hidden w-full lg:mt-0 lg:flex lg:w-auto">
           <ul class="flex flex-col lg:flex-row lg:gap-3">
-            {
-              menuItems.map((item, index) => {
-                const isExternalLink = item.path?.startsWith("http");
+            {menuItems.map((item, index) => {
+              const isExternalLink = item.path?.startsWith("http");
 
-                return (
-                  <>
-                    {item.children && (
-                      <Dropdown
-                        title={item.title}
-                        children={item.children}
-                        lastItem={index === menuItems.length - 1}
-                      />
-                    )}
+              return (
+                <>
+                  {item.children && (
+                    <Dropdown
+                      title={item.title}
+                      children={item.children}
+                      lastItem={index === menuItems.length - 1}
+                    />
+                  )}
 
-                    {!item.children && (
-                      <li>
-                        <a
-                          href={item.path}
-                          class="flex items-center py-2 font-medium text-primary-strong hover:text-primary lg:px-3"
-                          target={isExternalLink ? "_blank" : ""}>
-                          <span>{item.title}</span>
-                          {isExternalLink && (
-                            <Icon
-                              name="hugeicons:link-square-01"
-                              size={32}
-                              class="ml-1 size-4"
-                            />
-                          )}
-                        </a>
-                      </li>
-                    )}
-                  </>
-                );
-              })
-            }
+                  {!item.children && (
+                    <li>
+                      <a
+                        href={item.path}
+                        class="flex items-center py-2 font-medium text-primary-strong hover:text-primary lg:px-3"
+                        target={isExternalLink ? "_blank" : ""}>
+                        <span>{item.title}</span>
+                        {isExternalLink && (
+                          <Icon
+                            name="hugeicons:link-square-01"
+                            size={32}
+                            class="ml-1 size-4"
+                          />
+                        )}
+                      </a>
+                    </li>
+                  )}
+                </>
+              );
+            })}
           </ul>
           <div class="mt-3 flex items-center gap-4 lg:hidden">
             <Link href="/capture/" variant="inverted" size="md" block>

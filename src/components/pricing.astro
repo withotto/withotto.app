@@ -144,42 +144,37 @@ const faqs: FaqItem[] = [
 <div class="py-24" id="pricing">
   <Container>
     <div>
-      <h2
-        class="text-center text-3xl font-bold text-primary-strong md:text-5xl">
+      <h2 class="text-center text-3xl font-bold text-primary-strong md:text-5xl">
         Simple, credit-based pricing
       </h2>
-      <p
-        class="mx-auto mt-6 max-w-4xl text-lg leading-snug font-medium text-primary-strong">
+      <p class="mx-auto mt-6 max-w-4xl text-lg leading-snug font-medium text-primary-strong">
         All features, unlimited clients, and full support are included, with the
         same fair pricing for the practices using Otto.
       </p>
     </div>
 
     <div class="mt-12">
-      <div
-        class="relative mb-5 flex items-center rounded-md border border-primary/20 bg-primary-soft px-5 py-4 shadow-sm">
+      <div class="relative mb-5 flex items-center rounded-md border border-primary/20 bg-primary-soft px-5 py-4 shadow-sm">
         <Icon
           name="hugeicons:information-circle"
           size={32}
           class="size-7 shrink-0 text-primary"
         />
-        <span class="ml-3"
-          >Credits are shared across all your clients, helping smooth out those
-          monthly and seasonal variations in transaction volume.</span
-        >
+        <span class="ml-3">
+          Credits are shared across all your clients, helping smooth out those
+          monthly and seasonal variations in transaction volume.
+        </span>
       </div>
       <div class="relative">
         {/* Outer container with position relative for scroll indicators */}
         <div
           class="pointer-events-none absolute top-0 right-0 bottom-0 hidden w-12 bg-gradient-to-l from-white to-transparent md:hidden"
           aria-hidden="true"
-          id="scroll-indicator-right">
-        </div>
+          id="scroll-indicator-right"></div>
         <div
           class="pointer-events-none absolute top-0 bottom-0 left-0 hidden w-12 bg-gradient-to-r from-white to-transparent md:hidden"
           aria-hidden="true"
-          id="scroll-indicator-left">
-        </div>
+          id="scroll-indicator-left"></div>
 
         {/* Table container with horizontal scroll */}
         <div
@@ -192,9 +187,9 @@ const faqs: FaqItem[] = [
               <tr class="bg-primary font-bold text-white">
                 <th
                   scope="col"
-                  class="sticky left-0 bg-primary px-6 py-4 text-left text-white"
-                  >Plan</th
-                >
+                  class="sticky left-0 bg-primary px-6 py-4 text-left text-white">
+                  Plan
+                </th>
                 <th
                   scope="col"
                   class="bg-primary px-6 py-4 text-right font-bold text-white">
@@ -213,41 +208,37 @@ const faqs: FaqItem[] = [
               </tr>
             </thead>
             <tbody class="divide-y divide-muted-strong">
-              {
-                plans.map((plan, index) => (
-                  <tr
-                    class={`${index % 2 === 0 ? "bg-white" : "bg-primary-soft"}`}>
-                    <td class="sticky left-0 bg-inherit px-6 py-4 whitespace-nowrap">
-                      <div class="flex items-center gap-3">
-                        <span class="font-medium text-default">
-                          {plan.name}
+              {plans.map((plan, index) => (
+                <tr
+                  class={`${index % 2 === 0 ? "bg-white" : "bg-primary-soft"}`}>
+                  <td class="sticky left-0 bg-inherit px-6 py-4 whitespace-nowrap">
+                    <div class="flex items-center gap-3">
+                      <span class="font-medium text-default">{plan.name}</span>
+                      {plan.label && (
+                        <span
+                          class={`inline-flex rounded-full px-3 py-1 text-sm font-medium ${plan.label.classes}`}>
+                          {plan.label.title}
                         </span>
-                        {plan.label && (
-                          <span
-                            class={`inline-flex rounded-full px-3 py-1 text-sm font-medium ${plan.label.classes}`}>
-                            {plan.label.title}
-                          </span>
-                        )}
-                      </div>
-                    </td>
-                    <td class="px-6 py-4 text-right whitespace-nowrap">
-                      <div class="font-bold text-default">
-                        £{plan.price.toFixed(2).toLocaleString()}
-                      </div>
-                    </td>
-                    <td class="px-6 py-4 text-right whitespace-nowrap">
-                      <div class="text-default">
-                        {plan.credits.toLocaleString()}
-                      </div>
-                    </td>
-                    <td class="px-6 py-4 text-right whitespace-nowrap">
-                      <div class="text-default">
-                        £{(plan.price / plan.credits).toFixed(2)}
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              }
+                      )}
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 text-right whitespace-nowrap">
+                    <div class="font-bold text-default">
+                      £{plan.price.toFixed(2).toLocaleString()}
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 text-right whitespace-nowrap">
+                    <div class="text-default">
+                      {plan.credits.toLocaleString()}
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 text-right whitespace-nowrap">
+                    <div class="text-default">
+                      £{(plan.price / plan.credits).toFixed(2)}
+                    </div>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
@@ -256,20 +247,22 @@ const faqs: FaqItem[] = [
 
     <div class="mt-8 space-y-8 text-default-soft">
       <p class="text-sm">All prices exclude VAT</p>
-      <div
-        class="relative mx-auto mb-16 flex max-w-4xl items-center rounded-md border border-primary/20 bg-primary-soft px-5 py-4 shadow-sm">
+      <div class="relative mx-auto mb-16 flex max-w-4xl items-center rounded-md border border-primary/20 bg-primary-soft px-5 py-4 shadow-sm">
         <Icon
           name="hugeicons:calculator-01"
           size={32}
           class="size-7 shrink-0 text-primary"
         />
-        <span class="ml-3"
-          >Want to calculate your monthly costs? <a
+        <span class="ml-3">
+          Want to calculate your monthly costs?{" "}
+          <a
             href="/files/With%20Otto%20pricing%20calculator.xlsx"
             class="text-primary hover:underline hover:underline-offset-2"
-            download>Download our pricing spreadsheet</a
-          > to see exactly how much Otto will cost to work with your clients.</span
-        >
+            download>
+            Download our pricing spreadsheet
+          </a>{" "}
+          to see exactly how much Otto will cost to work with your clients.
+        </span>
       </div>
 
       <h3 class="text-center text-2xl font-bold text-primary-strong">
@@ -279,11 +272,12 @@ const faqs: FaqItem[] = [
         <FaqList items={faqs} />
       </div>
       <p class="mx-auto mt-10 max-w-3xl text-default">
-        Have more questions? <a
+        Have more questions?{" "}
+        <a
           href="/faqs/"
           class="text-primary hover:underline hover:underline-offset-2">
-          Read our full FAQs</a
-        >
+          Read our full FAQs
+        </a>
       </p>
     </div>
   </Container>

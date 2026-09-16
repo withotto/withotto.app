@@ -49,58 +49,56 @@ testimonials.sort(() => Math.random() - 0.5);
 <div class="bg-white py-24">
   <Container>
     <div class="grid gap-16">
-      {
-        testimonials.map((testimonial) => (
-          <div class="relative mt-32 rounded-2xl bg-primary-soft p-8 shadow-sm first:mt-20">
-            <div class="flex flex-col items-center">
-              <div class="absolute -top-20 flex w-full justify-center">
-                <Image
-                  src={testimonial.image}
-                  widths={[100, 200, 400]}
-                  sizes="(max-width: 768px) 100px, 200px"
-                  format="webp"
-                  quality={80}
-                  alt={`Headshot of ${testimonial.name}`}
-                  class="aspect-square size-36 rounded-full object-cover shadow-lg ring-4 ring-primary"
+      {testimonials.map((testimonial) => (
+        <div class="relative mt-32 rounded-2xl bg-primary-soft p-8 shadow-sm first:mt-20">
+          <div class="flex flex-col items-center">
+            <div class="absolute -top-20 flex w-full justify-center">
+              <Image
+                src={testimonial.image}
+                widths={[100, 200, 400]}
+                sizes="(max-width: 768px) 100px, 200px"
+                format="webp"
+                quality={80}
+                alt={`Headshot of ${testimonial.name}`}
+                class="aspect-square size-36 rounded-full object-cover shadow-lg ring-4 ring-primary"
+              />
+            </div>
+            <div class="mt-16 text-center">
+              <h3 class="text-2xl font-bold text-primary-strong">
+                {testimonial.title}
+              </h3>
+              <div class="relative mt-6">
+                <Icon
+                  name="hugeicons:quote-up"
+                  size={32}
+                  class="absolute -top-2 -left-2 size-6 text-primary-medium"
+                />
+                {testimonial.quote.map((paragraph) => (
+                  <p class="relative mb-4 px-6 text-left text-lg leading-relaxed">
+                    {paragraph}
+                  </p>
+                ))}
+                <Icon
+                  name="hugeicons:quote-down"
+                  size={32}
+                  class="absolute -right-2 -bottom-2 size-6 text-primary-medium"
                 />
               </div>
-              <div class="mt-16 text-center">
-                <h3 class="text-2xl font-bold text-primary-strong">
-                  {testimonial.title}
-                </h3>
-                <div class="relative mt-6">
-                  <Icon
-                    name="hugeicons:quote-up"
-                    size={32}
-                    class="absolute -top-2 -left-2 size-6 text-primary-medium"
-                  />
-                  {testimonial.quote.map((paragraph) => (
-                    <p class="relative mb-4 px-6 text-left text-lg leading-relaxed">
-                      {paragraph}
-                    </p>
-                  ))}
-                  <Icon
-                    name="hugeicons:quote-down"
-                    size={32}
-                    class="absolute -right-2 -bottom-2 size-6 text-primary-medium"
-                  />
-                </div>
-                <footer class="mt-6 border-t border-primary/10 pt-6">
-                  <p class="font-medium text-default-soft">
-                    {testimonial.name},{" "}
-                    <a
-                      href={testimonial.url}
-                      rel="noopener"
-                      class="underline transition-colors hover:text-primary-strong">
-                      {testimonial.practiceName}
-                    </a>
-                  </p>
-                </footer>
-              </div>
+              <footer class="mt-6 border-t border-primary/10 pt-6">
+                <p class="font-medium text-default-soft">
+                  {testimonial.name},{" "}
+                  <a
+                    href={testimonial.url}
+                    rel="noopener"
+                    class="underline transition-colors hover:text-primary-strong">
+                    {testimonial.practiceName}
+                  </a>
+                </p>
+              </footer>
             </div>
           </div>
-        ))
-      }
+        </div>
+      ))}
     </div>
   </Container>
 </div>

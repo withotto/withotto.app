@@ -5,8 +5,7 @@ const { title, lastItem, children } = Astro.props;
 
 <li class="relative z-10">
   <DropdownContainer class="group">
-    <button
-      class="flex w-full items-center gap-1 py-2 font-medium text-primary-strong hover:text-primary lg:w-auto lg:px-3">
+    <button class="flex w-full items-center gap-1 py-2 font-medium text-primary-strong hover:text-primary lg:w-auto lg:px-3">
       <span>{title}</span>
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -18,8 +17,7 @@ const { title, lastItem, children } = Astro.props;
         <path
           stroke-linecap="round"
           stroke-linejoin="round"
-          d="M19.5 8.25l-7.5 7.5-7.5-7.5">
-        </path>
+          d="M19.5 8.25l-7.5 7.5-7.5-7.5"></path>
       </svg>
     </button>
     <DropdownItems>
@@ -30,17 +28,14 @@ const { title, lastItem, children } = Astro.props;
             ? "origin-top-right lg:right-0"
             : "origin-top-left lg:left-0",
         ]}>
-        <div
-          class="flex flex-col px-3 lg:rounded-md lg:border lg:bg-white lg:py-2 lg:shadow">
-          {
-            children.map((item) => (
-              <a
-                href={item.path}
-                class="py-1 text-primary-strong hover:text-primary">
-                {item.title}
-              </a>
-            ))
-          }
+        <div class="flex flex-col px-3 lg:rounded-md lg:border lg:bg-white lg:py-2 lg:shadow">
+          {children.map((item) => (
+            <a
+              href={item.path}
+              class="py-1 text-primary-strong hover:text-primary">
+              {item.title}
+            </a>
+          ))}
         </div>
       </div>
     </DropdownItems>

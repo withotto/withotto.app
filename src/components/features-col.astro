@@ -42,21 +42,19 @@ const features = [
 ---
 
 <div class="grid grid-cols-1 gap-16 md:grid-cols-2">
-  {
-    features.map((feature) => (
-      <div class="flex flex-wrap justify-center gap-4 sm:flex-nowrap sm:justify-start sm:gap-8">
-        <div>
-          <div class="flex h-28 w-28 items-center justify-center rounded-full bg-primary-soft text-primary">
-            <Icon name={feature.icon} size={32} class="size-7/12" />
-          </div>
-        </div>
-        <div class="text-center sm:text-start">
-          <h3 class="text-2xl font-semibold text-primary-strong">
-            {feature.title}
-          </h3>
-          <p class="pt-2 text-default">{feature.description}</p>
+  {features.map((feature) => (
+    <div class="flex flex-wrap justify-center gap-4 sm:flex-nowrap sm:justify-start sm:gap-8">
+      <div>
+        <div class="flex h-28 w-28 items-center justify-center rounded-full bg-primary-soft text-primary">
+          <Icon name={feature.icon} size={32} class="size-7/12" />
         </div>
       </div>
-    ))
-  }
+      <div class="text-center sm:text-start">
+        <h3 class="text-2xl font-semibold text-primary-strong">
+          {feature.title}
+        </h3>
+        <p class="pt-2 text-default">{feature.description}</p>
+      </div>
+    </div>
+  ))}
 </div>
