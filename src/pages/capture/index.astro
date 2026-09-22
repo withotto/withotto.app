@@ -558,6 +558,49 @@ const heroCta =
     </Container>
   </div>
 
+  <!-- Missing receipts -->
+  <div class="py-16">
+    <Container>
+      <div class="mx-auto max-w-3xl">
+        <div class="flex flex-col items-center text-center">
+          <span class={sectionChipLight}>
+            <Icon name="hugeicons:file-search" class={sectionChipIcon} />
+          </span>
+          <h2 class="mt-5 text-3xl font-bold text-primary-strong md:text-5xl">
+            Chasing missing receipts
+          </h2>
+        </div>
+        <div class="mt-8 space-y-4 text-lg text-default">
+          <p>
+            Some receipts only come to light when a payment sits on the bank
+            statement with nothing to explain it. For clients on Xero, Otto
+            Capture turns those payments into a list your client can answer.
+          </p>
+          <p>
+            Export the statement lines Xero hasn't matched yet and import them
+            into Capture. Take out anything the client doesn't need to explain,
+            such as salaries or transfers between their own accounts, and share
+            a link to what's left. Your client opens it on any device, with no
+            account to create, and answers each payment with a receipt, a short
+            note, or both.
+          </p>
+          <p>
+            Receipts they send go straight into that client's review queue with
+            their note attached, and you can see at a glance which payments are
+            still waiting for an answer. The page shows the client only the
+            payments you chose, and you can replace the link or switch the page
+            off whenever you like.
+          </p>
+          <p class="text-base text-default-soft">
+            Missing receipts is available for Xero clients. Capture doesn't
+            import bank transactions for FreeAgent or QuickBooks Online clients
+            at present.
+          </p>
+        </div>
+      </div>
+    </Container>
+  </div>
+
   <!-- Accuracy and staying in control (dark feature band) -->
   <div class="bg-primary-strong py-20 text-white">
     <Container>
@@ -707,23 +750,19 @@ const heroCta =
     </Container>
   </div>
 
-  <!-- What's next -->
+  <!-- Honesty note -->
   <div class="py-16">
     <Container>
       <div class="mx-auto max-w-3xl">
-        <div class="rounded-xl border border-muted-strong bg-white p-6">
-          <div class="mb-3 flex items-center gap-3">
-            <Icon
-              name="hugeicons:route-01"
-              class="size-6 shrink-0 text-primary-strong"
-            />
-            <h2 class="text-2xl font-semibold text-primary-strong">
-              What's next
-            </h2>
-          </div>
+        <div class="flex items-start gap-4 rounded-lg border-l-4 border-primary bg-primary-soft p-6">
+          <Icon
+            name="hugeicons:information-circle"
+            class="mt-0.5 size-6 shrink-0 text-primary-strong"
+          />
           <p class="text-default">
-            Requesting missing documents from your clients is next. We'll add
-            features here as they ship.
+            Otto Capture is a newer product and we're developing it actively. If
+            something isn't right, or there's a feature you'd like to see, tell
+            us. Support comes direct from the team that builds it.
           </p>
         </div>
       </div>
@@ -756,25 +795,6 @@ const heroCta =
               <Icon name="hugeicons:arrow-right-01" class="size-5" />
             </Link>
           </div>
-        </div>
-      </div>
-    </Container>
-  </div>
-
-  <!-- Honesty note -->
-  <div class="py-16">
-    <Container>
-      <div class="mx-auto max-w-3xl">
-        <div class="flex items-start gap-4 rounded-lg border-l-4 border-primary bg-primary-soft p-6">
-          <Icon
-            name="hugeicons:information-circle"
-            class="mt-0.5 size-6 shrink-0 text-primary-strong"
-          />
-          <p class="text-default">
-            Otto Capture is a newer product and we're developing it actively. If
-            something isn't right, or there's a feature you'd like to see, tell
-            us. Support comes direct from the team that builds it.
-          </p>
         </div>
       </div>
     </Container>
