@@ -268,11 +268,6 @@ const heroCta =
         <p class="mt-6 text-sm font-medium text-default-soft">
           Works with Xero, FreeAgent, and QuickBooks Online
         </p>
-        <p class="mt-2 text-sm text-default-soft">
-          On QuickBooks Online, Otto publishes purchases: bills and supplier
-          credits. Sales invoices and sales credit notes are not supported there
-          at present.
-        </p>
       </div>
     </Container>
   </div>
@@ -375,6 +370,11 @@ const heroCta =
             </div>
           ))}
         </div>
+        <p class="mx-auto mt-6 max-w-2xl text-center text-sm text-default-soft">
+          On QuickBooks Online, Otto publishes purchases: bills and supplier
+          credits. Sales invoices and sales credit notes are not supported there
+          at present.
+        </p>
       </div>
     </Container>
   </div>
@@ -558,6 +558,50 @@ const heroCta =
     </Container>
   </div>
 
+  <!-- Missing receipts -->
+  <div class="py-16">
+    <Container>
+      <div class="mx-auto max-w-3xl">
+        <div class="flex flex-col items-center text-center">
+          <span class={sectionChipLight}>
+            <Icon name="hugeicons:file-search" class={sectionChipIcon} />
+          </span>
+          <h2 class="mt-5 text-3xl font-bold text-primary-strong md:text-5xl">
+            Chasing missing receipts
+          </h2>
+        </div>
+        <div class="mt-8 space-y-4 text-lg text-default">
+          <p>
+            Some receipts only come to light when a payment sits on the bank
+            statement with nothing to explain it. For clients on Xero, Otto
+            Capture turns those payments into a list your client can answer.
+          </p>
+          <p>
+            Export the client's unreconciled bank transactions from Xero and
+            import them into Capture. Take out anything the client doesn't need
+            to explain, such as salaries or transfers between their own
+            accounts, and share a link to what's left. Your client opens it on
+            any device, with no account to create, and answers each payment with
+            a receipt, a short note, or both.
+          </p>
+          <p>
+            Receipts they send go straight into that client's review queue with
+            their note attached, and you can see at a glance which payments are
+            still waiting for an answer. Anyone with the link sees only the
+            payments you chose, and you can replace the link or switch the page
+            off whenever you like.
+          </p>
+          <p class="text-base text-default-soft">
+            You can chase missing receipts for Xero clients today. We're working
+            on FreeAgent and QuickBooks Online, and if you'd like to chase
+            receipts for those clients, tell us, because it helps us decide what
+            to build first.
+          </p>
+        </div>
+      </div>
+    </Container>
+  </div>
+
   <!-- Accuracy and staying in control (dark feature band) -->
   <div class="bg-primary-strong py-20 text-white">
     <Container>
@@ -575,8 +619,9 @@ const heroCta =
             Otto reads each document and proposes the detail and coding. You
             stay in control of what reaches your accounting platform, reviewing
             and adjusting as much as you need. Behind the scenes we measure
-            accuracy rigorously against real coding decisions, rather than
-            asking you to take quality on trust.
+            accuracy rigorously against real coding decisions, using documents
+            only from practices that have opted in, rather than asking you to
+            take quality on trust.
           </p>
         </div>
       </div>
@@ -599,9 +644,9 @@ const heroCta =
           Otto Capture suits any practice that handles receipts and bills in
           Xero, FreeAgent, or QuickBooks Online, from a sole practitioner to a
           firm with a large client book. What makes it useful tends to matter
-          more as you grow, not less.
+          more as you grow.
         </p>
-        <p class="mt-8 space-y-4 text-lg text-default">
+        <p class="mt-8 text-lg text-default">
           Coding is learned for each client separately, so every client keeps
           its own treatment and your records stay consistent no matter how many
           of your team work on them. Line items are extracted from every
@@ -693,8 +738,8 @@ const heroCta =
             still waiting to be reviewed.
           </p>
           <p>
-            Otto Capture is free to trial for 60 days, extended from the usual
-            30 for a limited period. After the trial, the prices above apply.{" "}
+            Otto Capture is free to trial for 30 days. After the trial, the
+            prices above apply.{" "}
             <a
               href="https://capture.withotto.app/register/"
               class="font-semibold text-primary-strong underline underline-offset-2 hover:text-primary">
@@ -707,23 +752,19 @@ const heroCta =
     </Container>
   </div>
 
-  <!-- What's next -->
+  <!-- Honesty note -->
   <div class="py-16">
     <Container>
       <div class="mx-auto max-w-3xl">
-        <div class="rounded-xl border border-muted-strong bg-white p-6">
-          <div class="mb-3 flex items-center gap-3">
-            <Icon
-              name="hugeicons:route-01"
-              class="size-6 shrink-0 text-primary-strong"
-            />
-            <h2 class="text-2xl font-semibold text-primary-strong">
-              What's next
-            </h2>
-          </div>
+        <div class="flex items-start gap-4 rounded-lg border-l-4 border-primary bg-primary-soft p-6">
+          <Icon
+            name="hugeicons:information-circle"
+            class="mt-0.5 size-6 shrink-0 text-primary-strong"
+          />
           <p class="text-default">
-            Requesting missing documents from your clients is next. We'll add
-            features here as they ship.
+            Otto Capture is a newer product and we're developing it actively. If
+            something isn't right, or there's a feature you'd like to see, tell
+            us. Support comes direct from the team that builds it.
           </p>
         </div>
       </div>
@@ -756,25 +797,6 @@ const heroCta =
               <Icon name="hugeicons:arrow-right-01" class="size-5" />
             </Link>
           </div>
-        </div>
-      </div>
-    </Container>
-  </div>
-
-  <!-- Honesty note -->
-  <div class="py-16">
-    <Container>
-      <div class="mx-auto max-w-3xl">
-        <div class="flex items-start gap-4 rounded-lg border-l-4 border-primary bg-primary-soft p-6">
-          <Icon
-            name="hugeicons:information-circle"
-            class="mt-0.5 size-6 shrink-0 text-primary-strong"
-          />
-          <p class="text-default">
-            Otto Capture is a newer product and we're developing it actively. If
-            something isn't right, or there's a feature you'd like to see, tell
-            us. Support comes direct from the team that builds it.
-          </p>
         </div>
       </div>
     </Container>
