@@ -19,7 +19,7 @@ For Otto Bank Rec specifically: the software uses machine learning and you can n
 
 ## First-person Otto: a narrow exception
 
-First-person Otto is acceptable only in clearly mascot-framed short copy where the framing is visually obvious and the reader knows they're "meeting" Otto. Examples:
+This section overrides the shared rule in `.claude/rules/shared/voice-common.md`, which otherwise forbids first-person Otto. First-person Otto is acceptable only in clearly mascot-framed short copy where the framing is visually obvious and the reader knows they're "meeting" Otto. The rest of the shared persona rule still applies: in the first person, Otto says what he does in the software, never where he has been, who he has met, or how he feels. Examples:
 
 - A dedicated "Meet Otto" section or component with an illustration of Otto next to the text
 - A short audio clip attributed to Otto
@@ -89,7 +89,7 @@ Other guidance:
 - The tier prices and per-document rates are public and shown on the pricing table. Explain the mechanism in plain terms and avoid the jargon word "overage". The exact document counts where one tier overtakes the next don't need to appear on the page.
 - Say only documents published to the accounting platform are charged: not duplicates, not discarded documents, not documents still to be reviewed. Avoid wording like "drafts aren't charged", which can be misread against a Draft document status.
 
-Still internal (kept out of the committed public website and support repos): the exact tier-selection breakpoints. When the model changes, update this section together with the Capture pricing differentiators in `withotto-app-products.md` and the internal pricing notes.
+Still internal (kept out of the committed public website and support repos): the exact tier-selection breakpoints. When the model changes, update this section together with the Capture pricing differentiators in `.claude/rules/shared/products.md` and the confidential `.claude/rules/shared/pricing.md`, both rendered from the shared-rules repo and edited there.
 
 For Otto Bank Rec, pricing is established and the transparency rules apply: lead with the model in plain terms, show the pricing, no hidden "contact us" pricing, and a calculator or example where the model is non-trivial.
 
