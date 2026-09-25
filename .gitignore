@@ -31,3 +31,11 @@ pnpm-debug.log*
 .playwright-cli
 .codegraph/daemon.pid
 .worktrees/
+
+# Shared rules rendered from the private shared-rules repo at session start; never committed here
+/.claude/rules/shared/
+# Retired copies that now live in shared-rules; kept ignored so they cannot be committed again
+/.claude/rules/withotto-app-brand-audience.md
+/.claude/rules/withotto-app-voice-common.md
+/.claude/rules/withotto-app-products.md
+.claude/worktrees/

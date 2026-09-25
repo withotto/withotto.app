@@ -10,8 +10,8 @@ Marketing website for With Otto, a multi-product brand making focused automation
 
 | Product                            | Status                                                      | Landing                               | Notes                                                                                                                                                                                                           |
 | ---------------------------------- | ----------------------------------------------------------- | ------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Otto Capture** (receipt capture) | In beta, active development                                 | `src/pages/capture/index.astro`       | Foreground product. Active dev since Jan 2026, beta started April 2026, full launch targeted late Q2 / early Q3 2026. Marketing claims need a "beta" qualifier until launch.                                    |
-| **Bank Reconciliation** (ML)       | Available and supported; trials open, not actively promoted | `src/pages/bank-reconciliation.astro` | The product page explains Bank Rec and lets a visitor start a trial directly. Old `/business/`, `/trial/`, `/notebook/*` URLs redirect here. Position by need, not by quality (see `withotto-app-products.md`). |
+| **Otto Capture** (receipt capture) | Generally available, active development                     | `src/pages/capture/index.astro`       | Foreground product. Self-serve trial signup is live. Works with Xero, FreeAgent, and QuickBooks Online (purchases only on QuickBooks Online). Lifecycle wording lives in `shared/products.md`.            |
+| **Bank Reconciliation** (ML)       | Available and supported; trials open, not actively promoted | `src/pages/bank-reconciliation.astro` | The product page explains Bank Rec and lets a visitor start a trial directly. Old `/business/`, `/trial/`, `/notebook/*` URLs redirect here. Position by need, not by quality (see `shared/products.md`). |
 
 Homepage and shared copy should lead with the brand (tools for accountants/bookkeepers) and foreground Otto Capture. New product pages should follow the pattern of `src/pages/capture/index.astro`, a discrete per-product landing sharing the common Navbar/Footer.
 
@@ -109,7 +109,7 @@ Use these aliases in imports. Do not write relative `../../` paths:
 
 - `.env.development` holds local dev values. Never commit `.env.production` or secret keys.
 - Public stats endpoint: `PUBLIC_STATS_API_URL` (browser-exposed; `PUBLIC_` prefix required by Astro).
-- QuickBooks Online waitlist endpoint: `PUBLIC_QUICKBOOKS_WAITLIST_API_URL` (browser-exposed). Unset, `/capture/quickbooks/` renders a "please email support" card instead of the form, so the page is safe to ship before the function is deployed.
+- QuickBooks Online waitlist endpoint: `PUBLIC_QUICKBOOKS_WAITLIST_API_URL` (browser-exposed). Nothing on the site reads it any more: the `/capture/quickbooks/` waitlist page was removed when QuickBooks Online shipped, and that path now redirects to `/capture/`. The variable and the function behind it are retained until someone decides what happens to the sign-up list.
 - Listmonk admin credentials for the `quickbooks-waitlist` function are Supabase function secrets, never site env vars: `LISTMONK_API_URL`, `LISTMONK_API_USER`, `LISTMONK_API_TOKEN`, `LISTMONK_QBO_LIST_ID` (the numeric list ID, not the UUID).
 - Supabase: `PROD_SUPABASE_URL`, `PROD_SUPABASE_ANON_KEY` (anon key only; never ship service-role keys to the site bundle).
 

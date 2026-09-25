@@ -1,0 +1,2 @@
+# Copy the rules rendered from the shared-rules repo into worktrees Claude Code creates
+.claude/rules/shared/
