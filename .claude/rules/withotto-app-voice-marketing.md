@@ -11,7 +11,7 @@ Landing pages, product pages, the pricing page, the FAQ page, and any other page
 
 ## Otto as subject
 
-Otto does the work in marketing prose: "Otto reads each receipt", "Otto reconciles transactions", "Otto suggests account codes". Otto Capture and Otto Bank Rec are the products; Otto is the persona who does things inside them.
+Otto does the work in marketing prose: "Otto reads each receipt", "Otto reconciles transactions", "Otto suggests nominal codes". Otto Capture and Otto Bank Rec are the products; Otto is the persona who does things inside them.
 
 For Otto Capture specifically: avoid "our AI", "the AI", "Otto's AI" in running prose. Don't split the persona. Otto reads, extracts, classifies, matches, and suggests. If the underlying technology genuinely needs naming, describe it as "a third-party LLM" rather than naming the provider in marketing prose. Naming the specific provider belongs on transparency pages, not landing pages.
 
@@ -36,18 +36,18 @@ Hero headlines should name a specific benefit, not a vague category. "Receipt ca
 
 Subheaders do one job: explain the headline in one sentence. Not two.
 
-If a hero needs to mention AI, prefer the outcome over the mechanism. "Receipt capture for practices" is stronger than "AI-powered receipt capture for practices". If the mechanism needs to appear, put it in the subhead as a plain fact ("Otto extracts supplier, line items, and dates using a third-party LLM with a no-training agreement"), not as a marketing claim.
+If a hero needs to mention AI, prefer the outcome over the mechanism. "Receipt capture for practices" is stronger than "AI-powered receipt capture for practices". If the mechanism needs to appear, put it in the subhead as a plain fact ("Otto extracts supplier, line items, and dates using a third-party LLM under a zero-data-retention policy"), not as a marketing claim.
 
 Calls to action in heroes should match the product's current stage:
 
-- **Otto Capture:** "Join the beta" or "Request beta access" until general availability. After GA the CTA becomes a self-serve trial ("Start a trial"), optionally paired with a secondary "Book a setup call" for practices that want guided onboarding. Do not show a trial CTA until GA.
+- **Otto Capture:** "Start your free trial" is the primary CTA, leading to self-serve signup. Capture is generally available, so no beta or early-access wording.
 - **Otto Bank Rec:** "Start a trial" is the primary CTA, anchored to the booking section on the product page. Existing customers get "Sign in to the portal". Keep the tone informative rather than hard-sell, since the product is supported but not actively promoted.
 
 ## Transparency as differentiator
 
 The strongest marketing move available to With Otto is being more honest than competitors. Use it.
 
-- Where a limitation exists, name it with the reassurance alongside. "Xero app certification is in progress. You can still use Capture with your existing Xero connection."
+- Where a limitation exists, name it with the reassurance alongside. "On QuickBooks Online, Capture publishes purchases: bills and supplier credits. Sales invoices publish to Xero and FreeAgent."
 - Where a competitor is more expensive or more complicated, let the specifics speak rather than insult the competitor. "Otto extracts line items as standard, where some tools charge extra for them."
 - Where something is in beta, say so plainly. Don't dress it up as "early access for innovators".
 
