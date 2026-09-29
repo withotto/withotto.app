@@ -1,5 +1,9 @@
 root_dir = "dist/"
-# ico.org.uk rate-limits/blocks automated checkers (observed timing out in a
-# real browser from this machine too). The canonical regulator URL in the
-# privacy policy is correct - skip checking it.
-exclude = ["ico\\.org\\.uk"]
+# Sites that block automated checkers, so a failure says nothing about the link:
+# - ico.org.uk rate-limits/blocks automated checkers (observed timing out in a
+#   real browser from this machine too). The canonical regulator URL in the
+#   privacy policy is correct.
+# - unsplash.com answers requests from CI runners with a 307 to an anti-bot
+#   challenge (/.within.website) that returns 401. The photographer credit
+#   links on blog posts load fine in a browser.
+exclude = ["ico\\.org\\.uk", "unsplash\\.com"]
