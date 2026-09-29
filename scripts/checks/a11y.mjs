@@ -259,8 +259,17 @@ async function checkPage(
       `${target.route} returned HTTP ${response?.status() ?? "no response"} from the preview server.`,
     );
   }
-  // Contrast is measured against the rendered glyphs, so let web fonts land.
-  await page.evaluate(() => document.fonts.ready.then(() => undefined));
+  // Contrast is measured against the rendered glyphs, so let web fonts land,
+  // but not for longer than a page may take to load: a stalled font request
+  // would otherwise hang the run, since `evaluate` has no timeout of its own.
+  await page.evaluate(
+    (timeout) =>
+      Promise.race([
+        document.fonts.ready.then(() => undefined),
+        new Promise((resolve) => setTimeout(resolve, timeout)),
+      ]),
+    navigationTimeout,
+  );
 
   const results = await new AxeBuilder({ page })
     .withTags([...WCAG_TAGS, BEST_PRACTICE])
