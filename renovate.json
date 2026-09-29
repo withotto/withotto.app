@@ -73,9 +73,11 @@
     },
     {
       "customType": "regex",
-      "description": "Track the Lighthouse CI version the lighthouse workflow installs (pnpm add @lhci/cli@<version>); it is deliberately not in package.json",
+      "description": "Track the Lighthouse CI version the lighthouse workflow installs (pnpm add @lhci/cli@<version>); it is deliberately not in package.json. Anchored to the line holding only that argument, so a version mentioned in a comment is never extracted",
       "managerFilePatterns": ["/^\\.github\\/workflows\\/lighthouse\\.yml$/"],
-      "matchStrings": ["@lhci/cli@(?<currentValue>[0-9]+\\.[0-9]+\\.[0-9]+)"],
+      "matchStrings": [
+        "(^|\\n)\\s+@lhci/cli@(?<currentValue>[0-9]+\\.[0-9]+\\.[0-9]+)\\s*(\\n|$)"
+      ],
       "datasourceTemplate": "npm",
       "depNameTemplate": "@lhci/cli"
     }

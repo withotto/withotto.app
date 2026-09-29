@@ -84,12 +84,14 @@ jobs:
           [[ "$EVENT_TARGET_URL" =~ $url_re ]] || skip "target URL is not a deploy preview of this site"
           preview_number="${BASH_REMATCH[1]}"
 
-          pulls="$(gh api "repos/${GITHUB_REPOSITORY}/commits/${EVENT_SHA}/pulls?per_page=100")" \
+          # --slurp gathers every page into one array of pages, so the
+          # exactly-one check below sees all the PRs, not just the first 100.
+          pulls="$(gh api --paginate --slurp "repos/${GITHUB_REPOSITORY}/commits/${EVENT_SHA}/pulls?per_page=100")" \
             || skip "could not list the PRs for this commit"
           # Exactly one open PR into this repo, from a branch of this repo (not
           # a fork), whose head is this commit.
           pr="$(jq -r --arg repo "$GITHUB_REPOSITORY" --arg sha "$EVENT_SHA" '
-            [.[] | select(.state == "open" and .base.repo.full_name == $repo)]
+            [.[][] | select(.state == "open" and .base.repo.full_name == $repo)]
             | if length == 1
                 and .[0].head.repo.full_name == $repo
                 and .[0].head.sha == $sha
@@ -188,10 +190,13 @@ jobs:
           const base = process.env.PREVIEW_URL;
           const paths = process.env.LIGHTHOUSE_PATHS.trim().split(/\s+/);
           const categories = ["performance", "accessibility", "best-practices", "seo"];
-          const runs = fs
-            .readdirSync(".lighthouseci")
-            .filter((f) => /^lhr-\d+\.json$/.test(f))
-            .map((f) => JSON.parse(fs.readFileSync(`.lighthouseci/${f}`, "utf8")));
+          const dir = ".lighthouseci";
+          const runs = fs.existsSync(dir)
+            ? fs
+                .readdirSync(dir)
+                .filter((f) => /^lhr-\d+\.json$/.test(f))
+                .map((f) => JSON.parse(fs.readFileSync(`${dir}/${f}`, "utf8")))
+            : [];
           const median = (values) => {
             const s = values.filter((v) => typeof v === "number" && v >= 0 && v <= 1).sort((a, b) => a - b);
             if (s.length === 0) return null;
@@ -201,6 +206,12 @@ jobs:
           const scores = {};
           for (const path of paths) {
             const forPath = runs.filter((r) => r.requestedUrl === base + path);
+            // A page with no run at all was not scored, so there is no summary
+            // (and no PR comment) rather than a row of dashes that looks complete.
+            if (forPath.length === 0) {
+              console.error(`::error::Lighthouse produced no run for ${path}.`);
+              process.exit(1);
+            }
             scores[path] = Object.fromEntries(
               categories.map((c) => [c, median(forPath.map((r) => r.categories?.[c]?.score))]),
             );
@@ -322,9 +333,11 @@ jobs:
           jq -n --arg body "$body" '{body: $body}' >"$payload"
 
           # Only our own comment: the marker and github-actions[bot] as author.
+          # tail, not head: it reads the whole stream, so a duplicate match
+          # cannot SIGPIPE gh under pipefail, and it updates the newest match.
           existing="$(gh api --paginate "repos/${GITHUB_REPOSITORY}/issues/${PR}/comments?per_page=100" \
             --jq ".[] | select(.user.login == \"github-actions[bot]\" and .user.type == \"Bot\" and (.body | startswith(\"${marker}\"))) | .id" \
-            | head -n 1)"
+            | tail -n 1)"
           if [[ "$existing" =~ ^[0-9]+$ ]]; then
             gh api --method PATCH "repos/${GITHUB_REPOSITORY}/issues/comments/${existing}" --input "$payload" >/dev/null
             echo "Updated the scores comment on PR #${PR}."
