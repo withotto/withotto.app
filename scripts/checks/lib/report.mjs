@@ -105,13 +105,24 @@ export function writeReport(report, outputDir) {
   return file;
 }
 
+/**
+ * Where a finding is: a component and its pages, a check-formed group's
+ * pages (whose sources the message lists), or one page.
+ *
+ * @param {ReportedFinding} finding
+ */
+function where(finding) {
+  const pages = `${finding.routes.length} page(s): ${finding.routes.join(", ")}`;
+  if (finding.component !== null) {
+    return `at ${finding.component} (${finding.source}) on ${pages}`;
+  }
+  if (finding.group !== null) return `on ${pages}`;
+  return `at ${finding.route} (${finding.source === "unknown" ? "source unknown" : finding.source})`;
+}
+
 /** @param {ReportedFinding} finding */
 function describe(finding) {
-  const where =
-    finding.component !== null
-      ? `${finding.component} (${finding.source}) on ${finding.routes.length} page(s): ${finding.routes.join(", ")}`
-      : `${finding.route} (${finding.source === "unknown" ? "source unknown" : finding.source})`;
-  const lines = [`${finding.rule}: ${finding.message}`, `  at ${where}`];
+  const lines = [`${finding.rule}: ${finding.message}`, `  ${where(finding)}`];
   if (finding.selector) lines.push(`  selector: ${finding.selector}`);
   if (finding.snippet) lines.push(`  html: ${finding.snippet}`);
   if (finding.helpUrl) lines.push(`  help: ${finding.helpUrl}`);
@@ -147,7 +158,7 @@ export function formatReport(report) {
     );
     for (const entry of report.stale) {
       out.push(
-        `  ${entry.check}/${entry.rule} ${entry.component ?? entry.route}: baseline ${entry.count}, found ${entry.found}`,
+        `  ${entry.check}/${entry.rule} ${entry.component ?? entry.group ?? entry.route}: baseline ${entry.count}, found ${entry.found}`,
       );
     }
   }
@@ -178,7 +189,7 @@ export function formatSummaryMarkdown(report) {
       const cell = (/** @type {string} */ s) =>
         s.replaceAll("|", "\\|").replaceAll("\n", " ");
       lines.push(
-        `| ${f.status === "new" ? "block" : "warn"} | ${cell(f.rule)} | ${cell(f.component ?? f.route)} | ${cell(f.source)} | ${cell(f.message)} |`,
+        `| ${f.status === "new" ? "block" : "warn"} | ${cell(f.rule)} | ${cell(f.component ?? f.group ?? f.route)} | ${cell(f.source)} | ${cell(f.message)} |`,
       );
     }
   }

@@ -6,6 +6,7 @@ import { describe, it } from "node:test";
 import * as prettier from "prettier";
 import {
   applyBaseline,
+  baselineKey,
   BaselineError,
   entriesFor,
   parseBaseline,
@@ -139,6 +140,72 @@ describe("applyBaseline", () => {
   });
 });
 
+describe("group findings", () => {
+  const titleGroup = "title:a shared title";
+  const duplicate = (route) =>
+    finding({
+      rule: "title-duplicate",
+      route,
+      distFile: `dist${route}index.html`,
+      selector: "head > title",
+      group: titleGroup,
+    });
+  const entry = (count) => ({
+    check: "seo",
+    rule: "title-duplicate",
+    group: titleGroup,
+    count,
+  });
+
+  it("keys a group apart from a component of the same name", () => {
+    const item = { check: "seo", rule: "title-duplicate" };
+    assert.notEqual(
+      baselineKey({ ...item, group: "x" }),
+      baselineKey({ ...item, component: "x" }),
+    );
+    assert.equal(
+      baselineKey({ ...item, group: "x", route: "/a/" }),
+      baselineKey({ ...item, group: "x", route: "/b/" }),
+    );
+  });
+
+  it("stays baselined when the group's first page is fixed", () => {
+    const result = applyBaseline(
+      mergeFindings([duplicate("/b/"), duplicate("/c/")]),
+      baseline([entry(3)]),
+      scope,
+    );
+    assert.deepEqual(statuses(result), ["baselined"]);
+    assert.deepEqual(result.stale, [{ ...entry(3), found: 2 }]);
+  });
+
+  it("blocks when a page joins a baselined group", () => {
+    const result = applyBaseline(
+      mergeFindings(["/a/", "/b/", "/c/"].map(duplicate)),
+      baseline([entry(2)]),
+      scope,
+    );
+    assert.deepEqual(statuses(result), ["new"]);
+  });
+
+  it("counts a group by its pages through accept and prune", () => {
+    const entries = entriesFor(
+      mergeFindings(["/a/", "/b/", "/c/"].map(duplicate)),
+    );
+    assert.deepEqual(entries, [entry(3)]);
+    const current = parseBaseline(baseline(entries));
+
+    const fixed = mergeFindings([duplicate("/a/"), duplicate("/c/")]);
+    const { stale } = applyBaseline(fixed, current, scope);
+    const pruned = pruneBaseline(current, stale);
+    assert.deepEqual(pruned.entries, [entry(2)]);
+
+    const again = applyBaseline(fixed, pruned, scope);
+    assert.deepEqual(statuses(again), ["baselined"]);
+    assert.deepEqual(again.stale, []);
+  });
+});
+
 describe("entriesFor", () => {
   it("never writes a warn finding to the baseline", () => {
     const entries = entriesFor(
@@ -198,8 +265,21 @@ describe("reading and writing", () => {
         }),
       (error) =>
         error instanceof BaselineError &&
-        /exactly one of "component" or "route"/.test(error.message),
+        /exactly one of "component", "group" or "route"/.test(error.message),
     );
+    for (const pair of [
+      { component: "navbar", group: "title:x" },
+      { component: "navbar", route: "/" },
+      { group: "title:x", route: "/" },
+    ]) {
+      assert.throws(
+        () =>
+          parseBaseline(
+            baseline([{ check: "seo", rule: "x", count: 1, ...pair }]),
+          ),
+        /exactly one of "component", "group" or "route"/,
+      );
+    }
     assert.throws(
       () => parseBaseline({ entries: [] }),
       /schemaVersion must be 1/,
@@ -213,6 +293,13 @@ describe("reading and writing", () => {
         ),
       /unexpected keys: query/,
     );
+  });
+
+  it("accepts a group entry", () => {
+    const entries = [
+      { check: "seo", rule: "title-duplicate", group: "title:x", count: 2 },
+    ];
+    assert.deepEqual(parseBaseline(baseline(entries)).entries, entries);
   });
 
   it("fails a baseline file that is not JSON", () => {

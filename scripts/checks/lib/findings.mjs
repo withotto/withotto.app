@@ -16,8 +16,11 @@
  * @property {string | null} snippet   Short HTML excerpt, if any.
  * @property {string} message      What is wrong, readable without the rule docs.
  * @property {string | null} helpUrl
- * @property {string | null} component  Component root name, when the element
- *   sits under one. Only these findings merge across pages.
+ * @property {string | null} component  A real component root from
+ *   `componentRoots` in the config, when the element sits under one.
+ * @property {string | null} group  A cross-page group the check forms itself,
+ *   e.g. every page sharing one title ("title:<the title>"). Only findings
+ *   with a component or a group merge across pages.
  *
  * A merged finding is a Finding whose `routes` lists every page it occurs on
  * (a page finding has `routes: [route]`).
@@ -48,6 +51,7 @@ export function createFinding(fields) {
     message: fields.message,
     helpUrl: fields.helpUrl ?? null,
     component: fields.component ?? null,
+    group: fields.group ?? null,
   };
   const problems = validateFinding(finding);
   if (problems.length > 0) {
@@ -73,7 +77,7 @@ export function validateFinding(finding) {
     problems.push(`severity must be one of ${SEVERITIES.join(", ")}`);
   }
   if (typeof f.source !== "string") problems.push("source must be a string");
-  for (const key of ["selector", "snippet", "helpUrl", "component"]) {
+  for (const key of ["selector", "snippet", "helpUrl", "component", "group"]) {
     if (f[key] !== null && typeof f[key] !== "string") {
       problems.push(`${key} must be a string or null`);
     }
@@ -95,10 +99,11 @@ export function componentFor(isInside, roots) {
 }
 
 /**
- * Merges the same component finding across pages. Findings merge only when
- * they carry a component and match on check, rule, component and selector; a
- * matching selector alone is not enough, since `main > h1` on two pages is two
- * separate problems. Everything else stays a page finding.
+ * Merges the same component or group finding across pages. Findings merge
+ * only when they carry a component or a group and match on check, rule,
+ * component, group and selector; a matching selector alone is not enough,
+ * since `main > h1` on two pages is two separate problems. Everything else
+ * stays a page finding.
  *
  * @param {Finding[]} findings
  * @returns {MergedFinding[]}
@@ -109,7 +114,7 @@ export function mergeFindings(findings) {
   /** @type {MergedFinding[]} */
   const result = [];
   for (const finding of findings) {
-    if (finding.component === null) {
+    if (finding.component === null && finding.group === null) {
       result.push({ ...finding, routes: [finding.route] });
       continue;
     }
@@ -117,6 +122,7 @@ export function mergeFindings(findings) {
       finding.check,
       finding.rule,
       finding.component,
+      finding.group,
       finding.selector,
     ]);
     const existing = merged.get(key);

@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { ROUTE_SOURCES_OUTPUT } from "./source-map.mjs";
 
 /** Emitted by `src/pages/checks-route-sources.json.ts`. */
 export const ROUTE_SOURCES_FILE = "checks-route-sources.json";
@@ -24,7 +25,7 @@ export default function routeSources({ outputDir }) {
       "astro:build:done": ({ dir }) => {
         const from = path.join(fileURLToPath(dir), ROUTE_SOURCES_FILE);
         if (!fs.existsSync(from)) return;
-        const to = path.join(root, outputDir, "route-sources.json");
+        const to = path.join(root, outputDir, ROUTE_SOURCES_OUTPUT);
         fs.mkdirSync(path.dirname(to), { recursive: true });
         fs.copyFileSync(from, to);
         fs.rmSync(from);

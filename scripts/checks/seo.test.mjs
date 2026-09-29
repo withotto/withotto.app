@@ -126,6 +126,21 @@ describe("titles and descriptions", () => {
     assert.deepEqual(merged[0].routes, ["/f/", "/g/"]);
   });
 
+  it("groups duplicate titles by the shared title, not by a page or component", () => {
+    const found = withRule(findings, "title-duplicate");
+    for (const f of found) {
+      assert.equal(f.component, null);
+      assert.equal(f.group, "title:a shared fixture title used by two pages");
+    }
+    const [merged] = mergeFindings(found.toReversed());
+    assert.equal(merged.component, null);
+    assert.equal(
+      merged.group,
+      "title:a shared fixture title used by two pages",
+    );
+    assert.deepEqual(merged.routes, ["/f/", "/g/"]);
+  });
+
   it("blocks a missing title", () => {
     assert.deepEqual(summary(withRule(findings, "title-missing")), [
       "block title-missing /c/",
@@ -412,6 +427,20 @@ describe("JSON-LD", () => {
 });
 
 describe("page filter", () => {
+  it("rejects a page filter naming a page that was not built", () => {
+    assert.throws(
+      () => analyseSite(fixtureConfig("meta"), ["/b/", "/nope/"]),
+      /No built page for \/nope\//,
+    );
+  });
+
+  it("accepts a page filter naming built pages", () => {
+    assert.deepEqual(
+      analyseSite(fixtureConfig("meta"), ["/b/"]),
+      analyse("meta"),
+    );
+  });
+
   it("still finds duplicates against unfiltered pages, and reports only the filtered page", (t) => {
     t.mock.method(console, "log", () => {});
     const summaryFile = process.env.GITHUB_STEP_SUMMARY;

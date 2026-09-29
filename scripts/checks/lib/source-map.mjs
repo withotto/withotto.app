@@ -4,6 +4,12 @@ import path from "node:path";
 const PAGE_EXTENSIONS = [".astro", ".mdx", ".md"];
 
 /**
+ * The build-time route map's name in the checks' output directory. Written by
+ * `route-sources-integration.mjs`, read by the checks.
+ */
+export const ROUTE_SOURCES_OUTPUT = "route-sources.json";
+
+/**
  * Converts a built HTML file to its canonical route: a leading and a trailing
  * slash, the same form briefs and baseline keys use.
  *
@@ -73,4 +79,16 @@ export function routeToSource(route, { root, pagesDir, routeSources = {} }) {
 export function readRouteSources(file) {
   if (!fs.existsSync(file)) return {};
   return JSON.parse(fs.readFileSync(file, "utf8"));
+}
+
+/**
+ * Reads the build-time route map from the checks' output directory.
+ *
+ * @param {{ outputDir: string, abs: (p: string) => string }} config
+ * @returns {Record<string, string>}
+ */
+export function loadRouteSources(config) {
+  return readRouteSources(
+    config.abs(path.join(config.outputDir, ROUTE_SOURCES_OUTPUT)),
+  );
 }

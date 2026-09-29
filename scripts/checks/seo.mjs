@@ -5,23 +5,25 @@
  * orphan pages, internal link form and links to legacy redirects.
  *
  * The analysis always covers the whole site, because uniqueness and orphans
- * need every page; `--page` only limits what `finishRun` reports.
+ * need every page; `--page` only limits what `finishRun` reports, and must
+ * name pages that were built.
  *
  * Usage: node scripts/checks/seo.mjs [--page /capture/ ...]
  */
 import fs from "node:fs";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 import * as cheerio from "cheerio";
 import { loadConfig } from "./lib/config.mjs";
 import { componentFor, createFinding } from "./lib/findings.mjs";
 import {
+  assertPagesBuilt,
   canonicalRoute,
   finishRun,
   listPages,
   parseCheckArgs,
+  runMain,
 } from "./lib/run.mjs";
-import { readRouteSources, routeToSource } from "./lib/source-map.mjs";
+import { loadRouteSources, routeToSource } from "./lib/source-map.mjs";
 
 const CHECK = "seo";
 
@@ -338,15 +340,15 @@ function readSitemap(distAbs, indexFile, origin) {
  * Analyses the built site and returns every finding, for every page.
  *
  * @param {Awaited<ReturnType<typeof loadConfig>>} config
+ * @param {string[] | null} [pageFilter] The run's `--page` routes. They only
+ *   have to exist; findings still cover every page.
  * @returns {import("./lib/findings.mjs").Finding[]}
  */
-export function analyseSite(config) {
+export function analyseSite(config, pageFilter = null) {
   const distAbs = config.abs(config.distDir);
   const origin = new URL(config.site).origin;
   const roots = config.componentRoots ?? [];
-  const routeSources = readRouteSources(
-    path.join(config.abs(config.outputDir), "route-sources.json"),
-  );
+  const routeSources = loadRouteSources(config);
   const sourceOf = (/** @type {string} */ route) =>
     routeToSource(route, {
       root: config.root,
@@ -366,7 +368,12 @@ export function analyseSite(config) {
     ? parseRedirects(fs.readFileSync(redirectsAbs, "utf8"), config.site)
     : [];
 
-  const pages = listPages(distAbs, config.root).map((page) => {
+  const built = listPages(distAbs, config.root);
+  assertPagesBuilt(
+    pageFilter,
+    built.map((page) => page.route),
+  );
+  const pages = built.map((page) => {
     const html = fs.readFileSync(path.join(config.root, page.distFile), "utf8");
     const $ = cheerio.load(html);
     const head = readHead($);
@@ -681,9 +688,8 @@ export function analyseSite(config) {
     });
   }
 
-  // Duplicates: one finding per page, merged into one report entry through a
-  // shared group key in `component` (mergeFindings only merges component
-  // findings). Noindex pages and the 404 page are left out.
+  // Duplicates: one finding per page, merged into one report entry by a group
+  // named after the shared value. Noindex pages and the 404 page are left out.
   const eligible = pages.filter((p) => !p.noindex && !p.is404);
   for (const [field, rule, severity, label, selector] of [
     ["title", "title-duplicate", "block", "title", "head > title"],
@@ -701,9 +707,11 @@ export function analyseSite(config) {
       const value = page.head[/** @type {"title" | "description"} */ (field)];
       if (!value) continue;
       const key = value.toLowerCase();
-      groups.set(key, [...(groups.get(key) ?? []), page]);
+      let group = groups.get(key);
+      if (!group) groups.set(key, (group = []));
+      group.push(page);
     }
-    for (const group of groups.values()) {
+    for (const [key, group] of groups) {
       if (group.length < 2) continue;
       const value =
         group[0].head[/** @type {"title" | "description"} */ (field)];
@@ -716,7 +724,7 @@ export function analyseSite(config) {
               value.length > SNIPPET_LENGTH
                 ? `${value.slice(0, SNIPPET_LENGTH - 1)}…`
                 : value,
-            component: `same-${field}:${group[0].route}`,
+            group: `${field}:${key}`,
           }),
           rule,
           severity,
@@ -811,17 +819,8 @@ export function analyseSite(config) {
 async function main() {
   const { pages } = parseCheckArgs();
   const config = await loadConfig();
-  const findings = analyseSite(config);
-  process.exitCode = finishRun({ check: CHECK, findings, pages, config });
+  const findings = analyseSite(config, pages);
+  return finishRun({ check: CHECK, findings, pages, config });
 }
 
-const invokedDirectly =
-  process.argv[1] !== undefined &&
-  fs.realpathSync(process.argv[1]) ===
-    fs.realpathSync(fileURLToPath(import.meta.url));
-if (invokedDirectly) {
-  main().catch((error) => {
-    console.error(error);
-    process.exitCode = 2;
-  });
-}
+runMain(import.meta.url, CHECK, main);

@@ -22,6 +22,7 @@ import {
 } from "./lib/baseline.mjs";
 import { loadConfig } from "./lib/config.mjs";
 import { REPORT_SCHEMA_VERSION, validateReport } from "./lib/report.mjs";
+import { ROUTE_SOURCES_OUTPUT } from "./lib/source-map.mjs";
 
 const { values } = parseArgs({
   options: {
@@ -42,7 +43,7 @@ const outputDir = config.abs(config.outputDir);
 const reports = fs.existsSync(outputDir)
   ? fs
       .readdirSync(outputDir)
-      .filter((name) => name.endsWith(".json") && name !== "route-sources.json")
+      .filter((name) => name.endsWith(".json") && name !== ROUTE_SOURCES_OUTPUT)
       .map((name) => {
         const report = JSON.parse(
           fs.readFileSync(path.join(outputDir, name), "utf8"),

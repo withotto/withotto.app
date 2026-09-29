@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
 import { applyBaseline, BaselineError, readBaseline } from "./baseline.mjs";
 import { mergeFindings } from "./findings.mjs";
@@ -63,6 +64,59 @@ export function listPages(distAbs, root) {
       route: distFileToRoute(rel),
     }))
     .sort((a, b) => a.route.localeCompare(b.route));
+}
+
+/**
+ * Throws when a `--page` filter names a route that was not built, so a typo
+ * fails the run instead of passing with nothing checked.
+ *
+ * @param {string[] | null} pages Canonical routes, or null for no filter.
+ * @param {string[]} builtRoutes
+ */
+export function assertPagesBuilt(pages, builtRoutes) {
+  if (pages === null) return;
+  const built = new Set(builtRoutes);
+  const missing = pages.filter((route) => !built.has(route));
+  if (missing.length === 0) return;
+  const example =
+    builtRoutes.find((route) => route !== "/" && !/^\/\d{3}\//.test(route)) ??
+    "/";
+  throw new Error(
+    `No built page for ${missing.join(", ")}. Pass a built route with leading and trailing slashes (e.g. ${example}), or rebuild with \`pnpm build\`.`,
+  );
+}
+
+/**
+ * Runs a check's `main` when its file is the script Node was started with,
+ * and sets the exit code from it: `main`'s own code, or 2 when it throws.
+ *
+ * @param {string} importMetaUrl The check's `import.meta.url`.
+ * @param {string} name Check name, for the failure message.
+ * @param {() => number | Promise<number>} main
+ */
+export function runMain(importMetaUrl, name, main) {
+  const entry = process.argv[1];
+  if (entry === undefined) return;
+  try {
+    if (
+      fs.realpathSync(fileURLToPath(importMetaUrl)) !== fs.realpathSync(entry)
+    )
+      return;
+  } catch {
+    return;
+  }
+  Promise.resolve()
+    .then(main)
+    .then(
+      (code) => {
+        process.exitCode = code;
+      },
+      (error) => {
+        console.error(`${name} check failed: ${error.message}`);
+        if (process.env.DEBUG) console.error(error);
+        process.exitCode = 2;
+      },
+    );
 }
 
 /**

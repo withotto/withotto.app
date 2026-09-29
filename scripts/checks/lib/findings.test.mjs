@@ -6,7 +6,12 @@ import {
   mergeFindings,
   validateFinding,
 } from "./findings.mjs";
-import { buildReport, validateReport } from "./report.mjs";
+import {
+  buildReport,
+  formatReport,
+  formatSummaryMarkdown,
+  validateReport,
+} from "./report.mjs";
 import { applyBaseline } from "./baseline.mjs";
 
 const roots = [
@@ -40,7 +45,19 @@ describe("createFinding", () => {
     assert.equal(f.source, "unknown");
     assert.equal(f.selector, null);
     assert.equal(f.component, null);
+    assert.equal(f.group, null);
     assert.deepEqual(validateFinding(f), []);
+  });
+
+  it("accepts a group name and rejects a non-string one", () => {
+    assert.equal(finding({ group: "title:same" }).group, "title:same");
+    assert.throws(
+      () => finding({ group: 1 }),
+      /group must be a string or null/,
+    );
+    assert.deepEqual(validateFinding({ ...finding(), group: undefined }), [
+      "group must be a string or null",
+    ]);
   });
 
   it("rejects an unknown severity", () => {
@@ -113,6 +130,39 @@ describe("mergeFindings", () => {
     assert.equal(merged.length, 2);
   });
 
+  it("merges findings in the same group across pages, with no component", () => {
+    const merged = mergeFindings([
+      finding({ route: "/g/", group: "title:same", selector: "head > title" }),
+      finding({ route: "/f/", group: "title:same", selector: "head > title" }),
+    ]);
+    assert.equal(merged.length, 1);
+    assert.deepEqual(merged[0].routes, ["/f/", "/g/"]);
+    assert.equal(merged[0].component, null);
+    assert.equal(merged[0].group, "title:same");
+  });
+
+  it("keeps different groups separate", () => {
+    const merged = mergeFindings([
+      finding({ route: "/a/", group: "title:one", selector: "head > title" }),
+      finding({ route: "/b/", group: "title:two", selector: "head > title" }),
+    ]);
+    assert.deepEqual(
+      merged.map((f) => [f.group, f.routes]),
+      [
+        ["title:one", ["/a/"]],
+        ["title:two", ["/b/"]],
+      ],
+    );
+  });
+
+  it("keeps a finding with neither component nor group as a page finding", () => {
+    const merged = mergeFindings([
+      finding({ route: "/a/", selector: "head > title" }),
+      finding({ route: "/b/", selector: "head > title" }),
+    ]);
+    assert.equal(merged.length, 2);
+  });
+
   it("keeps an unmappable page finding with its route, selector and unknown source", () => {
     const [f] = mergeFindings([
       finding({
@@ -146,6 +196,32 @@ describe("report", () => {
     const report = buildReport({ check: "a11y", pageFilter: null, ...applied });
     assert.deepEqual(validateReport(report), []);
     assert.deepEqual(report.summary, { new: 1, baselined: 0, warn: 1 });
+  });
+
+  it("renders a group finding by its pages, never as a component", () => {
+    const merged = mergeFindings(
+      ["/f/", "/g/"].map((route) =>
+        finding({
+          check: "seo",
+          rule: "title-duplicate",
+          route,
+          source: `src/pages${route}index.astro`,
+          selector: "head > title",
+          group: "title:same",
+        }),
+      ),
+    );
+    const applied = applyBaseline(
+      merged,
+      { schemaVersion: 1, entries: [] },
+      { checks: ["seo"], complete: true },
+    );
+    const report = buildReport({ check: "seo", pageFilter: null, ...applied });
+    assert.deepEqual(validateReport(report), []);
+    const text = formatReport(report);
+    assert.match(text, /\n {2}on 2 page\(s\): \/f\/, \/g\/\n/);
+    assert.doesNotMatch(text, /title:same \(/);
+    assert.match(formatSummaryMarkdown(report), /\| title:same \|/);
   });
 
   it("rejects a report from another schema version", () => {

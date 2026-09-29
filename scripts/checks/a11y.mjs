@@ -15,15 +15,19 @@
  * Usage: node scripts/checks/a11y.mjs [--page /route/ ...]
  */
 import net from "node:net";
-import path from "node:path";
-import { pathToFileURL } from "node:url";
 import AxeBuilder from "@axe-core/playwright";
 import { preview } from "astro";
 import { chromium } from "playwright";
 import { loadConfig } from "./lib/config.mjs";
 import { componentFor, createFinding } from "./lib/findings.mjs";
-import { finishRun, listPages, parseCheckArgs } from "./lib/run.mjs";
-import { readRouteSources, routeToSource } from "./lib/source-map.mjs";
+import {
+  assertPagesBuilt,
+  finishRun,
+  listPages,
+  parseCheckArgs,
+  runMain,
+} from "./lib/run.mjs";
+import { loadRouteSources, routeToSource } from "./lib/source-map.mjs";
 
 const CHECK = "a11y";
 
@@ -164,16 +168,11 @@ export async function runA11y({
   logLevel = "warn",
 }) {
   let targets = listPages(distDir, root);
-  if (pages !== null) {
-    const built = new Set(targets.map((t) => t.route));
-    const missing = pages.filter((route) => !built.has(route));
-    if (missing.length > 0) {
-      throw new Error(
-        `No built page for ${missing.join(", ")}. Check the route, or rebuild with \`pnpm build\`.`,
-      );
-    }
-    targets = targets.filter((t) => pages.includes(t.route));
-  }
+  assertPagesBuilt(
+    pages,
+    targets.map((t) => t.route),
+  );
+  if (pages !== null) targets = targets.filter((t) => pages.includes(t.route));
 
   if (await isPortInUse(port)) throw portInUseError(port);
   const server = await startPreview({
@@ -417,9 +416,7 @@ async function main() {
     distDir: config.abs(config.distDir),
     port,
     pagesDir: config.pagesDir,
-    routeSources: readRouteSources(
-      config.abs(path.join(config.outputDir, "route-sources.json")),
-    ),
+    routeSources: loadRouteSources(config),
     pages,
     componentRoots: config.componentRoots,
     blockedHosts: config.blockedHosts,
@@ -430,17 +427,4 @@ async function main() {
   return finishRun({ check: CHECK, findings, pages, config });
 }
 
-if (
-  process.argv[1] &&
-  import.meta.url === pathToFileURL(process.argv[1]).href
-) {
-  main().then(
-    (code) => {
-      process.exitCode = code;
-    },
-    (error) => {
-      console.error(`a11y check failed: ${error.message}`);
-      process.exitCode = 2;
-    },
-  );
-}
+runMain(import.meta.url, CHECK, main);

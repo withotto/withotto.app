@@ -7,10 +7,16 @@ import * as prettier from "prettier";
  *
  * - Component findings are keyed by check, rule and component, so a new page
  *   inheriting a baselined layout issue does not block.
+ * - Group findings (pages the check itself grouped, e.g. by a shared title)
+ *   are keyed by check, rule and group, so fixing one page never re-keys the
+ *   rest of the group.
  * - Page findings are keyed by check, rule and route.
  * - Each entry carries a count; more findings than that for the key block.
+ *   A group finding counts once per page in it, so a page joining a
+ *   baselined group is new debt, and a page leaving it lets prune shrink the
+ *   count.
  * - Warnings are never baselined, since they never fail a run.
- * - The file holds rule IDs, routes and component names only.
+ * - The file holds rule IDs, routes, component names and group names only.
  *
  * Removing entries (prune) needs no approval, since it only shrinks the
  * baseline. Adding or re-keying entries needs Stuart's approval in review.
@@ -19,6 +25,7 @@ import * as prettier from "prettier";
  * @property {string} check
  * @property {string} rule
  * @property {string} [component]
+ * @property {string} [group]
  * @property {string} [route]
  * @property {number} count
  *
@@ -31,11 +38,31 @@ export const BASELINE_SCHEMA_VERSION = 1;
 
 export class BaselineError extends Error {}
 
-/** @param {{ check: string, rule: string, component?: string | null, route?: string }} item */
+/**
+ * The key a finding or entry is counted under. A component takes precedence
+ * over a group if a finding ever carries both; the route counts only when it
+ * has neither.
+ *
+ * @param {{ check: string, rule: string, component?: string | null, group?: string | null, route?: string }} item
+ */
 export function baselineKey(item) {
-  return item.component
-    ? JSON.stringify(["component", item.check, item.rule, item.component])
-    : JSON.stringify(["page", item.check, item.rule, item.route]);
+  if (item.component) {
+    return JSON.stringify(["component", item.check, item.rule, item.component]);
+  }
+  if (item.group) {
+    return JSON.stringify(["group", item.check, item.rule, item.group]);
+  }
+  return JSON.stringify(["page", item.check, item.rule, item.route]);
+}
+
+/**
+ * How much a finding counts towards its key: the number of pages for a group
+ * finding, else 1.
+ *
+ * @param {import("./findings.mjs").MergedFinding} finding
+ */
+function weight(finding) {
+  return !finding.component && finding.group ? finding.routes.length : 1;
 }
 
 /**
@@ -62,16 +89,18 @@ export function parseBaseline(data) {
         fail(`${at}.${key} must be a non-empty string`);
       }
     }
-    const hasComponent = typeof entry.component === "string";
-    const hasRoute = typeof entry.route === "string";
-    if (hasComponent === hasRoute) {
-      fail(`${at} needs exactly one of "component" or "route"`);
+    const locations = ["component", "group", "route"].filter(
+      (k) => typeof entry[k] === "string",
+    );
+    if (locations.length !== 1) {
+      fail(`${at} needs exactly one of "component", "group" or "route"`);
     }
     if (!Number.isInteger(entry.count) || entry.count < 1) {
       fail(`${at}.count must be a positive integer`);
     }
     const extra = Object.keys(entry).filter(
-      (k) => !["check", "rule", "component", "route", "count"].includes(k),
+      (k) =>
+        !["check", "rule", "component", "group", "route", "count"].includes(k),
     );
     if (extra.length > 0)
       fail(`${at} has unexpected keys: ${extra.join(", ")}`);
@@ -127,8 +156,8 @@ export async function writeBaseline(file, baseline) {
  *
  * Every finding gets a `status`: "new" (a block finding beyond the baseline),
  * "baselined" or "warn". When a key has more findings than its baseline
- * count, all of that key's findings are "new", because there is no telling
- * which one is the addition.
+ * count (a group finding counting once per page), all of that key's findings
+ * are "new", because there is no telling which one is the addition.
  *
  * `stale` lists what prune would change: entries no finding matches any more,
  * and entries whose count has fallen. Only keys the run could have seen are
@@ -141,12 +170,15 @@ export async function writeBaseline(file, baseline) {
  * @param {boolean} scope.complete False when a page filter limited the run.
  */
 export function applyBaseline(findings, baseline, { checks, complete }) {
-  /** @type {Map<string, import("./findings.mjs").MergedFinding[]>} */
-  const groups = new Map();
+  /** @type {Map<string, { findings: import("./findings.mjs").MergedFinding[], count: number }>} */
+  const byKey = new Map();
   for (const finding of findings) {
     if (finding.severity !== "block") continue;
     const key = baselineKey(finding);
-    groups.set(key, [...(groups.get(key) ?? []), finding]);
+    let tally = byKey.get(key);
+    if (!tally) byKey.set(key, (tally = { findings: [], count: 0 }));
+    tally.findings.push(finding);
+    tally.count += weight(finding);
   }
   const allowed = new Map(
     baseline.entries.map((entry) => [baselineKey(entry), entry.count]),
@@ -157,9 +189,9 @@ export function applyBaseline(findings, baseline, { checks, complete }) {
   for (const finding of findings) {
     if (finding.severity === "warn") status.set(finding, "warn");
   }
-  for (const [key, group] of groups) {
-    const within = group.length <= (allowed.get(key) ?? 0);
-    for (const finding of group)
+  for (const [key, tally] of byKey) {
+    const within = tally.count <= (allowed.get(key) ?? 0);
+    for (const finding of tally.findings)
       status.set(finding, within ? "baselined" : "new");
   }
 
@@ -167,7 +199,7 @@ export function applyBaseline(findings, baseline, { checks, complete }) {
     ? baseline.entries
         .filter((entry) => checks.includes(entry.check))
         .flatMap((entry) => {
-          const found = groups.get(baselineKey(entry))?.length ?? 0;
+          const found = byKey.get(baselineKey(entry))?.count ?? 0;
           return found < entry.count ? [{ ...entry, found }] : [];
         })
     : [];
@@ -218,25 +250,16 @@ export function entriesFor(findings) {
     const key = baselineKey(finding);
     const existing = entries.get(key);
     if (existing) {
-      existing.count += 1;
+      existing.count += weight(finding);
       continue;
     }
-    entries.set(
-      key,
-      finding.component
-        ? {
-            check: finding.check,
-            rule: finding.rule,
-            component: finding.component,
-            count: 1,
-          }
-        : {
-            check: finding.check,
-            rule: finding.rule,
-            route: finding.route,
-            count: 1,
-          },
-    );
+    const { check, rule } = finding;
+    const location = finding.component
+      ? { component: finding.component }
+      : finding.group
+        ? { group: finding.group }
+        : { route: finding.route };
+    entries.set(key, { check, rule, ...location, count: weight(finding) });
   }
   return [...entries.values()];
 }
