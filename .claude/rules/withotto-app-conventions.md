@@ -134,13 +134,13 @@ Dead components not on this system (`pricing-compare.astro`, `clients.astro`, `c
 
 ## Site Checks
 
-`scripts/checks/` holds the SEO and accessibility checks. They run over the built `dist/`, read site settings from `checks.config.mjs`, and write a versioned JSON report per check to the ignored `.checks/` folder. Each finding names its rule, route, source file, selector and a help link, so it can be fixed from the finding alone.
+`scripts/checks/` holds the SEO and accessibility checks. They run over the built `dist/`, read site settings from `checks.config.mjs`, and write a versioned JSON report per check to the ignored `.checks/` folder. Each finding names its rule, route, source file and selector, and says what is wrong and what is expected; accessibility findings also link the axe rule. Each can be fixed from the finding alone.
 
 - **Severity:** a11y serious and critical block, moderate, minor and best-practice warn. SEO blocks on a missing title, H1 or canonical, invalid JSON-LD, orphan pages, links without a trailing slash, and links to `_redirects` sources; lengths, duplicate descriptions and skipped heading levels warn.
 - **Baseline:** `checks-baseline.json` records existing block-level debt, keyed by rule and component (navbar, footer, table of contents) or by rule, route and count. Only findings beyond it fail. It holds rule IDs, routes and component names only.
 - **Shrinking needs no approval:** `pnpm check:baseline --prune` removes entries the latest run no longer finds. Fixing debt should always end with a prune.
 - **Growing needs Stuart's approval:** never run `--accept` to make a failing check pass. Fix the finding; if it truly cannot be fixed, propose the baseline change in the PR for Stuart to approve.
-- **Chatwoot is blocked** in every check (`blockedHosts`), because a headless visit would create a contact in the live sales inbox.
+- **The accessibility check blocks Chatwoot and the bookings embed** (`blockedHosts`): a headless visit to Chatwoot would create a contact in the live sales inbox, and a slow bookings host would stall the page load. The SEO check never loads a page, and the link check only fetches URLs that appear in the built HTML, which never includes Chatwoot.
 - **Blog sources:** the build writes a route map (`src/pages/checks-route-sources.json.ts`, moved out of `dist/` by an integration in `astro.config.mjs`) so blog findings point at the post's own file. Do not delete either piece.
 
 ## Redirects & Legacy URLs

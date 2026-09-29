@@ -295,6 +295,32 @@ describe("reading and writing", () => {
     );
   });
 
+  it("fails an empty or non-string location", () => {
+    for (const location of [
+      { component: "" },
+      { group: "" },
+      { route: "" },
+      { component: 1 },
+      { group: null },
+      { route: ["/"] },
+      { component: "", route: "/" },
+    ]) {
+      const [key] = Object.keys(location);
+      assert.throws(
+        () =>
+          parseBaseline(
+            baseline([{ check: "seo", rule: "x", count: 1, ...location }]),
+          ),
+        (error) =>
+          error instanceof BaselineError &&
+          error.message.includes(
+            `entries[0].${key} must be a non-empty string`,
+          ),
+        JSON.stringify(location),
+      );
+    }
+  });
+
   it("accepts a group entry", () => {
     const entries = [
       { check: "seo", rule: "title-duplicate", group: "title:x", count: 2 },

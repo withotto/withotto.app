@@ -7,7 +7,8 @@
  *                                 debt. Adding entries needs Stuart's approval,
  *                                 so the change goes through a PR he reviews.
  *
- * Run the checks first (`pnpm check`) so the reports are current.
+ * Run the checks first (`pnpm check`) so the reports are current. Both modes
+ * refuse a report older than the latest build in distDir.
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -74,6 +75,29 @@ if (filtered.length > 0) {
   process.exit(2);
 }
 
+// A report left in the output directory from before the latest build describes
+// a site that no longer exists, so pruning or accepting from it would rewrite
+// debt for pages nobody checked. The build time is the newest mtime of any HTML
+// file in distDir: every build rewrites all of them, and no check writes there,
+// so it tracks the latest build even when one page's file was left over.
+const distDir = config.abs(config.distDir);
+const builtAt = newestHtmlMtime(distDir);
+if (builtAt === null) {
+  console.error(
+    `No built site in ${config.distDir}/. Run \`pnpm build\` and then \`pnpm check\` first.`,
+  );
+  process.exit(2);
+}
+const outdated = reports
+  .filter((r) => Date.parse(r.generatedAt) < builtAt)
+  .map((r) => r.check);
+if (outdated.length > 0) {
+  console.error(
+    `The ${outdated.join(", ")} report predates the latest build in ${config.distDir}/. Re-run \`pnpm check\` so every report is current.`,
+  );
+  process.exit(2);
+}
+
 let baseline;
 try {
   baseline = readBaseline(baselineFile);
@@ -108,4 +132,22 @@ if (values.prune) {
   console.log(
     `Wrote ${next.entries.length} entries to ${config.baselineFile}. New entries need Stuart's approval before merge.`,
   );
+}
+
+/**
+ * @param {string} dir Absolute.
+ * @returns {number | null} Newest mtime in ms, or null when there is no HTML.
+ */
+function newestHtmlMtime(dir) {
+  if (!fs.existsSync(dir)) return null;
+  let newest = null;
+  for (const entry of fs.readdirSync(dir, {
+    recursive: true,
+    withFileTypes: true,
+  })) {
+    if (!entry.isFile() || !entry.name.endsWith(".html")) continue;
+    const { mtimeMs } = fs.statSync(path.join(entry.parentPath, entry.name));
+    if (newest === null || mtimeMs > newest) newest = mtimeMs;
+  }
+  return newest;
 }

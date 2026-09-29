@@ -101,9 +101,11 @@ export function componentFor(isInside, roots) {
 /**
  * Merges the same component or group finding across pages. Findings merge
  * only when they carry a component or a group and match on check, rule,
- * component, group and selector; a matching selector alone is not enough,
- * since `main > h1` on two pages is two separate problems. Everything else
- * stays a page finding.
+ * severity, component, group and selector; a matching selector alone is not
+ * enough, since `main > h1` on two pages is two separate problems. Severity is
+ * part of the key because an axe impact is per node, so the same element can
+ * block on one page and warn on another, and a warning seen first must not
+ * swallow the blocking occurrence. Everything else stays a page finding.
  *
  * @param {Finding[]} findings
  * @returns {MergedFinding[]}
@@ -121,6 +123,7 @@ export function mergeFindings(findings) {
     const key = JSON.stringify([
       finding.check,
       finding.rule,
+      finding.severity,
       finding.component,
       finding.group,
       finding.selector,

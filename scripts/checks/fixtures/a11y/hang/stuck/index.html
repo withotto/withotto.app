@@ -8,9 +8,17 @@
     <main>
       <h1>Stuck</h1>
     </main>
-    <!-- Never finishes loading, so the check has to time out mid-run. -->
+    <!--
+      Never finishes loading, so the check has to time out mid-run. The
+      iframe's document is opened and never closed, which holds back the
+      parent's load event with an idle main thread. (A module script awaiting
+      a promise that never settles does not: Chromium fires load regardless.)
+    -->
+    <iframe id="never-closed" title="Never finishes loading"></iframe>
     <script>
-      while (true) {}
+      const frame = document.getElementById("never-closed").contentDocument;
+      frame.open();
+      frame.write("<p>Still loading</p>");
     </script>
   </body>
 </html>

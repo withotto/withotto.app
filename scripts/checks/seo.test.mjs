@@ -201,8 +201,16 @@ describe("canonical", () => {
     ]);
   });
 
+  it("blocks a page with two canonical links, once", () => {
+    const found = withRule(findings, "canonical-multiple");
+    assert.deepEqual(summary(found), [
+      "block canonical-multiple /two-canonicals/",
+    ]);
+    assert.match(found[0].message, /2 canonical links/);
+  });
+
   it("reports nothing else", () => {
-    assert.equal(findings.length, 5);
+    assert.equal(findings.length, 6);
   });
 });
 
@@ -306,9 +314,22 @@ describe("redirects", () => {
   const findings = analyse("redirects");
 
   it("warns, not blocks, when a redirect source has a built page", () => {
-    const shadowed = withRule(findings, "redirect-shadowed");
+    const shadowed = withRule(findings, "redirect-shadowed").filter(
+      (f) => f.route === "/old-page/",
+    );
     assert.deepEqual(summary(shadowed), ["warn redirect-shadowed /old-page/"]);
     assert.match(shadowed[0].message, /never fires/);
+  });
+
+  it("warns when a redirect source is a built static file, not only a page", () => {
+    const shadowed = withRule(findings, "redirect-shadowed");
+    assert.deepEqual(summary(shadowed), [
+      "warn redirect-shadowed /files/old-price-list.pdf",
+      "warn redirect-shadowed /old-page/",
+    ]);
+    const asset = shadowed.find((f) => f.route.endsWith(".pdf"));
+    assert.equal(asset.distFile, "dist/files/old-price-list.pdf");
+    assert.match(asset.message, /never fires/);
   });
 
   it("does not treat a forced redirect as shadowed", () => {
@@ -322,9 +343,9 @@ describe("redirects", () => {
   });
 
   it("does not block a link to a shadowed source, but does to a forced one", () => {
-    assert.deepEqual(summary(findings.filter((f) => f.severity === "block")), [
-      "block link-legacy /",
-    ]);
+    const blocking = findings.filter((f) => f.severity === "block");
+    assert.deepEqual(summary(blocking), ["block link-legacy /"]);
+    assert.match(blocking[0].snippet, /forced-page/);
   });
 });
 
@@ -421,6 +442,17 @@ describe("an unreadable sitemap", () => {
     ]);
     assert.match(found[0].message, /https:\/\/example\.com\/sitemap-1\.xml/);
     assert.match(found[0].message, /https:\/\/withotto\.app/);
+  });
+
+  it("blocks a relative child sitemap location, which the protocol forbids", () => {
+    const findings = withIndex("sitemap-index-relative-child.xml");
+    const found = withRule(findings, "sitemap-unreadable");
+    assert.deepEqual(summary(blocking(findings)), [
+      "block sitemap-unreadable /",
+    ]);
+    assert.equal(found[0].distFile, "dist/sitemap-index-relative-child.xml");
+    assert.match(found[0].message, /\/sitemap-0\.xml/);
+    assert.match(found[0].message, /absolute URL/);
   });
 
   it("blocks a child sitemap location that is not a URL", () => {

@@ -77,6 +77,7 @@ export function validateReport(report) {
   } else {
     r.findings.forEach((/** @type {any} */ f, /** @type {number} */ i) => {
       for (const p of validateFinding(f)) problems.push(`findings[${i}]: ${p}`);
+      if (typeof f !== "object" || f === null) return;
       if (!Array.isArray(f.routes) || f.routes.length === 0) {
         problems.push(`findings[${i}]: routes must be a non-empty array`);
       }

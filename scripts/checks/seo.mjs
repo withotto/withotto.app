@@ -345,11 +345,19 @@ function readSitemap(distAbs, indexFile, origin) {
     }
     $("sitemap > loc").each((_, el) => {
       const loc = $(el).text().trim();
+      // The sitemap protocol requires absolute locations, so no origin
+      // fallback: a relative one is an error, not a path on this site.
       let url;
       try {
-        url = new URL(loc, origin);
+        url = new URL(loc);
       } catch {
-        errors.push({ file, loc, problem: "is not a valid URL" });
+        errors.push({
+          file,
+          loc,
+          problem: URL.canParse(loc, origin)
+            ? `is relative, but the sitemap protocol requires an absolute URL (e.g. ${origin}${loc.startsWith("/") ? "" : "/"}${loc})`
+            : "is not a valid URL",
+        });
         return;
       }
       if (url.origin !== origin) {
@@ -462,6 +470,21 @@ export function analyseSite(config, pageFilter = null) {
     ...extra,
   });
 
+  // Built files that are not pages (PDFs, images, feeds). Netlify serves any
+  // existing file in place of a non-forced redirect, not only an HTML page.
+  const staticFiles = fs
+    .readdirSync(distAbs, { recursive: true, encoding: "utf8" })
+    .filter(
+      (file) =>
+        !file.endsWith(".html") &&
+        fs.statSync(path.join(distAbs, file)).isFile(),
+    )
+    .map((file) => {
+      const urlPath = `/${file.split(path.sep).join("/")}`;
+      return { urlPath, distFile: rel(path.join(distAbs, file)) };
+    })
+    .sort((a, b) => a.urlPath.localeCompare(b.urlPath));
+
   // Effective redirects: 3xx rules that fire, i.e. forced or not shadowed.
   const effectiveRedirects = [];
   for (const rule of redirects.filter((r) => r.isRedirect)) {
@@ -476,7 +499,21 @@ export function analyseSite(config, pageFilter = null) {
         message: `${config.redirectsFile} line ${rule.line} redirects ${rule.source} to ${rule.target}, but ${page.distFile} exists, so Netlify serves the page and the redirect never fires. If the page was retired, delete its source (${page.source}); if it is live, remove the redirect line; to redirect anyway, force it with "${rule.status}!".`,
       });
     }
-    if (shadowing.length === 0) effectiveRedirects.push(rule);
+    const shadowingFiles = rule.forced
+      ? []
+      : staticFiles.filter((f) => rule.matches(f.urlPath));
+    for (const file of shadowingFiles) {
+      add({
+        route: file.urlPath,
+        distFile: file.distFile,
+        source: config.redirectsFile,
+        rule: "redirect-shadowed",
+        severity: "warn",
+        message: `${config.redirectsFile} line ${rule.line} redirects ${rule.source} to ${rule.target}, but ${file.distFile} exists, so Netlify serves the file and the redirect never fires. If the file was retired, delete it from the source that copies it into ${config.distDir}/ (usually public/); if it is live, remove the redirect line; to redirect anyway, force it with "${rule.status}!".`,
+      });
+    }
+    if (shadowing.length === 0 && shadowingFiles.length === 0)
+      effectiveRedirects.push(rule);
 
     if (
       rule.targetPath !== null &&

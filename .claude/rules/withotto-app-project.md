@@ -27,7 +27,7 @@ Homepage and shared copy should lead with the brand (tools for accountants/bookk
 - **Package manager:** pnpm 11.x (pinned via `packageManager` + `engines`; also installable via `mise`)
 - **Formatter:** Prettier 3 with `prettier-plugin-astro` + `prettier-plugin-tailwindcss` (2-space indent)
 - **Site checks:** custom SEO script (`cheerio`) and axe-core accessibility check (`@axe-core/playwright`) in `scripts/checks/`, plus `lychee` for links (pinned in `mise.toml`)
-- **CI:** GitHub Actions. `checks.yml` runs the site checks on every PR and push to `main`; `lighthouse.yml` scores deploy previews
+- **CI:** GitHub Actions. `checks.yml` runs the site checks on every PR and push to `main`
 - **Hosting:** Netlify (redirects in `_redirects`)
 
 No site test framework and no ESLint. The quality gate is `format:check` plus the `checks` workflow (build, `test:checks`, `check:seo`, `check:a11y`, `check:links`); run the same locally with `pnpm check`. The check scripts' own tests use Node's built-in runner. See `withotto-app-conventions.md`, "Site Checks", for the baseline policy.

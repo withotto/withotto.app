@@ -155,6 +155,39 @@ describe("mergeFindings", () => {
     );
   });
 
+  it("keeps a warn and a block on the same component element apart, so the block survives", () => {
+    const merged = mergeFindings([
+      finding({
+        route: "/a/",
+        severity: "warn",
+        component: "navbar",
+        selector: "header img",
+      }),
+      finding({
+        route: "/b/",
+        severity: "block",
+        component: "navbar",
+        selector: "header img",
+      }),
+    ]);
+    assert.deepEqual(
+      merged.map((f) => [f.severity, f.routes]),
+      [
+        ["warn", ["/a/"]],
+        ["block", ["/b/"]],
+      ],
+    );
+    const { findings } = applyBaseline(
+      merged,
+      { schemaVersion: 1, entries: [] },
+      { checks: ["a11y"], complete: true },
+    );
+    assert.deepEqual(
+      findings.map((f) => f.status),
+      ["warn", "new"],
+    );
+  });
+
   it("keeps a finding with neither component nor group as a page finding", () => {
     const merged = mergeFindings([
       finding({ route: "/a/", selector: "head > title" }),
@@ -222,6 +255,20 @@ describe("report", () => {
     assert.match(text, /\n {2}on 2 page\(s\): \/f\/, \/g\/\n/);
     assert.doesNotMatch(text, /title:same \(/);
     assert.match(formatSummaryMarkdown(report), /\| title:same \|/);
+  });
+
+  it("reports a finding that is not an object instead of throwing", () => {
+    const report = buildReport({
+      check: "a11y",
+      pageFilter: null,
+      findings: [],
+      stale: [],
+    });
+    for (const bad of [null, 1, "x"]) {
+      assert.deepEqual(validateReport({ ...report, findings: [bad] }), [
+        "findings[0]: not an object",
+      ]);
+    }
   });
 
   it("rejects a report from another schema version", () => {

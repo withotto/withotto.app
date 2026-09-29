@@ -89,9 +89,14 @@ export function parseBaseline(data) {
         fail(`${at}.${key} must be a non-empty string`);
       }
     }
-    const locations = ["component", "group", "route"].filter(
-      (k) => typeof entry[k] === "string",
+    const locations = ["component", "group", "route"].filter((k) =>
+      Object.hasOwn(entry, k),
     );
+    for (const key of locations) {
+      if (typeof entry[key] !== "string" || entry[key] === "") {
+        fail(`${at}.${key} must be a non-empty string`);
+      }
+    }
     if (locations.length !== 1) {
       fail(`${at} needs exactly one of "component", "group" or "route"`);
     }
