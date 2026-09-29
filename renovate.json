@@ -70,6 +70,14 @@
         "jsr:(?<depName>@[^/]+/[^@\"']+)@(?<currentValue>\\d+\\.\\d+\\.\\d+)"
       ],
       "datasourceTemplate": "jsr"
+    },
+    {
+      "customType": "regex",
+      "description": "Track the Lighthouse CI version the lighthouse workflow installs (pnpm add @lhci/cli@<version>); it is deliberately not in package.json",
+      "managerFilePatterns": ["/^\\.github\\/workflows\\/lighthouse\\.yml$/"],
+      "matchStrings": ["@lhci/cli@(?<currentValue>[0-9]+\\.[0-9]+\\.[0-9]+)"],
+      "datasourceTemplate": "npm",
+      "depNameTemplate": "@lhci/cli"
     }
   ],
   "packageRules": [
@@ -161,6 +169,11 @@
       "description": "Group the accessibility check's browser stack: @axe-core/playwright drives Playwright, and its rules come from axe-core, so they move together. An axe rules bump can surface new findings that block until the baseline is approved or the finding is fixed; that is intended",
       "matchPackageNames": ["playwright", "@axe-core/playwright", "axe-core"],
       "groupName": "Accessibility check (axe and Playwright)"
+    },
+    {
+      "description": "Lighthouse CI from the lighthouse workflow's customManager; apply 5-day supply-chain floor. A bump can change scores or pull in transitive versions that trip the workflow's trust-policy check",
+      "matchPackageNames": ["@lhci/cli"],
+      "minimumReleaseAge": "5 days"
     }
   ]
 }
