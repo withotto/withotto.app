@@ -148,6 +148,7 @@ All redirects use `301`. Any new removals should mirror this pattern.
 - Default OG image: `/opengraph.png` (in `public/`).
 - Landing pages that should NOT be indexed pass `seo={{ noindex: true }}` (see commit `e74c8a6`).
 - Never hand-roll `<meta>` tags. Extend the `seo` prop instead.
+- Titles, descriptions, headings, link text, alt text, structured data, and banned tactics for page copy: see `.claude/rules/withotto-app-seo-accessibility.md`.
 
 ## Pitfalls
 
