@@ -122,8 +122,8 @@ None of these, in copy, markup, alt text, or structured data. Each is named in G
 - **Keyword stuffing:** repeating a phrase or packing lists of terms into copy, titles, alt text, or footers. It reads as spam to people and is a named spam policy violation.
 - **Hidden text and links:** text meant for search engines but not people (white on white, off-screen, zero size, behind an element). It deceives the reader and is a named spam policy violation. Screen-reader-only text that describes or labels visible content is accessibility, not hidden text.
 - **Doorway pages:** near-duplicate pages per town, platform, or phrase that exist to rank and funnel to one page. A platform page earns its place only with content that genuinely differs. Named spam policy violation.
-- **Invented reviews, ratings, or testimonials:** anything not from a real, identifiable customer, including made-up counts ("trusted by thousands"). It is dishonest, violates Google's policies, and fake reviews are banned outright under UK consumer law (Digital Markets, Competition and Consumers Act 2024).
-- **Fake urgency:** countdowns, "only a few places left", or deadlines that are not real. It is misleading under UK consumer law and against the brand's no-pressure voice.
+- **Invented reviews, ratings, or testimonials:** anything not from a real, identifiable customer, including made-up counts ("trusted by thousands"). It is dishonest and violates Google's policies. UK law bans fake reviews outright where consumers are concerned (Digital Markets, Competition and Consumers Act 2024); our buyers are practices, so here the ban is house policy, with no exceptions.
+- **Fake urgency:** countdowns, "only a few places left", or deadlines that are not real. It misleads the reader and is against the brand's no-pressure voice.
 
 **Enforced by:** manual. `check:a11y` colour-contrast findings catch some hidden text as a side effect.
 
