@@ -1,5 +1,6 @@
 # Builds the site and runs the SEO, accessibility and link checks on every PR
-# and every push to main. The same pnpm scripts run locally (`pnpm check`).
+# and every push to main. `pnpm check` (scripts/checks/all.mjs) runs the same
+# steps locally; keep the two in step.
 #
 # Deliberately unprivileged: triggered by pull_request (never
 # pull_request_target), a read-only token, no secrets, and checkout
@@ -81,5 +82,7 @@ jobs:
         with:
           name: checks-report
           path: .checks/*.json
-          if-no-files-found: warn
+          # .checks/ is a dot-directory, which upload-artifact skips by default.
+          include-hidden-files: true
+          if-no-files-found: error
           retention-days: 30

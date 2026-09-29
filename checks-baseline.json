@@ -14,12 +14,6 @@
       "count": 2
     },
     {
-      "check": "a11y",
-      "rule": "frame-title",
-      "route": "/bank-reconciliation/",
-      "count": 1
-    },
-    {
       "check": "seo",
       "rule": "h1-multiple",
       "route": "/bank-rec-security-and-privacy/",

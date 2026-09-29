@@ -38,8 +38,10 @@ export default {
   ],
 
   // Third-party hosts no check may contact. Chatwoot creates a contact in the
-  // live sales inbox for every visitor, including a headless browser.
-  blockedHosts: ["chat.withotto.app"],
+  // live sales inbox for every visitor, including a headless browser. The
+  // bookings embed is a live service: a slow response would stall the page's
+  // load event and fail the run, and its injected markup is not ours to check.
+  blockedHosts: ["chat.withotto.app", "bookings.withotto.app"],
 
   // Fixed so a check never picks up a preview server Stuart already has open
   // (astro preview defaults to 4321) or collides with `dev:all`.
