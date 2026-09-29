@@ -13,7 +13,9 @@
     "astro": "astro",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "check-links": "astro build && lychee ./dist/**/*.html --include-fragments"
+    "check-links": "astro build && lychee ./dist/**/*.html --include-fragments",
+    "test:checks": "node --test \"scripts/checks/**/*.test.mjs\"",
+    "check:baseline": "node scripts/checks/baseline.mjs"
   },
   "dependencies": {
     "@astrojs/mdx": "8.0.1",

@@ -10,3 +10,7 @@ node_modules/
 
 # Astro
 .astro/
+
+# Check fixtures are deliberately malformed HTML; check reports are generated
+scripts/checks/fixtures/
+.checks/

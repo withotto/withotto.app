@@ -1,5 +1,8 @@
 # build output
 dist/
+
+# accessibility and SEO check reports (scripts/checks/)
+.checks/
 .output/
 .astro
 
