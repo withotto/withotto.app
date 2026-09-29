@@ -298,42 +298,85 @@ function listRoutes(items) {
 }
 
 /**
- * Reads the sitemap index (or a plain urlset) and returns every page URL.
+ * @typedef {object} SitemapError
+ * @property {string} file  Absolute path of the file to fix: the sitemap that
+ *   names the bad location, or the sitemap that is not a sitemap.
+ * @property {string | null} loc  The child location as written, if any.
+ * @property {string} problem  What is wrong, as a sentence fragment.
+ * @property {string} [child]  Absolute path the location resolved to, when
+ *   it names a file this build does not have.
+ */
+
+/**
+ * Reads the sitemap index (or a plain urlset) and returns every page URL,
+ * plus a problem for every child location that cannot be followed and every
+ * file that is not a sitemap, so a broken index is never read as a short one.
  *
  * @param {string} distAbs
  * @param {string} indexFile Relative to dist.
  * @param {string} origin
- * @returns {{ urls: string[], files: string[] } | null} null when the index is missing.
+ * @returns {{ urls: string[], files: string[], errors: SitemapError[] } | null}
+ *   null when the index is missing.
  */
 function readSitemap(distAbs, indexFile, origin) {
   const first = path.join(distAbs, indexFile);
   if (!fs.existsSync(first)) return null;
   const urls = [];
   const files = [];
+  /** @type {SitemapError[]} */
+  const errors = [];
   const queue = [first];
   const seen = new Set();
   while (queue.length > 0) {
     const file = /** @type {string} */ (queue.shift());
-    if (seen.has(file) || !fs.existsSync(file)) continue;
+    if (seen.has(file)) continue;
     seen.add(file);
     files.push(file);
     const $ = cheerio.load(fs.readFileSync(file, "utf8"), { xml: true });
+    const root = $.root().children().first().get(0);
+    const rootName = root && "tagName" in root ? root.tagName : null;
+    if (rootName !== "urlset" && rootName !== "sitemapindex") {
+      errors.push({
+        file,
+        loc: null,
+        problem: `is not a sitemap (its root element is ${rootName ? `<${rootName}>` : "missing"}, not <urlset> or <sitemapindex>)`,
+      });
+      continue;
+    }
     $("sitemap > loc").each((_, el) => {
       const loc = $(el).text().trim();
+      let url;
       try {
-        const url = new URL(loc, origin);
-        if (url.origin === origin) {
-          queue.push(path.join(distAbs, ...url.pathname.split("/")));
-        }
+        url = new URL(loc, origin);
       } catch {
-        // An unparseable child sitemap URL is skipped.
+        errors.push({ file, loc, problem: "is not a valid URL" });
+        return;
       }
+      if (url.origin !== origin) {
+        errors.push({
+          file,
+          loc,
+          problem: `is on another origin, not this site (${origin})`,
+        });
+        return;
+      }
+      const child = path.join(distAbs, ...url.pathname.split("/"));
+      if (!fs.existsSync(child) || !fs.statSync(child).isFile()) {
+        errors.push({
+          file,
+          loc,
+          problem: "does not exist in the build",
+          child,
+        });
+        return;
+      }
+      queue.push(child);
     });
     $("url > loc").each((_, el) => {
       urls.push($(el).text().trim());
     });
   }
-  return { urls, files };
+  return { urls, files, errors };
 }
 
 /**
@@ -747,6 +790,32 @@ export function analyseSite(config, pageFilter = null) {
       message: `${config.distDir}/${config.sitemapIndex} does not exist, so search engines get no sitemap. Check the sitemap integration in the Astro config.`,
     });
   } else {
+    for (const error of sitemap.errors) {
+      const file = rel(error.file);
+      add({
+        route: "/",
+        distFile: file,
+        source: "unknown",
+        snippet: error.loc === null ? null : `<loc>${error.loc}</loc>`,
+        rule: "sitemap-unreadable",
+        severity: "block",
+        message:
+          error.loc === null
+            ? `${file} ${error.problem}, so search engines cannot read the URLs it should list. Check the sitemap integration in the Astro config.`
+            : `${file} lists the child sitemap ${error.loc}, which ${error.problem}${error.child ? ` (no file at ${rel(error.child)})` : ""}, so search engines cannot read the URLs it should list. Point the index at a sitemap this build writes (check the sitemap integration and \`site\` in the Astro config).`,
+      });
+    }
+    const indexable = pages.some((p) => !p.noindex && !p.is404);
+    if (sitemap.urls.length === 0 && sitemap.errors.length === 0 && indexable) {
+      add({
+        route: "/",
+        distFile: rel(sitemap.files[0]),
+        source: "unknown",
+        rule: "sitemap-empty",
+        severity: "block",
+        message: `${config.distDir}/${config.sitemapIndex} resolves to no page URLs, although the build has indexable pages, so search engines get an empty sitemap. Check the sitemap integration and its filter in the Astro config.`,
+      });
+    }
     const sitemapFile = rel(sitemap.files[sitemap.files.length - 1]);
     for (const loc of sitemap.urls) {
       let url;
@@ -770,6 +839,11 @@ export function analyseSite(config, pageFilter = null) {
       }
     }
   }
+
+  // Per-page sitemap warnings only mean something when the whole sitemap was
+  // read; otherwise the blocking sitemap finding above is the one to fix.
+  const sitemapComplete =
+    sitemap !== null && sitemap.errors.length === 0 && sitemap.urls.length > 0;
 
   for (const page of pages) {
     if (page.is404) {
@@ -803,7 +877,7 @@ export function analyseSite(config, pageFilter = null) {
         message: `No other page links to ${page.route} (it is ${inSitemap ? "in the sitemap" : "not in the sitemap either"}), so visitors and crawlers cannot reach it by browsing. Link to it from a relevant page, or mark it noindex or stop building it if it should not be public.`,
       });
     }
-    if (sitemap !== null && !inSitemap) {
+    if (sitemapComplete && !inSitemap) {
       add({
         ...pageAt(page),
         rule: "sitemap-page-missing",

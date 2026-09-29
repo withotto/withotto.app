@@ -372,6 +372,100 @@ describe("orphans and the sitemap", () => {
   });
 });
 
+describe("an unreadable sitemap", () => {
+  const withIndex = (sitemapIndex) =>
+    analyseSite({ ...fixtureConfig("sitemap"), sitemapIndex });
+  const blocking = (findings) => findings.filter((f) => f.severity === "block");
+
+  it("passes an index whose children all resolve", () => {
+    assert.deepEqual(summary(withIndex("sitemap-index.xml")), []);
+  });
+
+  it("blocks an index naming a child sitemap that was not built", () => {
+    const findings = withIndex("sitemap-index-missing-child.xml");
+    const found = withRule(findings, "sitemap-unreadable");
+    assert.deepEqual(summary(blocking(findings)), [
+      "block sitemap-unreadable /",
+    ]);
+    assert.equal(found[0].distFile, "dist/sitemap-index-missing-child.xml");
+    assert.match(found[0].message, /sitemap-9\.xml/);
+    assert.match(found[0].message, /does not exist/);
+  });
+
+  it("blocks a child sitemap that is not a sitemap", () => {
+    const findings = withIndex("sitemap-index-unparseable-child.xml");
+    const found = withRule(findings, "sitemap-unreadable");
+    assert.deepEqual(summary(blocking(findings)), [
+      "block sitemap-unreadable /",
+    ]);
+    assert.equal(found[0].distFile, "dist/sitemap-html.xml");
+    assert.match(found[0].message, /<urlset>/);
+  });
+
+  it("blocks an index that is not a sitemap", () => {
+    const findings = withIndex("sitemap-index-garbage.xml");
+    assert.deepEqual(summary(blocking(findings)), [
+      "block sitemap-unreadable /",
+    ]);
+    assert.equal(
+      withRule(findings, "sitemap-unreadable")[0].distFile,
+      "dist/sitemap-index-garbage.xml",
+    );
+  });
+
+  it("blocks a child sitemap on another origin", () => {
+    const findings = withIndex("sitemap-index-off-origin.xml");
+    const found = withRule(findings, "sitemap-unreadable");
+    assert.deepEqual(summary(blocking(findings)), [
+      "block sitemap-unreadable /",
+    ]);
+    assert.match(found[0].message, /https:\/\/example\.com\/sitemap-1\.xml/);
+    assert.match(found[0].message, /https:\/\/withotto\.app/);
+  });
+
+  it("blocks a child sitemap location that is not a URL", () => {
+    const findings = withIndex("sitemap-index-bad-loc.xml");
+    const found = withRule(findings, "sitemap-unreadable");
+    assert.deepEqual(summary(blocking(findings)), [
+      "block sitemap-unreadable /",
+    ]);
+    assert.match(found[0].message, /not-a-host/);
+  });
+
+  it("blocks an index with no child sitemaps, and a child with no URLs", () => {
+    for (const index of [
+      "sitemap-index-no-children.xml",
+      "sitemap-index-empty-child.xml",
+    ]) {
+      const findings = withIndex(index);
+      assert.deepEqual(summary(blocking(findings)), ["block sitemap-empty /"]);
+      assert.equal(
+        withRule(findings, "sitemap-empty")[0].distFile,
+        `dist/${index}`,
+      );
+    }
+  });
+
+  it("does not bury the blocker under a warning per page", () => {
+    for (const index of [
+      "sitemap-index-missing-child.xml",
+      "sitemap-index-no-children.xml",
+    ]) {
+      assert.deepEqual(
+        withRule(withIndex(index), "sitemap-page-missing"),
+        [],
+        index,
+      );
+    }
+  });
+
+  it("still blocks a missing index as sitemap-missing", () => {
+    assert.deepEqual(summary(withIndex("sitemap-index-nope.xml")), [
+      "block sitemap-missing /",
+    ]);
+  });
+});
+
 describe("validateJsonLd", () => {
   it("accepts an object, an array of objects and a @graph", () => {
     assert.deepEqual(
