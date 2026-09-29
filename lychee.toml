@@ -3,7 +3,7 @@ root_dir = "dist/"
 # - ico.org.uk rate-limits/blocks automated checkers (observed timing out in a
 #   real browser from this machine too). The canonical regulator URL in the
 #   privacy policy is correct.
-# - unsplash.com answers requests from CI runners with a 307 to an anti-bot
-#   challenge (/.within.website) that returns 401. The photographer credit
-#   links on blog posts load fine in a browser.
-exclude = ["ico\\.org\\.uk", "unsplash\\.com"]
+# - Stock photo sites behind bot protection answer CI runners with 401/403
+#   (Unsplash via a /.within.website challenge, Pexels via Cloudflare). They
+#   only carry the photo credit links on blog posts, which load in a browser.
+exclude = ["ico\\.org\\.uk", "unsplash\\.com", "pexels\\.com"]
