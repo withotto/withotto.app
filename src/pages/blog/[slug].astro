@@ -25,7 +25,7 @@ const { Content } = await render(entry);
 <Layout title={entry.data.title}>
   <Container>
     <div class="mx-auto mt-14 max-w-3xl text-center">
-      <span class="text-sm font-medium tracking-wider text-primary uppercase">
+      <span class="text-sm font-medium tracking-wider text-primary-strong uppercase">
         {entry.data.category}
       </span>
       <h1 class="mt-1 text-4xl font-bold lg:text-5xl lg:leading-tight lg:tracking-tight">
@@ -54,7 +54,7 @@ const { Content } = await render(entry);
             <Icon
               name="hugeicons:linkedin-02"
               size={32}
-              class="size-4 shrink-0 text-primary"
+              class="size-4 shrink-0 text-primary-strong"
             />
           </a>
           <a
@@ -65,7 +65,7 @@ const { Content } = await render(entry);
             <Icon
               name="hugeicons:facebook-02"
               size={32}
-              class="size-4 shrink-0 text-primary"
+              class="size-4 shrink-0 text-primary-strong"
             />
           </a>
         </div>
@@ -101,7 +101,7 @@ const { Content } = await render(entry);
                     href={entry.data.imageCreditUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="text-primary hover:underline">
+                    class="text-primary-strong hover:underline">
                     {entry.data.imageCredit}
                   </a>
                 ) : (

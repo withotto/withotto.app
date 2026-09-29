@@ -34,13 +34,13 @@ const brandColours = [
     name: "Persian Green",
     hex: "#02AC8A",
     rgb: "2, 172, 138",
-    description: "Main brand colour",
+    description: "Main brand colour, for accents and borders",
   },
   {
     name: "Deep Sea Green",
     hex: "#105E59",
     rgb: "16, 94, 89",
-    description: "Darker green for headings and emphasis",
+    description: "Green text, buttons, and fills with text or icons on them",
   },
   {
     name: "Loafer",
@@ -137,7 +137,7 @@ const brandColours = [
                 <div class="flex justify-between">
                   <span class="text-default-soft">HEX:</span>
                   <button
-                    class="cursor-pointer font-mono text-default hover:text-primary"
+                    class="cursor-pointer font-mono text-default hover:text-primary-strong"
                     onclick={`navigator.clipboard.writeText('${colour.hex}'); this.textContent = 'Copied!'; setTimeout(() => this.textContent = '${colour.hex}', 1000)`}>
                     {colour.hex}
                   </button>
@@ -145,7 +145,7 @@ const brandColours = [
                 <div class="flex justify-between">
                   <span class="text-default-soft">RGB:</span>
                   <button
-                    class="cursor-pointer font-mono text-default hover:text-primary"
+                    class="cursor-pointer font-mono text-default hover:text-primary-strong"
                     onclick={`navigator.clipboard.writeText('${colour.rgb}'); this.textContent = 'Copied!'; setTimeout(() => this.textContent = '${colour.rgb}', 1000)`}>
                     {colour.rgb}
                   </button>
@@ -175,14 +175,40 @@ const brandColours = [
 
           <h3 class="text-primary-strong">Colour usage</h3>
           <ul>
-            <li>Persian Green (#02AC8A) is our main brand colour</li>
-            <li>Use Deep Sea Green (#105E59) for headings and emphasis</li>
+            <li>
+              Persian Green (#02AC8A) is our main brand colour, for accents and
+              borders
+            </li>
+            <li>
+              Use Deep Sea Green (#105E59) for green text, buttons, and fills
+              with text or icons on them
+            </li>
             <li>
               Use Loafer and Willow Brook for backgrounds and subtle accents
             </li>
             <li>Use Mindaro for success states and feature highlights</li>
             <li>Use Terracotta for alerts and warnings</li>
             <li>Maintain accessibility by ensuring proper contrast ratios</li>
+          </ul>
+
+          <h3 class="text-primary-strong">Which green to use where</h3>
+          <p>
+            Persian Green is the brand colour, but it is too light to carry
+            text. White text on Persian Green has a contrast ratio of 2.89:1,
+            and Persian Green text on white is the same. Both fail WCAG AA,
+            which asks for 4.5:1. Deep Sea Green reaches about 7.6:1 against
+            white.
+          </p>
+          <ul>
+            <li>
+              Use Deep Sea Green for any green text, for buttons, and for any
+              green fill with text or an icon on it, such as table headers and
+              icon badges
+            </li>
+            <li>
+              Use Persian Green for accents, borders, focus rings, and large
+              decorative shapes, where nothing has to be read against it
+            </li>
           </ul>
 
           <h3 class="text-primary-strong">General guidelines</h3>

@@ -20,7 +20,7 @@ const { headings } = Astro.props;
           <Icon
             name="hugeicons:calendar-03"
             size={32}
-            class="size-5 text-primary"
+            class="size-5 text-primary-strong"
           />
           <span>
             Last updated:{" "}
@@ -37,12 +37,12 @@ const { headings } = Astro.props;
           <Icon
             name="hugeicons:download-04"
             size={32}
-            class="size-5 text-primary"
+            class="size-5 text-primary-strong"
           />
           <span>
             <a
               href={`/files/${encodeURIComponent(frontmatter.pdfFilename)}`}
-              class="text-primary-strong hover:text-primary"
+              class="text-primary-strong hover:underline"
               download>
               Download this page as a PDF
             </a>
