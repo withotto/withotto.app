@@ -73,7 +73,7 @@ const stats: Stat[] = [
       <Icon
         name="hugeicons:loading-02"
         size="16"
-        class="animate-spin text-primary"
+        class="animate-spin text-primary-strong"
       />
       <span class="ml-2">Loading latest statistics</span>
     </p>
@@ -90,7 +90,7 @@ const stats: Stat[] = [
             <div class="p-6">
               <p class="font-medium text-default-soft">{stat.label}</p>
               <p class="mt-2 flex flex-col">
-                <span class="p-2 text-center text-4xl font-bold text-primary md:text-6xl">
+                <span class="p-2 text-center text-4xl font-bold text-primary-strong md:text-6xl">
                   <StatError withIcon={false} />
                 </span>
                 <span class="mt-1 text-right text-sm text-default-soft">
@@ -119,7 +119,7 @@ const stats: Stat[] = [
               <p class="font-medium text-default-soft">{stat.label}</p>
               <p class="mt-2 flex flex-col">
                 <span
-                  class="p-2 text-center text-4xl font-bold text-primary md:text-6xl"
+                  class="p-2 text-center text-4xl font-bold text-primary-strong md:text-6xl"
                   data-stat={stat.key}
                   data-options={JSON.stringify(stat.localeOptions)}>
                   &mdash;
