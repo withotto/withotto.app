@@ -64,17 +64,6 @@
     },
     {
       "customType": "regex",
-      "description": "Track the mise CLI version pinned in the checks workflow's mise-action `version:` input. The github-actions manager only updates the action's SHA, not its inputs. mise's release tags are 'v<version>', so extractVersion strips the prefix and write-back stays bare numeric",
-      "managerFilePatterns": ["/^\\.github/workflows/checks\\.yml$/"],
-      "matchStrings": [
-        "(^|\\n)\\s+version:\\s*(?<currentValue>[0-9]+\\.[0-9]+\\.[0-9]+)\\s*(\\n|$)"
-      ],
-      "datasourceTemplate": "github-releases",
-      "depNameTemplate": "jdx/mise",
-      "extractVersionTemplate": "^v(?<version>.+)$"
-    },
-    {
-      "customType": "regex",
       "description": "Track Deno jsr: imports pinned to exact versions (major-only pins like '@2' are intentionally ignored)",
       "managerFilePatterns": ["/^supabase\\/functions\\/.*\\.ts$/"],
       "matchStrings": [
@@ -160,11 +149,6 @@
       "description": "Cross-file: lychee from the mise.toml customManager; apply 5-day supply-chain floor",
       "matchPackageNames": ["lycheeverse/lychee"],
       "groupName": "lychee",
-      "minimumReleaseAge": "5 days"
-    },
-    {
-      "description": "The mise CLI pinned in the checks workflow; apply 5-day supply-chain floor",
-      "matchPackageNames": ["jdx/mise"],
       "minimumReleaseAge": "5 days"
     },
     {

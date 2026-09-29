@@ -34,8 +34,7 @@ jobs:
       - uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4.3.0
         with:
           # Pinned so a mise release can't silently change tool resolution
-          # between runs, as in Otto Capture's CI. A custom manager in
-          # renovate.json keeps it current.
+          # between runs, as in Otto Capture's CI; Renovate keeps it current.
           version: 2026.9.14
           install_args: node pnpm lychee
 
