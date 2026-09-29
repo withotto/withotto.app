@@ -98,7 +98,7 @@ const playerId = `audio-player-${Math.random().toString(36).substr(2, 9)}`;
             </p>
             <p class="text-default-soft text-sm">
               There was an issue loading the audio file. Please try refreshing the page or 
-              <a href="${this.querySelector("source").src}" class="text-primary-strong underline hover:decoration-2" download>download the file</a> 
+              <a href="${this.querySelector("source")?.src ?? ""}" class="text-primary-strong underline hover:decoration-2" download>download the file</a> 
               to listen offline.
             </p>
           `;
