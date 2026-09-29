@@ -1,7 +1,6 @@
 {
   "schemaVersion": 1,
   "entries": [
-    { "check": "a11y", "rule": "listitem", "component": "footer", "count": 1 },
     {
       "check": "a11y",
       "rule": "color-contrast",
