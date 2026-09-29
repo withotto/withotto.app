@@ -55,7 +55,9 @@ const HOST = "127.0.0.1";
 export function isBlockedHost(url, hosts) {
   let hostname;
   try {
-    hostname = new URL(url).hostname.toLowerCase();
+    // A fully qualified name's trailing dot ("chat.withotto.app.") reaches
+    // the same host, so it must not slip past the comparison.
+    hostname = new URL(url).hostname.toLowerCase().replace(/\.$/, "");
   } catch {
     return false;
   }

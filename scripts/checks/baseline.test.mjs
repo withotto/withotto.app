@@ -120,6 +120,36 @@ describe("check:baseline", () => {
     assert.doesNotMatch(result.stderr, /at JSON\.parse/);
   });
 
+  it("exits 0 with nothing to prune when no report has a stale entry", () => {
+    builtAt(BUILD);
+    writeBaseline([seoEntry]);
+    writeReport({ check: "seo", at: AFTER });
+
+    const result = run("--prune");
+
+    assert.equal(result.status, 0, result.stderr);
+    assert.match(result.stdout, /Nothing to prune\./);
+    assert.deepEqual(readEntries(), [seoEntry]);
+  });
+
+  it("says accepted entries need approval", () => {
+    builtAt(BUILD);
+    writeBaseline([]);
+    writeReport({
+      check: "seo",
+      at: AFTER,
+      findings: [blockFinding("seo", "title-length")],
+    });
+
+    const result = run("--accept");
+
+    assert.equal(result.status, 0, result.stderr);
+    assert.match(
+      result.stdout,
+      /Wrote 1 entries to .*New entries need Stuart's approval/,
+    );
+  });
+
   it("refuses a report whose stale entry has no found count", () => {
     builtAt(BUILD);
     writeBaseline([seoEntry]);

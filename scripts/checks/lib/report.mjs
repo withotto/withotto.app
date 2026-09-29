@@ -64,8 +64,14 @@ export function validateReport(report) {
   ) {
     problems.push("generatedAt must be an ISO date");
   }
-  if (r.pageFilter !== null && !Array.isArray(r.pageFilter)) {
-    problems.push("pageFilter must be an array or null");
+  if (
+    r.pageFilter !== null &&
+    !(
+      Array.isArray(r.pageFilter) &&
+      r.pageFilter.every((/** @type {unknown} */ p) => typeof p === "string")
+    )
+  ) {
+    problems.push("pageFilter must be an array of routes or null");
   }
   for (const key of STATUSES) {
     if (!Number.isInteger(r.summary?.[key])) {
@@ -78,8 +84,14 @@ export function validateReport(report) {
     r.findings.forEach((/** @type {any} */ f, /** @type {number} */ i) => {
       for (const p of validateFinding(f)) problems.push(`findings[${i}]: ${p}`);
       if (typeof f !== "object" || f === null) return;
-      if (!Array.isArray(f.routes) || f.routes.length === 0) {
-        problems.push(`findings[${i}]: routes must be a non-empty array`);
+      if (
+        !Array.isArray(f.routes) ||
+        f.routes.length === 0 ||
+        !f.routes.every((/** @type {unknown} */ r) => typeof r === "string")
+      ) {
+        problems.push(
+          `findings[${i}]: routes must be a non-empty array of routes`,
+        );
       }
       if (!STATUSES.includes(f.status)) {
         problems.push(
@@ -199,8 +211,12 @@ export function formatSummaryMarkdown(report) {
     for (const f of rows) {
       const cell = (/** @type {string} */ s) =>
         s.replaceAll("|", "\\|").replaceAll("\n", " ");
+      // A merged component or group finding names every page it covers, as
+      // the text report does.
+      const label = f.component ?? f.group;
+      const where = label ? `${label} on ${f.routes.join(", ")}` : f.route;
       lines.push(
-        `| ${f.status === "new" ? "block" : "warn"} | ${cell(f.rule)} | ${cell(f.component ?? f.group ?? f.route)} | ${cell(f.source)} | ${cell(f.message)} |`,
+        `| ${f.status === "new" ? "block" : "warn"} | ${cell(f.rule)} | ${cell(where)} | ${cell(f.source)} | ${cell(f.message)} |`,
       );
     }
   }

@@ -4,8 +4,10 @@
 #
 # Deliberately unprivileged: triggered by pull_request (never
 # pull_request_target), a read-only token, no secrets, and checkout
-# credentials not persisted. Findings land in the job summary and in the
-# `checks-report` artifact, readable with `gh run view` / `gh run download`.
+# credentials not persisted. SEO and accessibility findings land in the job
+# summary and in the `checks-report` artifact, readable with `gh run view` /
+# `gh run download`. Link check (lychee) findings are in its step's log
+# (`gh run view --log-failed`).
 name: checks
 
 on:

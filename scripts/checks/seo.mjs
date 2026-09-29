@@ -1,8 +1,8 @@
 /**
- * SEO check over the built site (R5, KTD4 in the website content system
- * plan). Reads every HTML page in `dist/`, plus the sitemap and `_redirects`,
- * and reports titles and descriptions, canonicals, heading structure, JSON-LD,
- * orphan pages, internal link form and links to legacy redirects.
+ * SEO check over the built site. Reads every HTML page in `dist/`, plus the
+ * sitemap and `_redirects`, and reports titles and descriptions, canonicals,
+ * heading structure, JSON-LD, orphan pages, internal link form and links to
+ * legacy redirects.
  *
  * The analysis always covers the whole site, because uniqueness and orphans
  * need every page; `--page` only limits what `finishRun` reports, and must
@@ -230,15 +230,27 @@ export function parseRedirects(text, site = "https://withotto.app") {
   return rules;
 }
 
-/** Whether a path's last segment looks like a file, e.g. "pricing.xlsx". */
-function isFilePath(/** @type {string} */ pathname) {
+/**
+ * Whether a path is a file download, e.g. "/files/pricing.xlsx": its last
+ * segment looks like a file name and no page was built at that route. The
+ * route check keeps a dotted page route such as "/release-1.0" a page.
+ *
+ * @param {string} pathname
+ * @param {Set<string>} routes Every built route.
+ */
+function isFilePath(pathname, routes) {
   const last = pathname.split("/").pop() ?? "";
-  return /\.[a-z0-9]+$/i.test(last);
+  return /\.[a-z0-9]+$/i.test(last) && !routes.has(canonicalRoute(pathname));
 }
 
-/** Route a same-site path lands on, or null for a file download. */
-function pathToRoute(/** @type {string} */ pathname) {
-  if (isFilePath(pathname)) return null;
+/**
+ * Route a same-site path lands on, or null for a file download.
+ *
+ * @param {string} pathname
+ * @param {Set<string>} routes Every built route.
+ */
+function pathToRoute(pathname, routes) {
+  if (isFilePath(pathname, routes)) return null;
   return canonicalRoute(pathname);
 }
 
@@ -518,7 +530,7 @@ export function analyseSite(config, pageFilter = null) {
     if (
       rule.targetPath !== null &&
       !/[*:]/.test(rule.targetPath) &&
-      !isFilePath(rule.targetPath) &&
+      !isFilePath(rule.targetPath, routes) &&
       !routes.has(canonicalRoute(rule.targetPath))
     ) {
       add({
@@ -606,7 +618,7 @@ export function analyseSite(config, pageFilter = null) {
       if (!/^https?:$/.test(url.protocol) || url.origin !== origin) return;
       const pathname = url.pathname;
 
-      const target = pathToRoute(pathname);
+      const target = pathToRoute(pathname, routes);
       if (target !== null && target !== page.route && !page.is404) {
         if (!incoming.has(target)) incoming.set(target, new Set());
         /** @type {Set<string>} */ (incoming.get(target)).add(page.route);
@@ -625,7 +637,7 @@ export function analyseSite(config, pageFilter = null) {
       if (
         pathname !== "/" &&
         !pathname.endsWith("/") &&
-        !isFilePath(pathname)
+        !isFilePath(pathname, routes)
       ) {
         add({
           ...at(page, el),
@@ -681,7 +693,7 @@ export function analyseSite(config, pageFilter = null) {
       return;
     }
     const canonicalPath = url.pathname;
-    if (!canonicalPath.endsWith("/") && !isFilePath(canonicalPath)) {
+    if (!canonicalPath.endsWith("/") && !isFilePath(canonicalPath, routes)) {
       add({
         ...pageAt(page, { selector, snippet }),
         rule: "canonical-trailing-slash",
@@ -689,7 +701,7 @@ export function analyseSite(config, pageFilter = null) {
         message: `Canonical ${head.canonical} has no trailing slash, so it names a URL that redirects. Use ${origin}${canonicalPath}/.`,
       });
     }
-    const target = pathToRoute(canonicalPath);
+    const target = pathToRoute(canonicalPath, routes);
     if (target === null || !routes.has(target)) {
       add({
         ...pageAt(page, { selector, snippet }),
@@ -862,7 +874,7 @@ export function analyseSite(config, pageFilter = null) {
         url = null;
       }
       const route =
-        url && url.origin === origin ? pathToRoute(url.pathname) : null;
+        url && url.origin === origin ? pathToRoute(url.pathname, routes) : null;
       if (route !== null) sitemapRoutes.add(route);
       if (route === null || !routes.has(route)) {
         add({

@@ -96,6 +96,16 @@ describe("isBlockedHost", () => {
     );
     assert.equal(isBlockedHost("data:text/plain,hi", hosts), false);
   });
+
+  it("matches a fully qualified name with a trailing dot", () => {
+    const hosts = ["chat.withotto.app"];
+    assert.equal(isBlockedHost("https://chat.withotto.app./x", hosts), true);
+    assert.equal(
+      isBlockedHost("https://cdn.chat.withotto.app./x", hosts),
+      true,
+    );
+    assert.equal(isBlockedHost("https://withotto.app./", hosts), false);
+  });
 });
 
 describe("runA11y on the fixture site", () => {

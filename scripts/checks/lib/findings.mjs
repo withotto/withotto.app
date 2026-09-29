@@ -1,6 +1,6 @@
 /**
- * The one finding shape every check emits (KTD2 in the website content system
- * plan). Later tools parse the JSON report, never stdout, so changing a field
+ * The one finding shape every check emits, so every report can be read the
+ * same way. Later tools parse the JSON report, never stdout, so changing a field
  * here means bumping `REPORT_SCHEMA_VERSION` in `report.mjs`.
  *
  * @typedef {"block" | "warn"} Severity

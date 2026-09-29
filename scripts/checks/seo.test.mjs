@@ -75,7 +75,8 @@ describe("headings", () => {
     assert.equal(found.length, 1);
     assert.equal(found[0].severity, "block");
     assert.equal(found[0].route, "/two-h1/");
-    assert.match(found[0].selector, /h1/);
+    assert.equal(found[0].selector, "body > main > h1:nth-of-type(2)");
+    assert.equal(found[0].snippet, "<h1>Second heading</h1>");
     assert.match(found[0].message, /Second heading/);
   });
 
@@ -168,7 +169,7 @@ describe("titles and descriptions", () => {
     ]);
     const [title] = withRule(findings, "title-length");
     assert.match(title.message, /9 characters/);
-    assert.match(title.message, /30.60/);
+    assert.match(title.message, /30–60/);
   });
 });
 
@@ -235,8 +236,21 @@ describe("internal links", () => {
       "/capture?a=1",
       "/contact",
       "/contact",
+      "/release-1.0",
       "https://withotto.app/capture",
     ]);
+  });
+
+  it("treats a dotted route that was built as a page, not a file", () => {
+    const found = slash.find((f) => f.snippet?.includes('href="/release-1.0"'));
+    assert.ok(found, "expected a missing-slash finding for /release-1.0");
+    assert.match(found.message, /\/release-1\.0\//);
+    assert.deepEqual(
+      withRule(findings, "sitemap-url-missing").filter((f) =>
+        f.message.includes("release-1.0"),
+      ),
+      [],
+    );
   });
 
   it("passes a file download, mailto, tel, fragments and external links", () => {

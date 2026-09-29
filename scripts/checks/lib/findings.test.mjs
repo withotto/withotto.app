@@ -76,9 +76,14 @@ describe("createFinding", () => {
 });
 
 describe("componentFor", () => {
-  it("returns the first root that contains the element", () => {
+  it("returns the root that contains the element", () => {
     const inside = (sel) => sel === "body > footer";
     assert.equal(componentFor(inside, roots)?.name, "footer");
+  });
+
+  it("returns the first root in order when several contain the element", () => {
+    const inside = (sel) => sel === "header" || sel === "body > footer";
+    assert.equal(componentFor(inside, roots)?.name, "navbar");
   });
 
   it("returns null outside every root", () => {
@@ -254,7 +259,10 @@ describe("report", () => {
     const text = formatReport(report);
     assert.match(text, /\n {2}on 2 page\(s\): \/f\/, \/g\/\n/);
     assert.doesNotMatch(text, /title:same \(/);
-    assert.match(formatSummaryMarkdown(report), /\| title:same \|/);
+    assert.match(
+      formatSummaryMarkdown(report),
+      /\| title:same on \/f\/, \/g\/ \|/,
+    );
   });
 
   it("reports a finding that is not an object instead of throwing", () => {
@@ -281,6 +289,30 @@ describe("report", () => {
     assert.match(
       validateReport({ ...report, schemaVersion: 99 })[0],
       /schemaVersion/,
+    );
+  });
+
+  it("rejects a page filter or finding routes that are not all strings", () => {
+    const report = buildReport({
+      check: "seo",
+      pageFilter: null,
+      findings: [],
+      stale: [],
+    });
+    assert.deepEqual(validateReport({ ...report, pageFilter: ["/a/", 1] }), [
+      "pageFilter must be an array of routes or null",
+    ]);
+    const [valid] = applyBaseline(
+      mergeFindings([finding({ check: "seo", rule: "h1-count", route: "/" })]),
+      { schemaVersion: 1, entries: [] },
+      { checks: ["seo"], complete: true },
+    ).findings;
+    assert.deepEqual(
+      validateReport({
+        ...report,
+        findings: [{ ...valid, routes: ["/", null] }],
+      }),
+      ["findings[0]: routes must be a non-empty array of routes"],
     );
   });
 });

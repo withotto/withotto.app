@@ -2,8 +2,8 @@ import fs from "node:fs";
 import * as prettier from "prettier";
 
 /**
- * The committed baseline of existing block-severity debt (KTD10 in the website
- * content system plan). Only findings beyond it block.
+ * The committed baseline of existing block-severity debt. Only findings beyond
+ * it block.
  *
  * - Component findings are keyed by check, rule and component, so a new page
  *   inheriting a baselined layout issue does not block.
