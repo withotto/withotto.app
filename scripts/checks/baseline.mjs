@@ -46,9 +46,15 @@ const reports = fs.existsSync(outputDir)
       .readdirSync(outputDir)
       .filter((name) => name.endsWith(".json") && name !== ROUTE_SOURCES_OUTPUT)
       .map((name) => {
-        const report = JSON.parse(
-          fs.readFileSync(path.join(outputDir, name), "utf8"),
-        );
+        let report;
+        try {
+          report = JSON.parse(
+            fs.readFileSync(path.join(outputDir, name), "utf8"),
+          );
+        } catch {
+          console.error(`${name} is not valid JSON. Re-run the checks.`);
+          process.exit(2);
+        }
         const problems = validateReport(report);
         if (problems.length > 0) {
           console.error(

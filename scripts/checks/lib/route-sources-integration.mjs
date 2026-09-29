@@ -24,8 +24,13 @@ export default function routeSources({ outputDir }) {
       },
       "astro:build:done": ({ dir }) => {
         const from = path.join(fileURLToPath(dir), ROUTE_SOURCES_FILE);
-        if (!fs.existsSync(from)) return;
         const to = path.join(root, outputDir, ROUTE_SOURCES_OUTPUT);
+        // A map left by an earlier build would point findings at sources
+        // that may no longer exist.
+        if (!fs.existsSync(from)) {
+          fs.rmSync(to, { force: true });
+          return;
+        }
         fs.mkdirSync(path.dirname(to), { recursive: true });
         fs.copyFileSync(from, to);
         fs.rmSync(from);

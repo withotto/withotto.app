@@ -108,6 +108,18 @@ const seoEntry = { check: "seo", rule: "h1-count", route: "/", count: 1 };
 const a11yEntry = { check: "a11y", rule: "image-alt", route: "/", count: 1 };
 
 describe("check:baseline", () => {
+  it("fails cleanly on a report that is not valid JSON", () => {
+    builtAt(BUILD);
+    writeBaseline([seoEntry]);
+    fs.writeFileSync(path.join(root, ".checks", "seo.json"), "{ truncated");
+
+    const result = run("--prune");
+
+    assert.equal(result.status, 2);
+    assert.match(result.stderr, /seo\.json is not valid JSON/);
+    assert.doesNotMatch(result.stderr, /at JSON\.parse/);
+  });
+
   it("refuses to prune from a report older than the latest build", () => {
     builtAt(BUILD);
     writeBaseline([seoEntry, a11yEntry]);
