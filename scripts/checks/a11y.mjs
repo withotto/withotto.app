@@ -231,7 +231,13 @@ export async function runA11y({
   } finally {
     await context?.close().catch(() => {});
     if (!sharedBrowser) await browser?.close().catch(() => {});
-    await server.stop();
+    // Logged, not thrown: a stop failure must not replace the error that
+    // ended the run, which is the one runMain has to report.
+    await server.stop().catch((/** @type {Error} */ error) => {
+      console.error(
+        `a11y: could not stop the preview server: ${error.message}`,
+      );
+    });
   }
 }
 

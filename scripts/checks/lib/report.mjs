@@ -88,7 +88,17 @@ export function validateReport(report) {
       }
     });
   }
-  if (!Array.isArray(r.stale)) problems.push("stale must be an array");
+  if (!Array.isArray(r.stale)) {
+    problems.push("stale must be an array");
+  } else {
+    // `--prune` writes `found` back as the entry's count, so a missing or
+    // fractional one would leave a baseline the next run refuses to read.
+    r.stale.forEach((/** @type {any} */ entry, /** @type {number} */ i) => {
+      if (!(Number.isInteger(entry?.found) && entry.found >= 0)) {
+        problems.push(`stale[${i}]: found must be a non-negative integer`);
+      }
+    });
+  }
   return problems;
 }
 
