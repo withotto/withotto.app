@@ -22,9 +22,10 @@ concurrency:
 
 jobs:
   checks:
-    # Blacksmith's ARM runners, as used for Otto Capture's CI: faster than
-    # GitHub-hosted runners, and actions/cache goes to their co-located cache.
-    runs-on: blacksmith-2vcpu-ubuntu-2404-arm
+    # Blacksmith, as for Otto Capture's CI: actions/cache goes to their
+    # co-located cache. x64 rather than ARM: Blacksmith's ARM runners measured
+    # about a third of the x64 CPU speed, and nothing here needs ARM.
+    runs-on: blacksmith-2vcpu-ubuntu-2404
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
