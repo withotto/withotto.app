@@ -132,6 +132,17 @@ Both take the same `variant` and `size`, so a `<Link>` and a `<Button>` with mat
 
 Dead components not on this system (`pricing-compare.astro`, `clients.astro`, `clients-alt.astro`, `solutions.astro`, `highlights.astro`) are imported nowhere. Migrate them if they are ever brought back into use.
 
+## Site Checks
+
+`scripts/checks/` holds the SEO and accessibility checks. They run over the built `dist/`, read site settings from `checks.config.mjs`, and write a versioned JSON report per check to the ignored `.checks/` folder. Each finding names its rule, route, source file, selector and a help link, so it can be fixed from the finding alone.
+
+- **Severity:** a11y serious and critical block, moderate, minor and best-practice warn. SEO blocks on a missing title, H1 or canonical, invalid JSON-LD, orphan pages, links without a trailing slash, and links to `_redirects` sources; lengths, duplicate descriptions and skipped heading levels warn.
+- **Baseline:** `checks-baseline.json` records existing block-level debt, keyed by rule and component (navbar, footer, table of contents) or by rule, route and count. Only findings beyond it fail. It holds rule IDs, routes and component names only.
+- **Shrinking needs no approval:** `pnpm check:baseline --prune` removes entries the latest run no longer finds. Fixing debt should always end with a prune.
+- **Growing needs Stuart's approval:** never run `--accept` to make a failing check pass. Fix the finding; if it truly cannot be fixed, propose the baseline change in the PR for Stuart to approve.
+- **Chatwoot is blocked** in every check (`blockedHosts`), because a headless visit would create a contact in the live sales inbox.
+- **Blog sources:** the build writes a route map (`src/pages/checks-route-sources.json.ts`, moved out of `dist/` by an integration in `astro.config.mjs`) so blog findings point at the post's own file. Do not delete either piece.
+
 ## Redirects & Legacy URLs
 
 Managed in `_redirects` (Netlify). Do **not** create pages for these paths; redirects will not fire if a real page exists:

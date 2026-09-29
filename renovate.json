@@ -53,6 +53,17 @@
     },
     {
       "customType": "regex",
+      "description": "Track lychee (the link checker) in mise.toml — its GitHub release tags are 'lychee-v<version>', so extractVersion strips the prefix and write-back stays bare numeric",
+      "managerFilePatterns": ["/^mise\\.toml$/"],
+      "matchStrings": [
+        "(^|\\n)lychee\\s*=\\s*\"(?<currentValue>[0-9]+\\.[0-9]+\\.[0-9]+)\""
+      ],
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "lycheeverse/lychee",
+      "extractVersionTemplate": "^lychee-v(?<version>.+)$"
+    },
+    {
+      "customType": "regex",
       "description": "Track Deno jsr: imports pinned to exact versions (major-only pins like '@2' are intentionally ignored)",
       "managerFilePatterns": ["/^supabase\\/functions\\/.*\\.ts$/"],
       "matchStrings": [
@@ -133,6 +144,23 @@
       "description": "5-day minimum age for dev dependencies (matches prod-dep floor; pnpm enforces the same floor at install time for transitives via pnpm-workspace.yaml)",
       "matchDepTypes": ["devDependencies"],
       "minimumReleaseAge": "5 days"
+    },
+    {
+      "description": "Cross-file: lychee from the mise.toml customManager; apply 5-day supply-chain floor",
+      "matchPackageNames": ["lycheeverse/lychee"],
+      "groupName": "lychee",
+      "minimumReleaseAge": "5 days"
+    },
+    {
+      "description": "GitHub Actions stay pinned to a commit SHA (with the tag in a comment) and get the same 5-day supply-chain floor as packages. Actions run in CI with the repo's token, so a compromised tag is as dangerous as a compromised package",
+      "matchManagers": ["github-actions"],
+      "pinDigests": true,
+      "minimumReleaseAge": "5 days"
+    },
+    {
+      "description": "Group the accessibility check's browser stack: @axe-core/playwright drives Playwright, and its rules come from axe-core, so they move together. An axe rules bump can surface new findings that block until the baseline is approved or the finding is fixed; that is intended",
+      "matchPackageNames": ["playwright", "@axe-core/playwright", "axe-core"],
+      "groupName": "Accessibility check (axe and Playwright)"
     }
   ]
 }
