@@ -148,7 +148,19 @@ All redirects use `301`. Any new removals should mirror this pattern.
 - Default OG image: `/opengraph.png` (in `public/`).
 - Landing pages that should NOT be indexed pass `seo={{ noindex: true }}` (see commit `e74c8a6`).
 - Never hand-roll `<meta>` tags. Extend the `seo` prop instead.
-- Titles, descriptions, headings, link text, alt text, structured data, and banned tactics for page copy: see `.claude/rules/withotto-app-seo-accessibility.md`.
+
+### Page copy: how this site carries out the shared rules
+
+What good titles, descriptions, headings, link text, alt text and structured data are, and the banned tactics, is set by `shared/accessible-copy.md` and `shared/search-pages.md`. Both are rendered from the private shared-rules repo on page paths. This is how this codebase carries them out:
+
+- **Title:** pass a short `title` prop to `Layout`. `RootLayout` appends ` — With Otto` (12 characters), so the prop has roughly 18 to 48 of the 30 to 60. Never put "With Otto" in it.
+- **Description:** `<Layout title="…" seo={{ description: "…" }}>`. `RootLayout` spreads `seo` over its defaults, so a page without one inherits the site-wide default. A blog post's `excerpt` is its listing summary; write it to the same standard.
+- **Canonical:** never in the `seo` prop. `RootLayout` builds it from the page path and the site URL.
+- **Structured data:** the `jsonLd` prop on `Layout`, one object or an array. `RootLayout` renders one `<script type="application/ld+json">` per object.
+- **Headings:** marketing pages stop at H3 (voice rules). Pick the level for structure and style it with classes.
+- **Alt text:** `Screenshot.astro` reuses its `alt` as the zoom button's accessible name and the zoom dialog's heading, so it takes informative images only and its `alt` is never empty. Blog frontmatter has `imageAlt` (a short phrase on the hero image) and `imageDescription` (a longer, screen-reader-only caption linked with `aria-describedby`); `imageAlt: ""` only for a genuinely decorative hero.
+- **Internal links:** end in `/` (except downloads under `/files/`), never point at a path in `_redirects`, and every new page is linked from at least one other page.
+- **Enforced by:** `check:seo` (missing or duplicate titles and descriptions, the canonical, one H1, skipped heading levels, JSON-LD that does not parse, orphan pages, link form), `check:a11y` (link names, alt text, contrast, heading best practice), `check:links`, and Lighthouse on deploy previews. See "Site Checks".
 
 ## Pitfalls
 
