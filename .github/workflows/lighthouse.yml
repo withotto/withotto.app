@@ -52,7 +52,7 @@ env:
 
 jobs:
   validate:
-    runs-on: ubuntu-24.04
+    runs-on: blacksmith-2vcpu-ubuntu-2404
     timeout-minutes: 5
     permissions:
       pull-requests: read # list the PRs for the status's commit
@@ -110,7 +110,11 @@ jobs:
   lighthouse:
     needs: validate
     if: needs.validate.outputs.pr != ''
-    runs-on: ubuntu-24.04
+    # Blacksmith x64 with 4 vCPUs: Lighthouse recommends 4 dedicated cores for
+    # steady performance scores, and the x64 image has Google Chrome
+    # preinstalled. Blacksmith's ARM runners have no Chrome and measured about
+    # a third of the x64 CPU benchmark, which lowers performance scores.
+    runs-on: blacksmith-4vcpu-ubuntu-2404
     timeout-minutes: 30
     permissions:
       contents: read
@@ -134,6 +138,8 @@ jobs:
       # Renovate-tracked Node and pnpm versions (mise.toml) as checks.yml.
       - uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4.3.0
         with:
+          # Pinned as in checks.yml; Renovate keeps it current.
+          version: 2026.9.14
           install_args: node pnpm
 
       # Installed outside the checkout, with the repo's supply-chain floor
@@ -254,7 +260,7 @@ jobs:
   comment:
     needs: [validate, lighthouse]
     if: ${{ !cancelled() && needs.validate.outputs.pr != '' && needs.lighthouse.outputs.summary == 'true' }}
-    runs-on: ubuntu-24.04
+    runs-on: blacksmith-2vcpu-ubuntu-2404
     timeout-minutes: 5
     permissions:
       pull-requests: write # create or update the scores comment
