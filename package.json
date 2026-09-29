@@ -13,17 +13,21 @@
     "astro": "astro",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "check-links": "astro build && lychee ./dist/**/*.html --include-fragments",
+    "check": "node scripts/checks/all.mjs",
+    "check:seo": "node scripts/checks/seo.mjs",
+    "check:a11y": "node scripts/checks/a11y.mjs",
+    "check:links": "lychee \"./dist/**/*.html\" --include-fragments",
     "test:checks": "node --test \"scripts/checks/**/*.test.mjs\"",
-    "check:baseline": "node scripts/checks/baseline.mjs"
+    "check:baseline": "node scripts/checks/baseline.mjs",
+    "setup:browsers": "playwright install chromium"
   },
   "dependencies": {
     "@astrojs/mdx": "8.0.1",
     "@astrojs/sitemap": "3.7.4",
-    "@tailwindcss/vite": "4.3.3",
     "@fontsource-variable/rethink-sans": "5.3.0",
     "@iconify-json/hugeicons": "1.2.34",
     "@tailwindcss/typography": "0.5.20",
+    "@tailwindcss/vite": "4.3.3",
     "astro": "7.3.2",
     "astro-icon": "1.2.0",
     "astro-navbar": "2.4.0",
@@ -32,6 +36,10 @@
     "tailwindcss": "4.3.3"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
+    "axe-core": "4.13.0",
+    "cheerio": "1.2.0",
+    "playwright": "1.63.0",
     "prettier": "3.9.6",
     "prettier-plugin-astro": "1.0.0",
     "prettier-plugin-tailwindcss": "0.8.1",
