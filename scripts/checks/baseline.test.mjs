@@ -115,7 +115,7 @@ describe("check:baseline", () => {
 
     const result = run("--prune");
 
-    assert.equal(result.status, 2);
+    assert.equal(result.status, 2, result.stderr);
     assert.match(result.stderr, /seo\.json is not valid JSON/);
     assert.doesNotMatch(result.stderr, /at JSON\.parse/);
   });
@@ -132,7 +132,7 @@ describe("check:baseline", () => {
 
     const result = run("--prune");
 
-    assert.equal(result.status, 2);
+    assert.equal(result.status, 2, result.stderr);
     assert.match(result.stderr, /a11y report predates the latest build/);
     assert.deepEqual(readEntries(), [seoEntry, a11yEntry]);
   });
@@ -144,7 +144,7 @@ describe("check:baseline", () => {
 
     const result = run("--accept");
 
-    assert.equal(result.status, 2);
+    assert.equal(result.status, 2, result.stderr);
     assert.match(result.stderr, /seo report predates the latest build/);
     assert.deepEqual(readEntries(), [seoEntry]);
   });
@@ -156,7 +156,7 @@ describe("check:baseline", () => {
 
     const result = run("--prune");
 
-    assert.equal(result.status, 2);
+    assert.equal(result.status, 2, result.stderr);
     assert.match(result.stderr, /No built site in dist\//);
   });
 
@@ -206,7 +206,7 @@ describe("check:baseline", () => {
 
     const result = run("--prune");
 
-    assert.equal(result.status, 2);
+    assert.equal(result.status, 2, result.stderr);
     assert.match(result.stderr, /limited to some pages/);
     assert.deepEqual(readEntries(), [seoEntry]);
   });
