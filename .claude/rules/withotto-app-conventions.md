@@ -140,7 +140,7 @@ Dead components not on this system (`pricing-compare.astro`, `clients.astro`, `c
   - title problems: missing, more than one, or shared with another page
   - H1 problems: missing or more than one
   - canonical problems: missing, more than one, not absolute, on another origin, without a trailing slash, or pointing at a page that was not built
-  - JSON-LD that does not parse
+  - JSON-LD that does not parse, or has an item without an `@context` or `@type`
   - sitemap problems: missing, unreadable, empty, or listing a URL with no built page
   - an indexable 404 page, and orphan pages
   - links without a trailing slash, and links to `_redirects` sources
