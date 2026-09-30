@@ -49,7 +49,7 @@ const playerId = `audio-player-${Math.random().toString(36).substr(2, 9)}`;
       </p>
       <a
         href={audioFile}
-        class="inline-flex items-center gap-2 text-sm font-medium text-primary underline hover:text-primary-strong"
+        class="inline-flex items-center gap-2 text-sm font-medium text-primary-strong underline hover:decoration-2"
         download
         aria-label={`Download audio version of ${title}`}>
         <svg
@@ -98,7 +98,7 @@ const playerId = `audio-player-${Math.random().toString(36).substr(2, 9)}`;
             </p>
             <p class="text-default-soft text-sm">
               There was an issue loading the audio file. Please try refreshing the page or 
-              <a href="${this.querySelector("source").src}" class="text-primary hover:text-primary-strong underline" download>download the file</a> 
+              <a href="${this.querySelector("source")?.src ?? ""}" class="text-primary-strong underline hover:decoration-2" download>download the file</a> 
               to listen offline.
             </p>
           `;

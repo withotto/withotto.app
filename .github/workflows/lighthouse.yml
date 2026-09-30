@@ -1,0 +1,358 @@
+# Scores key pages of each Netlify deploy preview with Lighthouse CI and posts
+# the median scores on the PR.
+#
+# Triggered by the commit status Netlify posts when a deploy preview is ready.
+# (Netlify never fires deployment_status, and @netlify/plugin-lighthouse is
+# frozen on Lighthouse 9.) A status-triggered run always runs this file and
+# lighthouserc.json from the default branch, never from the PR, so the PR that
+# adds or changes them cannot exercise the change; it is verified on the next
+# PR. The run is attached to the default branch, not the PR's commit, so it
+# never shows as a PR check and can never be a required one.
+#
+# Treated as privileged, because it can comment on PRs:
+# - Nothing from the PR is checked out or run. The preview is only loaded in
+#   Lighthouse's browser, in a job whose token can only read contents.
+# - `validate` proceeds only for a success status from Netlify's bot, with the
+#   exact deploy-preview context, a 40-hex SHA and a preview URL for this site,
+#   for the head of exactly one open same-repo PR. Fork PRs are skipped.
+#   Anything else exits successfully with no outputs, which skips the rest.
+# - Event values reach scripts only through `env:`.
+# - `comment` holds the only write permission. It reads nothing but a
+#   numeric-only summary, checks it against the fixed path list, and posts
+#   numbers and that list.
+name: lighthouse
+
+on:
+  status:
+
+permissions: {}
+
+env:
+  # Netlify's values, read from the statuses it posted on PRs #144-#151
+  # (context "deploy/netlify", creator netlify[bot] of type Bot, target URL
+  # https://deploy-preview-<PR>--withotto-v2.netlify.app on success). Confirm
+  # them again on the first real run. The validate job never prints event
+  # values, so read them from a PR head commit's statuses:
+  # `gh api repos/withotto/withotto.app/commits/<sha>/statuses --jq
+  # '.[] | [.context, .state, .creator.login, .target_url] | @tsv'`.
+  # The context names no site, so the target URL check is what ties a status
+  # to this site's deploy previews.
+  NETLIFY_SITE: withotto-v2
+  NETLIFY_CONTEXT: deploy/netlify
+  NETLIFY_SENDER: netlify[bot]
+  # Hand-maintained: the pages scored on every preview, separated by spaces.
+  # Never derive this from anything else. The PR comment lists these paths.
+  LIGHTHOUSE_PATHS: >-
+    /
+    /capture/
+    /bank-reconciliation/
+    /faqs/
+    /blog/bank-rule-activity-report/
+    /privacy-policy/
+
+jobs:
+  validate:
+    runs-on: blacksmith-2vcpu-ubuntu-2404
+    timeout-minutes: 5
+    permissions:
+      pull-requests: read # list the PRs for the status's commit
+    outputs:
+      pr: ${{ steps.check.outputs.pr }}
+      sha: ${{ steps.check.outputs.sha }}
+      preview-url: ${{ steps.check.outputs.preview-url }}
+    steps:
+      - name: Validate the status event
+        id: check
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT_CONTEXT: ${{ github.event.context }}
+          EVENT_STATE: ${{ github.event.state }}
+          EVENT_SENDER: ${{ github.event.sender.login }}
+          EVENT_SENDER_TYPE: ${{ github.event.sender.type }}
+          EVENT_SHA: ${{ github.event.sha }}
+          EVENT_TARGET_URL: ${{ github.event.target_url }}
+        run: |
+          set -euo pipefail
+          # Never print event values: they are untrusted text.
+          skip() { echo "Skipped: $1."; exit 0; }
+
+          [[ "$EVENT_CONTEXT" == "$NETLIFY_CONTEXT" ]] || skip "not the Netlify deploy-preview context"
+          [[ "$EVENT_STATE" == "success" ]] || skip "state is not success"
+          [[ "$EVENT_SENDER" == "$NETLIFY_SENDER" && "$EVENT_SENDER_TYPE" == "Bot" ]] || skip "sender is not Netlify"
+          [[ "$EVENT_SHA" =~ ^[0-9a-f]{40}$ ]] || skip "SHA is not 40 hex characters"
+          url_re="^https://deploy-preview-([1-9][0-9]*)--${NETLIFY_SITE}\.netlify\.app/?$"
+          [[ "$EVENT_TARGET_URL" =~ $url_re ]] || skip "target URL is not a deploy preview of this site"
+          preview_number="${BASH_REMATCH[1]}"
+
+          # --slurp gathers every page into one array of pages, so the
+          # exactly-one check below sees all the PRs, not just the first 100.
+          pulls="$(gh api --paginate --slurp "repos/${GITHUB_REPOSITORY}/commits/${EVENT_SHA}/pulls?per_page=100")" \
+            || skip "could not list the PRs for this commit"
+          # Exactly one open PR into this repo, from a branch of this repo (not
+          # a fork), whose head is this commit.
+          pr="$(jq -r --arg repo "$GITHUB_REPOSITORY" --arg sha "$EVENT_SHA" '
+            [.[][] | select(.state == "open" and .base.repo.full_name == $repo)]
+            | if length == 1
+                and .[0].head.repo.full_name == $repo
+                and .[0].head.sha == $sha
+              then .[0].number else empty end
+          ' <<<"$pulls")"
+          [[ "$pr" =~ ^[1-9][0-9]*$ ]] || skip "no single open same-repo PR has this commit as its head"
+          [[ "$pr" == "$preview_number" ]] || skip "preview number does not match the PR"
+
+          {
+            echo "pr=${pr}"
+            echo "sha=${EVENT_SHA}"
+            echo "preview-url=https://deploy-preview-${pr}--${NETLIFY_SITE}.netlify.app"
+          } >> "$GITHUB_OUTPUT"
+          echo "Scoring the deploy preview of PR #${pr}."
+
+  lighthouse:
+    needs: validate
+    if: needs.validate.outputs.pr != ''
+    # Blacksmith x64 with 4 vCPUs: Lighthouse recommends 4 dedicated cores for
+    # steady performance scores, and the x64 image has Google Chrome
+    # preinstalled. Blacksmith's ARM runners have no Chrome and measured about
+    # a third of the x64 CPU benchmark, which lowers performance scores.
+    runs-on: blacksmith-4vcpu-ubuntu-2404
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    # A repeated status for the same commit replaces the run in progress.
+    concurrency:
+      group: lighthouse-${{ needs.validate.outputs.sha }}
+      cancel-in-progress: true
+    outputs:
+      # The comment job downloads the summary and links to the reports, so it
+      # runs only once both artifacts are uploaded.
+      summary: ${{ steps.summary-upload.outcome == 'success' }}
+      reports: ${{ steps.reports.outcome == 'success' }}
+    env:
+      PREVIEW_URL: ${{ needs.validate.outputs.preview-url }}
+    steps:
+      # For a status event, checkout with no ref gives the default branch's
+      # latest commit (GITHUB_SHA/GITHUB_REF), which is what supplies
+      # lighthouserc.json and mise.toml. Never check out github.event.sha.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # mise rather than actions/setup-node: the same pinned action and
+      # Renovate-tracked Node and pnpm versions (mise.toml) as checks.yml.
+      - uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4.3.0
+        with:
+          # Pinned as in checks.yml; Renovate keeps it current.
+          version: 2026.9.14
+          install_args: node pnpm
+
+      # Installed outside the checkout, with the repo's supply-chain floor
+      # (5-day minimum release age, no trust downgrades) passed explicitly.
+      # semver 5.7.2 and 6.3.1 (transitive, via lighthouse) are published
+      # without provenance after versions that had it, which trips the trust
+      # check; they are long-established releases. Renovate tracks the
+      # @lhci/cli version below (renovate.json). Deliberately outside the
+      # repo's lockfile (not a site dependency), hence the zizmor ignore.
+      - name: Install Lighthouse CI
+        run: | # zizmor: ignore[adhoc-packages]
+          set -euo pipefail
+          dir="${RUNNER_TEMP}/lhci"
+          mkdir -p "$dir"
+          pnpm --dir "$dir" add \
+            --config.minimum-release-age=7200 \
+            --config.trust-policy=no-downgrade \
+            --config.trust-policy-exclude='semver@5.7.2 || 6.3.1' \
+            @lhci/cli@0.15.1
+          echo "${dir}/node_modules/.bin" >> "$GITHUB_PATH"
+
+      - name: Run Lighthouse
+        id: collect
+        run: |
+          set -euo pipefail
+          read -r -a paths <<<"$LIGHTHOUSE_PATHS"
+          urls=()
+          for path in "${paths[@]}"; do urls+=("--url=${PREVIEW_URL}${path}"); done
+          lhci collect --config=./lighthouserc.json "${urls[@]}"
+
+      # Runs before the summary so the summary can record the outcome; the
+      # job fails on it in the last step, after the artifacts are uploaded.
+      - name: Check the assertions
+        id: assert
+        continue-on-error: true
+        run: lhci assert --config=./lighthouserc.json
+
+      - name: Write the reports
+        if: ${{ !cancelled() && steps.collect.outcome == 'success' }}
+        run: lhci upload --config=./lighthouserc.json --target=filesystem --outputDir=./lighthouse-report
+
+      # Numbers only: per path, the median of each category score across the
+      # runs, as an integer 0-100 (null if Lighthouse produced no score).
+      - name: Write the score summary
+        id: summary
+        if: ${{ !cancelled() && steps.collect.outcome == 'success' }}
+        env:
+          ASSERT_OUTCOME: ${{ steps.assert.outcome }}
+        run: |
+          set -euo pipefail
+          mkdir -p lighthouse-summary
+          node --input-type=module <<'EOF'
+          import fs from "node:fs";
+          const base = process.env.PREVIEW_URL;
+          const paths = process.env.LIGHTHOUSE_PATHS.trim().split(/\s+/);
+          const categories = ["performance", "accessibility", "best-practices", "seo"];
+          const dir = ".lighthouseci";
+          const runs = fs.existsSync(dir)
+            ? fs
+                .readdirSync(dir)
+                .filter((f) => /^lhr-\d+\.json$/.test(f))
+                .map((f) => JSON.parse(fs.readFileSync(`${dir}/${f}`, "utf8")))
+            : [];
+          const median = (values) => {
+            const s = values.filter((v) => typeof v === "number" && v >= 0 && v <= 1).sort((a, b) => a - b);
+            if (s.length === 0) return null;
+            const m = s.length % 2 ? s[(s.length - 1) / 2] : (s[s.length / 2 - 1] + s[s.length / 2]) / 2;
+            return Math.round(m * 100);
+          };
+          const scores = {};
+          for (const path of paths) {
+            const forPath = runs.filter((r) => r.requestedUrl === base + path);
+            // A page with no run at all was not scored, so there is no summary
+            // (and no PR comment) rather than a row of dashes that looks complete.
+            if (forPath.length === 0) {
+              console.error(`::error::Lighthouse produced no run for ${path}.`);
+              process.exit(1);
+            }
+            scores[path] = Object.fromEntries(
+              categories.map((c) => [c, median(forPath.map((r) => r.categories?.[c]?.score))]),
+            );
+          }
+          const summary = { assertionsPassed: process.env.ASSERT_OUTCOME === "success", scores };
+          fs.writeFileSync("lighthouse-summary/summary.json", JSON.stringify(summary, null, 2) + "\n");
+          EOF
+          cat lighthouse-summary/summary.json
+
+      - name: Upload the score summary
+        id: summary-upload
+        if: ${{ !cancelled() && steps.summary.outcome == 'success' }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: lighthouse-summary
+          path: lighthouse-summary/summary.json
+          if-no-files-found: error
+          retention-days: 30
+
+      # Full reports go to a run artifact, not temporary-public-storage. This
+      # repo is public, so any signed-in GitHub user can download them; they
+      # hold only Lighthouse results for public preview pages.
+      - name: Upload the reports
+        id: reports
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: lighthouse-report
+          path: |
+            lighthouse-report/
+            .lighthouseci/assertion-results.json
+          include-hidden-files: true
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Fail when an assertion failed
+        if: ${{ steps.assert.outcome == 'failure' }}
+        run: |
+          echo "::error::A Lighthouse assertion failed. The lighthouse-report artifact has the details."
+          exit 1
+
+  comment:
+    needs: [validate, lighthouse]
+    if: ${{ !cancelled() && needs.validate.outputs.pr != '' && needs.lighthouse.outputs.summary == 'true' && needs.lighthouse.outputs.reports == 'true' }}
+    runs-on: blacksmith-2vcpu-ubuntu-2404
+    timeout-minutes: 5
+    permissions:
+      pull-requests: write # create or update the scores comment
+    # One writer per PR at a time, so two runs cannot both create a comment.
+    concurrency:
+      group: lighthouse-comment-${{ needs.validate.outputs.pr }}
+      cancel-in-progress: false
+    env:
+      GH_TOKEN: ${{ github.token }}
+      PR: ${{ needs.validate.outputs.pr }}
+      SHA: ${{ needs.validate.outputs.sha }}
+      RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+    steps:
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: lighthouse-summary
+          path: ${{ runner.temp }}/lighthouse-summary
+
+      - name: Post or update the PR comment
+        run: |
+          set -euo pipefail
+          marker='<!-- lighthouse-scores -->'
+          file="${RUNNER_TEMP}/lighthouse-summary/summary.json"
+
+          # Re-check the values handed over by validate.
+          [[ "$PR" =~ ^[1-9][0-9]*$ && "$SHA" =~ ^[0-9a-f]{40}$ ]] || { echo "::error::Bad PR number or SHA."; exit 1; }
+
+          # The summary came from a job that loaded untrusted pages, so accept
+          # only the exact numeric shape, keyed by the fixed path list in order.
+          [[ -f "$file" && ! -L "$file" ]] || { echo "::error::Summary missing."; exit 1; }
+          (( $(wc -c <"$file") < 8192 )) || { echo "::error::Summary too large."; exit 1; }
+          paths_json="$(jq -nc --arg p "$LIGHTHOUSE_PATHS" '$p | split(" ") | map(select(. != ""))')"
+          jq -e --argjson paths "$paths_json" '
+            type == "object"
+            and keys_unsorted == ["assertionsPassed", "scores"]
+            and (.assertionsPassed | type == "boolean")
+            and (.scores | type == "object")
+            and (.scores | keys_unsorted) == $paths
+            and all(.scores[];
+                  type == "object"
+                  and (keys_unsorted | sort) == ["accessibility", "best-practices", "performance", "seo"]
+                  and all(.[]; . == null or (type == "number" and . == floor and . >= 0 and . <= 100)))
+          ' "$file" >/dev/null || { echo "::error::Summary is not the expected numeric-only shape."; exit 1; }
+
+          # Skip if the PR has moved on or closed; the newer commit's run
+          # posts its own scores.
+          head="$(gh api "repos/${GITHUB_REPOSITORY}/pulls/${PR}" --jq 'if .state == "open" then .head.sha else "" end')"
+          [[ "$head" == "$SHA" ]] || { echo "PR head has moved on or the PR is closed; not commenting."; exit 0; }
+
+          # Everything in the body is fixed text, the fixed path list, the
+          # validated SHA, this run's URL, or a validated number.
+          body="$(jq -r --arg marker "$marker" --arg sha "$SHA" --arg run "$RUN_URL" --argjson paths "$paths_json" '
+            def cell: if . == null then "–" else tostring end;
+            . as $s
+            | [
+                $marker,
+                "### Lighthouse scores for the deploy preview",
+                "",
+                "Median of the runs for each page (mobile emulation), for commit \($sha).",
+                "",
+                "| Page | Performance | Accessibility | Best practices | SEO |",
+                "| --- | ---: | ---: | ---: | ---: |",
+                ($paths[] as $p | $s.scores[$p]
+                  | "| `\($p)` | \(.performance | cell) | \(.accessibility | cell) | \(.["best-practices"] | cell) | \(.seo | cell) |"),
+                "",
+                (if $s.assertionsPassed
+                  then "Accessibility, SEO and best practices all met their thresholds."
+                  else "**At least one assertion failed.** Accessibility, SEO and best practices must meet their thresholds; performance only warns."
+                  end),
+                "",
+                "Full reports are in the `lighthouse-report` artifact of [this run](\($run))."
+              ]
+            | join("\n")
+          ' "$file")"
+          payload="${RUNNER_TEMP}/comment.json"
+          jq -n --arg body "$body" '{body: $body}' >"$payload"
+
+          # Only our own comment: the marker and github-actions[bot] as author.
+          # tail, not head: it reads the whole stream, so a duplicate match
+          # cannot SIGPIPE gh under pipefail, and it updates the newest match.
+          existing="$(gh api --paginate "repos/${GITHUB_REPOSITORY}/issues/${PR}/comments?per_page=100" \
+            --jq ".[] | select(.user.login == \"github-actions[bot]\" and .user.type == \"Bot\" and (.body | startswith(\"${marker}\"))) | .id" \
+            | tail -n 1)"
+          if [[ "$existing" =~ ^[0-9]+$ ]]; then
+            gh api --method PATCH "repos/${GITHUB_REPOSITORY}/issues/comments/${existing}" --input "$payload" >/dev/null
+            echo "Updated the scores comment on PR #${PR}."
+          else
+            gh api --method POST "repos/${GITHUB_REPOSITORY}/issues/${PR}/comments" --input "$payload" >/dev/null
+            echo "Posted the scores comment on PR #${PR}."
+          fi

@@ -23,15 +23,19 @@ const sizes: Record<ButtonSize, string> = {
 };
 
 const variants: Record<ButtonVariant, string> = {
-  /** The default call to action: solid brand green. */
+  /**
+   * The default call to action: solid dark brand green. Not `bg-primary`: white
+   * on `primary` is 2.89:1 and fails WCAG AA. The hover lightens the fill to
+   * 85% (about 5.3:1 with white text) so it stays distinct and still passes.
+   */
   primary:
-    "border border-transparent bg-primary text-white shadow-sm hover:bg-primary-strong focus-visible:ring-primary-strong",
+    "border border-transparent bg-primary-strong text-white shadow-sm hover:bg-primary-strong/85 focus-visible:ring-primary-strong",
   /** Lower emphasis, sits next to a primary without competing with it. */
   outline:
     "border border-primary bg-transparent text-primary-strong hover:bg-primary-soft focus-visible:ring-primary-strong",
   /** For use on the brand-coloured bands, where a solid green button would vanish. */
   inverted:
-    "border border-transparent bg-white text-primary-strong shadow-sm hover:bg-primary hover:text-white focus-visible:ring-primary-strong",
+    "border border-transparent bg-white text-primary-strong shadow-sm hover:bg-primary-strong hover:text-white focus-visible:ring-primary-strong",
   /** Neutral, for navigation rather than conversion (pagination, dialog dismiss). */
   subtle:
     "border border-muted-strong bg-muted-soft text-default shadow-sm hover:bg-muted-strong focus-visible:ring-primary-strong",

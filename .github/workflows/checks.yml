@@ -1,0 +1,96 @@
+# Builds the site and runs the SEO, accessibility and link checks on every PR
+# and every push to main. `pnpm check` (scripts/checks/all.mjs) runs the same
+# steps locally; keep the two in step.
+#
+# Deliberately unprivileged: triggered by pull_request (never
+# pull_request_target), a read-only token, no secrets, and checkout
+# credentials not persisted. SEO and accessibility findings land in the job
+# summary and in the `checks-report` artifact, readable with `gh run view` /
+# `gh run download`. Link check (lychee) findings are in its step's log
+# (`gh run view --log-failed`).
+name: checks
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: checks-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    # Blacksmith, as for Otto Capture's CI: actions/cache goes to their
+    # co-located cache. x64 rather than ARM: Blacksmith's ARM runners measured
+    # about a third of the x64 CPU speed, and nothing here needs ARM.
+    runs-on: blacksmith-2vcpu-ubuntu-2404
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4.3.0
+        with:
+          # Pinned so a mise release can't silently change tool resolution
+          # between runs, as in Otto Capture's CI; Renovate keeps it current.
+          version: 2026.9.14
+          install_args: node pnpm lychee
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Read the Playwright version
+        id: playwright
+        run: echo "version=$(node -p 'require("playwright/package.json").version')" >> "$GITHUB_OUTPUT"
+
+      - name: Cache Playwright browsers
+        id: browser-cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ runner.arch }}-${{ steps.playwright.outputs.version }}
+
+      - name: Install Chromium
+        if: steps.browser-cache.outputs.cache-hit != 'true'
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Install Chromium system libraries
+        if: steps.browser-cache.outputs.cache-hit == 'true'
+        run: pnpm exec playwright install-deps chromium
+
+      - name: Test the check scripts
+        run: pnpm test:checks
+
+      - name: Build
+        id: build
+        run: pnpm build
+
+      # Each check runs even when an earlier one fails, so one run reports
+      # everything.
+      - name: SEO check
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        run: pnpm check:seo
+
+      - name: Accessibility check
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        run: pnpm check:a11y
+
+      - name: Link check
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        run: pnpm check:links
+
+      - name: Upload the reports
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: checks-report
+          path: .checks/*.json
+          # .checks/ is a dot-directory, which upload-artifact skips by default.
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 30

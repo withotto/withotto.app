@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Small target</title>
+  </head>
+  <body>
+    <main>
+      <h1>Small target</h1>
+      <!-- Two 16x16 targets with no spacing between them fail WCAG 2.5.8. -->
+      <div style="display: flex; gap: 0">
+        <button type="button" aria-label="Previous" style="width: 16px; height: 16px; padding: 0; border: 0; background: #333"></button>
+        <button type="button" aria-label="Next" style="width: 16px; height: 16px; padding: 0; border: 0; background: #333"></button>
+      </div>
+    </main>
+  </body>
+</html>

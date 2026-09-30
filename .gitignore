@@ -1,5 +1,10 @@
 # build output
 dist/
+# ...except the SEO check's fixture sites, which are built output by design
+!scripts/checks/fixtures/**/dist/
+
+# accessibility and SEO check reports (scripts/checks/)
+.checks/
 .output/
 .astro
 

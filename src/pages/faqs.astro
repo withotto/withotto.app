@@ -37,7 +37,7 @@ const faqs: CategorisedFaqItem[] = [
     answer: `
       <p class="py-2">You'll need to:</p>
       <ul class="list-disc pl-5">
-        <li>Set up your bank rules, or check you're happy with the ones you already have. We've made a <a href="/files/Bank%20rules%20quick%20guide.pdf" class="text-primary hover:underline hover:underline-offset-2">quick guide</a> to help you with this.</li>
+        <li>Set up your bank rules, or check you're happy with the ones you already have. We've made a <a href="/files/Bank%20rules%20quick%20guide.pdf" class="text-primary-strong underline underline-offset-2 hover:decoration-2">quick guide</a> to help you with this.</li>
         <li><b>Practices:</b> Invite Otto to your Xero practice and assign the clients he should work with.</li>
         <li><b>Businesses:</b> Invite Otto to the Xero organisations you want him to help with.</li>
       </ul>
@@ -179,14 +179,14 @@ const faqs: CategorisedFaqItem[] = [
       "I don't currently have many bank rules set up. What can I use them for?",
     answer: `
         <p class="py-2">Bank rules are great for transactions where you don't get a bill, such as bank account fees, payment processing fees, and transfers. They are also helpful where the sales invoice or receipt has been generated outside of Xero, for platforms like Stripe. For companies with payroll, rules can normally be created for the wage payment, PAYE, and pension payments.</p>
-        <p class="py-2">Read our <a href="/files/Bank%20rules%20quick%20guide.pdf" class="text-primary hover:underline hover:underline-offset-2">quick guide</a> for more ideas, as well as tips for making the most of rules and avoiding unexpected issues.</p>
+        <p class="py-2">Read our <a href="/files/Bank%20rules%20quick%20guide.pdf" class="text-primary-strong underline underline-offset-2 hover:decoration-2">quick guide</a> for more ideas, as well as tips for making the most of rules and avoiding unexpected issues.</p>
     `,
   },
   {
     categories: [Category.SECURITY],
     question: "Is Otto secure?",
     answer: `
-        <p class="py-2">We've put a lot of work into making sure Otto is as secure as possible. Please see our <a href="/bank-rec-security-and-privacy/" class="text-primary hover:underline hover:underline-offset-2">security and privacy</a> page for more details. You can download a PDF from there to share with your clients if you want to explain the security measures that have been put in place.</p>
+        <p class="py-2">We've put a lot of work into making sure Otto is as secure as possible. Please see our <a href="/bank-rec-security-and-privacy/" class="text-primary-strong underline underline-offset-2 hover:decoration-2">security and privacy</a> page for more details. You can download a PDF from there to share with your clients if you want to explain the security measures that have been put in place.</p>
     `,
   },
   {
@@ -283,13 +283,13 @@ const faqs: CategorisedFaqItem[] = [
           Capture, see the{" "}
           <a
             href="/capture/"
-            class="underline underline-offset-2 hover:text-primary">
+            class="underline underline-offset-2 hover:text-primary-strong">
             Otto Capture page
           </a>
           . If your question isn't here, email us at{" "}
           <a
             href="mailto:support@withotto.app"
-            class="underline underline-offset-2 hover:text-primary">
+            class="underline underline-offset-2 hover:text-primary-strong">
             support@withotto.app
           </a>
           .
@@ -304,7 +304,9 @@ const faqs: CategorisedFaqItem[] = [
         return (
           <div class="mx-auto flex max-w-4xl items-center justify-center p-10">
             <div class="flex w-full flex-col">
-              <h2 class="text-2xl font-semibold text-primary">{category}</h2>
+              <h2 class="text-2xl font-semibold text-primary-strong">
+                {category}
+              </h2>
               <div class="mt-4 flex w-full flex-col divide-y divide-neutral-200">
                 <FaqList items={categoryFaqs} />
               </div>

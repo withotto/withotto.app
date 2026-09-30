@@ -62,13 +62,13 @@ const { page }: { page: Page } = Astro.props;
                 </figure>
 
                 <div>
-                  <h2 class="mt-3 text-2xl leading-snug font-semibold tracking-tight group-hover:text-primary">
+                  <h2 class="mt-3 text-2xl leading-snug font-semibold tracking-tight group-hover:text-primary-strong">
                     {blogPostEntry.data.title}
                   </h2>
 
                   <div class="mt-3 flex items-center gap-5">
                     <time
-                      class="text-gray-400"
+                      class="text-default-soft"
                       datetime={blogPostEntry.data.publishDate.toISOString()}>
                       {blogPostEntry.data.publishDate.toLocaleDateString(
                         "en-GB",
@@ -81,15 +81,13 @@ const { page }: { page: Page } = Astro.props;
                     {blogPostEntry.data.excerpt}
                   </p>
                   <div class="mt-2">
-                    <a
-                      href={`/blog/${getBlogSlug(blogPostEntry)}/`}
-                      class="text-primary">
+                    <span class="text-primary-strong">
                       Read
                       <svg
                         width="27"
                         height="12"
                         viewBox="0 0 27 12"
-                        class="inline text-primary"
+                        class="inline text-primary-strong"
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg">
                         <path
@@ -97,7 +95,7 @@ const { page }: { page: Page } = Astro.props;
                           fill="currentColor"
                         />
                       </svg>
-                    </a>
+                    </span>
                   </div>
                 </div>
               </div>

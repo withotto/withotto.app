@@ -1,0 +1,7 @@
+# Host rule, skipped
+https://old.example.com/* https://withotto.app/:splat 301!
+
+# Removed pages
+/old /about/ 301
+/trial /about/#start-a-trial 301!
+/api/* https://example.com/api/:splat 200

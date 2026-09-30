@@ -9,9 +9,16 @@ export interface Props {
   title?: string;
   affiliateProgramId?: string;
   seo?: Partial<SEOProps>;
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
 }
 
-const { title, affiliateProgramId, seo = {} } = Astro.props;
+const { title, affiliateProgramId, seo = {}, jsonLd } = Astro.props;
+
+// One <script type="application/ld+json"> per object. "<" is escaped so the
+// data can never close the script element early.
+const jsonLdScripts = (jsonLd ? [jsonLd].flat() : []).map((data) =>
+  JSON.stringify(data).replace(/</g, "\\u003c"),
+);
 
 const makeTitle = title
   ? title + " — " + "With Otto"
@@ -53,6 +60,10 @@ const defaultDescription =
         data-program-id={affiliateProgramId}
         async></script>
     )}
+
+    {jsonLdScripts.map((json) => (
+      <script is:inline type="application/ld+json" set:html={json}></script>
+    ))}
 
     <SEO
       charset="UTF-8"
