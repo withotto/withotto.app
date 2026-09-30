@@ -123,8 +123,9 @@ jobs:
       group: lighthouse-${{ needs.validate.outputs.sha }}
       cancel-in-progress: true
     outputs:
-      summary: ${{ steps.summary.outputs.written }}
-      # The comment links to the report artifact, so it waits for the upload.
+      # The comment job downloads the summary and links to the reports, so it
+      # runs only once both artifacts are uploaded.
+      summary: ${{ steps.summary-upload.outcome == 'success' }}
       reports: ${{ steps.reports.outcome == 'success' }}
     env:
       PREVIEW_URL: ${{ needs.validate.outputs.preview-url }}
@@ -228,9 +229,9 @@ jobs:
           fs.writeFileSync("lighthouse-summary/summary.json", JSON.stringify(summary, null, 2) + "\n");
           EOF
           cat lighthouse-summary/summary.json
-          echo "written=true" >> "$GITHUB_OUTPUT"
 
       - name: Upload the score summary
+        id: summary-upload
         if: ${{ !cancelled() && steps.summary.outcome == 'success' }}
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
