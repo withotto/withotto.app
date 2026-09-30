@@ -1,32 +1,58 @@
 {
-  "$comment": "Lighthouse CI config for .github/workflows/lighthouse.yml, which runs on each Netlify deploy preview. The URLs are not listed here: the workflow builds them from its hand-maintained LIGHTHOUSE_PATHS and the preview's base URL. The minScore thresholds are PROVISIONAL, chosen before any real run; reset each one to just below the medians of the first real runs, so existing debt does not fail every run. is-crawlable is skipped because Netlify serves every deploy preview with x-robots-tag: noindex (indexability is enforced by the SEO check over dist/). chat.withotto.app is blocked so Chatwoot never creates contacts in the live sales inbox.",
+  "$comment": "Lighthouse CI config for .github/workflows/lighthouse.yml, which runs on each Netlify deploy preview. The URLs are not listed here: the workflow builds them from its hand-maintained LIGHTHOUSE_PATHS and the preview's base URL. Thresholds sit just below the medians of the first real run (PR #155, September 2026); raise them as scores improve, and never lower one to pass a run without a reason recorded here. /bank-reconciliation/ has its own best-practices threshold because the bookings embed logs cookie warnings in Chrome's Issues panel (inspector-issues), which this site cannot fix. third-party-cookies is skipped for the same reason: the only third-party cookie is Stripe's, set inside the bookings iframe. is-crawlable is skipped because Netlify serves every deploy preview with x-robots-tag: noindex (indexability is enforced by the SEO check over dist/). chat.withotto.app is blocked so Chatwoot never creates contacts in the live sales inbox.",
   "ci": {
     "collect": {
       "numberOfRuns": 3,
       "settings": {
-        "skipAudits": ["is-crawlable"],
+        "skipAudits": ["is-crawlable", "third-party-cookies"],
         "blockedUrlPatterns": ["*chat.withotto.app*"]
       }
     },
     "assert": {
-      "assertions": {
-        "categories:accessibility": [
-          "error",
-          { "minScore": 0.9, "aggregationMethod": "median" }
-        ],
-        "categories:seo": [
-          "error",
-          { "minScore": 0.9, "aggregationMethod": "median" }
-        ],
-        "categories:best-practices": [
-          "error",
-          { "minScore": 0.9, "aggregationMethod": "median" }
-        ],
-        "categories:performance": [
-          "warn",
-          { "minScore": 0.8, "aggregationMethod": "median" }
-        ]
-      }
+      "assertMatrix": [
+        {
+          "matchingUrlPattern": "^(?!.*/bank-reconciliation/$).*$",
+          "assertions": {
+            "categories:accessibility": [
+              "error",
+              { "minScore": 0.95, "aggregationMethod": "median" }
+            ],
+            "categories:seo": [
+              "error",
+              { "minScore": 0.95, "aggregationMethod": "median" }
+            ],
+            "categories:best-practices": [
+              "error",
+              { "minScore": 0.95, "aggregationMethod": "median" }
+            ],
+            "categories:performance": [
+              "warn",
+              { "minScore": 0.9, "aggregationMethod": "median" }
+            ]
+          }
+        },
+        {
+          "matchingUrlPattern": "/bank-reconciliation/$",
+          "assertions": {
+            "categories:accessibility": [
+              "error",
+              { "minScore": 0.95, "aggregationMethod": "median" }
+            ],
+            "categories:seo": [
+              "error",
+              { "minScore": 0.95, "aggregationMethod": "median" }
+            ],
+            "categories:best-practices": [
+              "error",
+              { "minScore": 0.9, "aggregationMethod": "median" }
+            ],
+            "categories:performance": [
+              "warn",
+              { "minScore": 0.9, "aggregationMethod": "median" }
+            ]
+          }
+        }
+      ]
     }
   }
 }
