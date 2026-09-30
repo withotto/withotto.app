@@ -15,7 +15,7 @@ const CONFIG = `export default {
   site: "https://example.test",
   distDir: "dist",
   pagesDir: "src/pages",
-  redirectsFile: "_redirects",
+  redirectsFile: "public/_redirects",
   sitemapIndex: "sitemap-index.xml",
   trailingSlash: "always",
   outputDir: ".checks",

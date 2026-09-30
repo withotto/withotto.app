@@ -1,6 +1,6 @@
 # Project: withotto.app (v2)
 
-**Last Updated:** 2026-06-19
+**Last Updated:** 2026-09-30
 
 ## Overview
 
@@ -28,7 +28,7 @@ Homepage and shared copy should lead with the brand (tools for accountants/bookk
 - **Formatter:** Prettier 3 with `prettier-plugin-astro` + `prettier-plugin-tailwindcss` (2-space indent)
 - **Site checks:** custom SEO script (`cheerio`) and axe-core accessibility check (`@axe-core/playwright`) in `scripts/checks/`, plus `lychee` for links (pinned in `mise.toml`)
 - **CI:** GitHub Actions. `checks.yml` runs the site checks on every PR and push to `main`
-- **Hosting:** Netlify (redirects in `_redirects`)
+- **Hosting:** Netlify (redirects in `public/_redirects`)
 
 No site test framework and no ESLint. The quality gate is `format:check` plus the `checks` workflow (build, `test:checks`, `check:seo`, `check:a11y`, `check:links`); run the same locally with `pnpm check`. The check scripts' own tests use Node's built-in runner. See `withotto-app-conventions.md`, "Site Checks", for the baseline policy.
 
@@ -46,13 +46,12 @@ No site test framework and no ESLint. The quality gate is `format:check` plus th
 │   ├── utils/          # Pure TS helpers (blog.ts)
 │   ├── types/          # Shared TS types
 │   └── styles/         # global.css — Tailwind 4 @theme brand tokens
-├── public/             # Static assets served as-is
+├── public/             # Static assets served as-is, including _redirects
 ├── supabase/
 │   ├── functions/      # Deno edge functions (e.g. reconciliation-stats)
 │   └── config.toml
 ├── astro.config.mjs
-├── prettier.config.mjs
-└── _redirects          # Netlify redirect rules
+└── prettier.config.mjs
 ```
 
 ## Path Aliases (tsconfig)
@@ -121,4 +120,4 @@ Use these aliases in imports. Do not write relative `../../` paths:
 
 ## Redirects
 
-Defined in `_redirects` (Netlify syntax). Old/removed pages and legal slugs should be mirrored here, not handled in-app.
+Defined in `public/_redirects` (Netlify syntax). Old/removed pages and legal slugs should be mirrored here, not handled in-app. Netlify reads the file only from the publish directory, `dist/`, so it lives in `public/`, which Astro copies there; at the repo root it is never deployed.
