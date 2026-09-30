@@ -3,12 +3,15 @@ export interface Props {
   variant?: "default" | "compact" | "inline";
   uuid?: string;
   affiliateId?: string;
+  /** Accessible name for the booking iframe. */
+  title?: string;
 }
 
 const {
   variant = "default",
   uuid = "9efe86c2-31c3-4038-ac5c-94e6a62b9350",
   affiliateId,
+  title = "Book a session with With Otto",
 } = Astro.props;
 
 const variantClasses = {
@@ -49,6 +52,21 @@ const variantClasses = {
       } catch (error) {
         // Silently handle any errors - booking form will work without ref parameter
       }
+    })();
+  </script>
+  <script is:inline define:vars={{ title }}>
+    // embed.js creates its iframe without a title, so screen readers would
+    // announce an unnamed frame. Name it as soon as it is added.
+    (function () {
+      const container = document.querySelector(".embedded-booking");
+      if (!container) return;
+      const nameFrames = () => {
+        for (const frame of container.querySelectorAll("iframe:not([title])")) {
+          frame.setAttribute("title", title);
+        }
+      };
+      new MutationObserver(nameFrames).observe(container, { childList: true });
+      nameFrames();
     })();
   </script>
   <script
