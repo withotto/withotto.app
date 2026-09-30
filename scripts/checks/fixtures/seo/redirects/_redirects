@@ -1,0 +1,9 @@
+# Host rule, skipped
+https://old.example.com/* https://withotto.app/:splat 301!
+
+/old-page /new-page/ 301
+/forced-page/ /new-page/ 301!
+/gone /nowhere/ 301
+/trial /new-page/#start-a-trial 301
+/api/* https://example.com/api/:splat 200
+/files/old-price-list.pdf /new-page/ 301

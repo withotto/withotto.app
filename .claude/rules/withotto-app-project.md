@@ -26,10 +26,11 @@ Homepage and shared copy should lead with the brand (tools for accountants/bookk
 - **Backend:** Supabase edge functions (Deno) in `supabase/functions/`
 - **Package manager:** pnpm 11.x (pinned via `packageManager` + `engines`; also installable via `mise`)
 - **Formatter:** Prettier 3 with `prettier-plugin-astro` + `prettier-plugin-tailwindcss` (2-space indent)
-- **Link checker:** `lychee` (via `check-links` script)
+- **Site checks:** custom SEO script (`cheerio`) and axe-core accessibility check (`@axe-core/playwright`) in `scripts/checks/`, plus `lychee` for links (pinned in `mise.toml`)
+- **CI:** GitHub Actions. `checks.yml` runs the site checks on every PR and push to `main`
 - **Hosting:** Netlify (redirects in `_redirects`)
 
-No test framework, no ESLint, no CI config in repo. Quality gate is `format:check` + `check-links`.
+No site test framework and no ESLint. The quality gate is `format:check` plus the `checks` workflow (build, `test:checks`, `check:seo`, `check:a11y`, `check:links`); run the same locally with `pnpm check`. The check scripts' own tests use Node's built-in runner. See `withotto-app-conventions.md`, "Site Checks", for the baseline policy.
 
 ## Directory Structure
 
@@ -79,7 +80,12 @@ Use these aliases in imports. Do not write relative `../../` paths:
 | Preview build         | `pnpm preview`                                                                                                                                                            |
 | Format (write)        | `pnpm format`                                                                                                                                                             |
 | Format (check)        | `pnpm format:check`                                                                                                                                                       |
-| Check broken links    | `pnpm check-links` (builds then runs lychee on `dist/**/*.html`)                                                                                                          |
+| All site checks       | `pnpm check` (builds once, then SEO, accessibility and link checks; `--page /route/` limits the SEO and a11y reports)                                                     |
+| SEO check             | `pnpm check:seo` (over an existing `dist/`)                                                                                                                               |
+| Accessibility check   | `pnpm check:a11y` (over an existing `dist/`; needs `pnpm setup:browsers` once)                                                                                            |
+| Check broken links    | `pnpm check:links` (lychee over an existing `dist/`)                                                                                                                      |
+| Check-script tests    | `pnpm test:checks`                                                                                                                                                        |
+| Baseline maintenance  | `pnpm check:baseline --prune` / `--accept`                                                                                                                                |
 | Raw Astro CLI         | `pnpm astro <cmd>`                                                                                                                                                        |
 | Supabase CLI          | `pnpm supabase <cmd>` (dev dep, use via pnpm)                                                                                                                             |
 

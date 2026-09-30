@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "check": "a11y",
+      "rule": "color-contrast",
+      "route": "/bank-reconciliation/",
+      "count": 1
+    },
+    {
+      "check": "a11y",
+      "rule": "color-contrast",
+      "route": "/capture/",
+      "count": 2
+    },
+    {
+      "check": "seo",
+      "rule": "h1-multiple",
+      "route": "/bank-rec-security-and-privacy/",
+      "count": 2
+    },
+    {
+      "check": "seo",
+      "rule": "h1-multiple",
+      "route": "/blog/bank-rule-activity-report/",
+      "count": 1
+    },
+    {
+      "check": "seo",
+      "rule": "h1-multiple",
+      "route": "/blog/how-to-get-clients-to-send-receipts/",
+      "count": 1
+    },
+    {
+      "check": "seo",
+      "rule": "h1-multiple",
+      "route": "/blog/the-definitive-guide-to-reconciling-stripe-and-amazon-payouts-in-xero/",
+      "count": 1
+    },
+    {
+      "check": "seo",
+      "rule": "not-found-indexable",
+      "route": "/404/",
+      "count": 1
+    }
+  ]
+}

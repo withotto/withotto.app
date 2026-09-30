@@ -50,6 +50,7 @@ const { Content } = await render(entry);
             href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(Astro.url.href)}`}
             target="_blank"
             rel="noopener noreferrer"
+            aria-label="Share on LinkedIn"
             class="flex h-7 w-7 items-center justify-center rounded-full bg-primary-soft">
             <Icon
               name="hugeicons:linkedin-02"
@@ -61,6 +62,7 @@ const { Content } = await render(entry);
             href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(Astro.url.href)}`}
             target="_blank"
             rel="noopener noreferrer"
+            aria-label="Share on Facebook"
             class="flex h-7 w-7 items-center justify-center rounded-full bg-primary-soft">
             <Icon
               name="hugeicons:facebook-02"

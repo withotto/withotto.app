@@ -1,5 +1,6 @@
 [tools]
 deno = "2.9.6"
+lychee = "0.24.2"
 node = "24.21.0"
 pnpm = "11.26.0"
 
