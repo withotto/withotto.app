@@ -155,13 +155,14 @@ Dead components not on this system (`pricing-compare.astro`, `clients.astro`, `c
 
 ## Redirects & Legacy URLs
 
-Managed in `_redirects` (Netlify). Do **not** create pages for these paths; redirects will not fire if a real page exists:
+Managed in `public/_redirects` (Netlify). It must stay in `public/`: Netlify reads it only from the publish directory, `dist/`, and a copy at the repo root is never deployed. Do **not** create pages for these paths; redirects will not fire if a real page exists:
 
 - `/business/`, `/trial/` → `/bank-reconciliation/`
-- `/notebook/*` → `/bank-reconciliation/` (old campaign/landing pages; `src/pages/notebook/` is intentionally empty and excluded from the sitemap in `astro.config.mjs`)
-- `/privacy-and-security/` → `/bank-rec-privacy-and-security/`
+- the old `/notebook/` campaign and landing pages → `/bank-reconciliation/` (each listed by path; `src/pages/notebook/` is intentionally empty and excluded from the sitemap in `astro.config.mjs`)
+- `/privacy-and-security/`, `/bank-rec-privacy-and-security/` → `/bank-rec-security-and-privacy/`
+- `/capture/quickbooks/` → `/capture/` (the retired QuickBooks Online waitlist)
 
-All redirects use `301`. Any new removals should mirror this pattern.
+Removed pages use `301`. The one exception is `/capture/quickbooks/`, a `302` so browsers don't cache it and the path stays free to reuse. Any new removals should mirror this pattern.
 
 ## SEO Defaults
 

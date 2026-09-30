@@ -9,7 +9,7 @@ export default {
   site: "https://withotto.app",
   distDir: "dist",
   pagesDir: "src/pages",
-  redirectsFile: "_redirects",
+  redirectsFile: "public/_redirects",
   sitemapIndex: "sitemap-index.xml",
   trailingSlash: "always",
 
