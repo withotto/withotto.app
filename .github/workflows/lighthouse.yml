@@ -124,6 +124,8 @@ jobs:
       cancel-in-progress: true
     outputs:
       summary: ${{ steps.summary.outputs.written }}
+      # The comment links to the report artifact, so it waits for the upload.
+      reports: ${{ steps.reports.outcome == 'success' }}
     env:
       PREVIEW_URL: ${{ needs.validate.outputs.preview-url }}
     steps:
@@ -237,9 +239,11 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
-      # Full reports stay private to the repo as an artifact; nothing goes to
-      # temporary-public-storage.
+      # Full reports go to a run artifact, not temporary-public-storage. This
+      # repo is public, so any signed-in GitHub user can download them; they
+      # hold only Lighthouse results for public preview pages.
       - name: Upload the reports
+        id: reports
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
@@ -259,7 +263,7 @@ jobs:
 
   comment:
     needs: [validate, lighthouse]
-    if: ${{ !cancelled() && needs.validate.outputs.pr != '' && needs.lighthouse.outputs.summary == 'true' }}
+    if: ${{ !cancelled() && needs.validate.outputs.pr != '' && needs.lighthouse.outputs.summary == 'true' && needs.lighthouse.outputs.reports == 'true' }}
     runs-on: blacksmith-2vcpu-ubuntu-2404
     timeout-minutes: 5
     permissions:
