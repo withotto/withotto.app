@@ -56,9 +56,13 @@ const variantClasses = {
   </script>
   <script is:inline define:vars={{ title }}>
     // embed.js creates its iframe without a title, so screen readers would
-    // announce an unnamed frame. Name it as soon as it is added.
+    // announce an unnamed frame. Name it as soon as it is added. Scoped to
+    // this component's own container, so each instance names its own frame.
     (function () {
-      const container = document.querySelector(".embedded-booking");
+      const container =
+        document.currentScript?.parentElement?.querySelector(
+          ".embedded-booking",
+        );
       if (!container) return;
       const nameFrames = () => {
         for (const frame of container.querySelectorAll("iframe:not([title])")) {
