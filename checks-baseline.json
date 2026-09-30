@@ -4,12 +4,6 @@
     {
       "check": "a11y",
       "rule": "color-contrast",
-      "route": "/bank-reconciliation/",
-      "count": 1
-    },
-    {
-      "check": "a11y",
-      "rule": "color-contrast",
       "route": "/capture/",
       "count": 2
     },
