@@ -36,13 +36,13 @@ export function breadcrumbList(items: BreadcrumbItem[], site: URL): JsonLd {
   };
 }
 
-// "£9" -> 9. Fails the build on anything else, so a change of currency or
-// format in `@lib/capture` can't publish a wrong price.
+// "£9" -> 9, "£9.50" -> 9.5. Fails the build on anything else, so a change of
+// currency or format in `@lib/capture` can't publish a wrong price.
 function poundsToNumber(price: string): number {
   const match = /^£(\d+(?:\.\d{1,2})?)$/.exec(price.trim());
   if (!match) {
     throw new Error(
-      `Pricing tier price "${price}" is not a whole-pound GBP amount like "£9".`,
+      `Pricing tier price "${price}" is not a GBP amount like "£9" or "£9.50".`,
     );
   }
   return Number(match[1]);
