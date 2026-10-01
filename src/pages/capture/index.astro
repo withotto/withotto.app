@@ -16,7 +16,7 @@ import submissionPageImg from "@assets/capture/client-submission-page.png";
 
 const seo = {
   description:
-    "Receipt and bill capture for UK accounting practices. Otto extracts the supplier, dates, totals, and line items, and suggests the coding from each client's own history. Works with Xero, FreeAgent, and QuickBooks Online.",
+    "Receipt and bill capture for UK accounting practices. Otto extracts the supplier, dates, totals, and line items, and suggests the coding for bills from how you've coded each client's suppliers. Works with Xero, FreeAgent, and QuickBooks Online.",
 };
 
 const howItWorksSteps: {
@@ -42,7 +42,7 @@ const howItWorksSteps: {
   {
     name: "Review",
     intent:
-      "Otto suggests the nominal code and tax rate from that client's history, and you check and adjust anything before it goes further.",
+      "Otto suggests the nominal code and tax rate, drawing on how you've coded that client's bills from the same supplier, and you check and adjust anything before it goes further.",
     image: reviewImg,
     imageAlt:
       "Reviewing Otto's extracted fields and suggested coding before publishing",
@@ -100,7 +100,7 @@ const differentiators: {
   {
     title: "Historical learning",
     intent:
-      "Otto looks at how you've coded that supplier for that specific client before, and suggests the same nominal code and tax rate for you to confirm. The history stays per client, so one client's coding is never mixed with another's, or with how that supplier is coded elsewhere on the system.",
+      "Otto looks at how you've coded bills from that supplier for that specific client before, and suggests the same nominal code and tax rate for you to confirm. The history stays per client, so one client's coding is never mixed with another's, or with how that supplier is coded elsewhere on the system.",
     icon: "hugeicons:ai-brain-01",
     image: historicalImg,
     imageAlt:
@@ -249,12 +249,12 @@ const heroCta =
           </span>
         </div>
         <h1 class="mx-auto max-w-4xl text-4xl font-bold text-primary-strong md:text-6xl">
-          Receipt capture that learns how your practice codes
+          Receipt capture that learns how you code each client's suppliers
         </h1>
         <p class="mx-auto max-w-3xl py-6 text-xl leading-normal text-default">
-          Otto reads each document and extracts the detail, suggests the coding
-          from how you've handled that client before, and leaves you to review
-          and publish to your accounting platform.
+          Otto reads each document and extracts the detail, suggests a bill's
+          coding from how you've coded that supplier for that client before, and
+          leaves you to review and publish to your accounting platform.
         </p>
         <div class="flex justify-center">
           <Link
@@ -290,8 +290,8 @@ const heroCta =
           <p>
             So we built one, focused on what actually matters: extraction that
             picks up the whole document including line items, coding that learns
-            from how you already work, and getting documents into your
-            accounting platform with less manual effort.
+            how you code each client's suppliers, and getting documents into
+            your accounting platform with less manual effort.
           </p>
         </div>
       </div>
@@ -592,8 +592,8 @@ const heroCta =
             off whenever you like.
           </p>
           <p class="text-base text-default-soft">
-            You can chase missing receipts for Xero clients today. We're working
-            on FreeAgent and QuickBooks Online, and if you'd like to chase
+            You can chase missing receipts for Xero clients today. FreeAgent is
+            in pilot, and QuickBooks Online is to follow. If you'd like to chase
             receipts for those clients, tell us, because it helps us decide what
             to build first.
           </p>
