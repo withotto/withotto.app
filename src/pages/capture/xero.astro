@@ -1,0 +1,385 @@
+---
+import CapturePageLayout from "@layouts/CapturePageLayout.astro";
+import CaptureHero from "@components/capture/CaptureHero.astro";
+import CaptureSection from "@components/capture/CaptureSection.astro";
+import CaptureTrialCta from "@components/capture/CaptureTrialCta.astro";
+import CapturePricing from "@components/capture/CapturePricing.astro";
+import Container from "@components/container.astro";
+import Screenshot from "@components/Screenshot.astro";
+import StepList from "@components/StepList.astro";
+import Step from "@components/Step.astro";
+import WithAside from "@components/WithAside.astro";
+import Aside from "@components/Aside.astro";
+import reviewBillTrackingImg from "@assets/capture/xero/review-bill-tracking.png";
+import contactLearnedMatchImg from "@assets/capture/xero/contact-learned-match.png";
+import currencyRateWarningImg from "@assets/capture/xero/currency-rate-warning.png";
+import importPreviewImg from "@assets/capture/xero/import-preview.png";
+import clientPagePhoneImg from "@assets/capture/xero/client-page-phone.png";
+import syncedDataImg from "@assets/capture/xero/synced-data.png";
+
+const description =
+  "Otto reads your clients' receipts and bills, suggests account codes from each client's own history, and publishes them to Xero for you to review first.";
+
+const breadcrumbs = [
+  { name: "With Otto", path: "/" },
+  { name: "Otto Capture", path: "/capture/" },
+  { name: "Xero", path: "/capture/xero/" },
+];
+
+// /capture/'s inline link, with the kit's keyboard focus ring.
+const inlineLink =
+  "rounded-sm font-semibold text-primary-strong underline underline-offset-2 hover:decoration-2 focus-visible:ring-2 focus-visible:ring-primary-strong focus-visible:ring-offset-2 focus-visible:outline-none";
+const subheading = "text-2xl font-semibold text-primary-strong";
+const bulletList = "list-disc space-y-2 pl-6 marker:text-primary-medium";
+---
+
+<CapturePageLayout
+  title="Otto Capture for Xero"
+  description={description}
+  breadcrumbs={breadcrumbs}
+  softwareApplication>
+  <CaptureHero title="Receipt and bill capture for practices on Xero">
+    Otto reads each document and suggests account codes from how you've coded
+    that client's bills from the same supplier.
+    <Fragment slot="after-cta">
+      <p>
+        You check each document, then publish it to the client's Xero
+        organisation with the line items and the original attached. Nothing
+        reaches Xero until someone in your practice has reviewed it and clicked{" "}
+        <strong>Publish</strong>.
+      </p>
+      <p>
+        Otto learns one client at a time. His suggestions draw on the bills
+        you've published through Capture for that client, including any changes
+        you made in review. Bills already in Xero from before you connected the
+        client aren't part of that history, so it builds up as you publish. For
+        a supplier the client hasn't used before, he suggests a code from the
+        document alone. He does the same where he isn't sure he has matched the
+        right contact.
+      </p>
+    </Fragment>
+  </CaptureHero>
+
+  <CaptureSection
+    title="Built by a practice, for practices"
+    icon="hugeicons:building-03">
+    <p>
+      We run an accounting practice, and our clients are on Xero. We tried a lot
+      of receipt capture tools, and none had the mix of features and pricing
+      that worked for our clients. The small rough edges added up too, using
+      them day in, day out.
+    </p>
+    <p>
+      So we built Otto Capture around the jobs that took our time. Clients send
+      documents without creating an account. Missing receipts are chased from
+      one list, not a spreadsheet. And every line is read and given a suggested
+      code from that client's own history.
+    </p>
+  </CaptureSection>
+
+  <CaptureSection
+    title="From a client's document to Xero"
+    tone="soft"
+    icon="hugeicons:route-01">
+    <StepList>
+      <Step>
+        Your client sends a receipt or bill by email, through their submission
+        page, or on WhatsApp.
+      </Step>
+      <Step>
+        Otto reads it, line by line, matches the supplier to one of the client's
+        Xero contacts, and suggests an account code and tax rate for each line.
+      </Step>
+      <Step>
+        Someone in your practice checks it and changes anything that needs it.
+      </Step>
+      <Step>
+        You click <strong>Publish</strong>, and it arrives in the client's Xero
+        organisation with the original attached.
+      </Step>
+    </StepList>
+    <p class="pt-6">
+      Otto publishes bills and sales invoices to Xero, and the credit notes
+      against both.
+    </p>
+
+    <div class="space-y-4 pt-8">
+      <h3 class={subheading}>Line items and coding</h3>
+      <p>
+        Each line item you've reviewed becomes a line on the bill or invoice in
+        Xero, with its account code and tax rate. If the client uses tracking
+        categories, you set them on each line during review, and they publish
+        with it. Otto doesn't suggest tracking categories.
+      </p>
+      <Screenshot
+        src={reviewBillTrackingImg}
+        alt="A bill in review, each line coded with an account code, tax rate and tracking category, set to publish to Xero as a draft"
+      />
+    </div>
+
+    <div class="space-y-4 pt-8">
+      <h3 class={subheading}>The state it arrives in</h3>
+      <p>
+        You choose the state each client's bills and sales invoices arrive in:{" "}
+        <strong>Draft</strong>, <strong>Awaiting approval</strong>, or{" "}
+        <strong>Awaiting payment</strong>, and you can change it for a single
+        document during review.
+      </p>
+    </div>
+
+    <div class="space-y-4 pt-8">
+      <h3 class={subheading}>The original document</h3>
+      <p>
+        Otto attaches the original document to the bill, invoice, or credit note
+        in Xero, up to 10 MB. Where Xero won't take the file type, such as an
+        iPhone photo saved as HEIC, Capture attaches a converted copy instead.
+        Each bill and sales invoice also carries a link back to the document in
+        Capture.
+      </p>
+    </div>
+
+    <div class="space-y-4 pt-8">
+      <h3 class={subheading}>Contacts</h3>
+      <p>
+        Otto matches the supplier or customer on each document to the client's
+        Xero contacts. He remembers which contact you published each supplier
+        name against, for that client. Where a name doesn't match a Xero contact
+        exactly, he uses that to match the next document. If the contact isn't
+        in Xero yet, you can create it during review, and Capture adds it to
+        Xero when you publish.
+      </p>
+      <Screenshot
+        src={contactLearnedMatchImg}
+        alt="The contact field on a bill, auto-matched to the Xero contact picked for this supplier name before"
+        class="mx-auto max-w-[376px]"
+      />
+    </div>
+
+    <div class="space-y-4 pt-8">
+      <h3 class={subheading}>Foreign currency</h3>
+      <p>
+        How a foreign currency document reaches Xero depends on the client's
+        Xero plan, because multi-currency isn't on every plan. Capture asks Xero
+        what the organisation can do, and offers only what it can.
+      </p>
+      <ul class={bulletList}>
+        <li>
+          <strong>On a plan with multi-currency,</strong> you can publish the
+          document in its own currency, adding that currency to Xero during
+          review if it isn't there yet. Or you can convert it to the currency of
+          the account it was paid from, so the bill is recorded in the currency
+          that cleared and is easier to reconcile.
+        </li>
+        <li>
+          <strong>On a plan without it,</strong> you convert the document before
+          publishing.
+        </li>
+      </ul>
+      <p>
+        To convert, enter the total the client was actually charged. Otto
+        restates every line at that rate and puts anything left over from
+        rounding on the most suitable line, so the lines add up to your total
+        exactly. He also compares your total with the market rate on the
+        document's date. If it's well out, he asks you to check it before
+        applying, which catches a mistyped figure.
+      </p>
+      <Screenshot
+        src={currencyRateWarningImg}
+        alt="Converting a euro bill to pounds, with a warning that the total entered is well above the market rate on the bill's date"
+        class="mx-auto max-w-[560px]"
+      />
+    </div>
+  </CaptureSection>
+
+  <CaptureSection
+    title="Chasing missing receipts"
+    width="wide"
+    icon="hugeicons:file-search">
+    <p class="mx-auto max-w-3xl">
+      For clients on Xero, Capture turns the payments you have no paperwork for
+      into a list the client answers.
+    </p>
+    <WithAside class="pt-6">
+      <StepList>
+        <Step>
+          Export the client's <strong>Uncoded statement lines</strong> report
+          from Xero as a CSV, and upload it on the client's{" "}
+          <strong>Missing receipts</strong> tab. Capture checks the bank
+          accounts in the file against the client's Xero organisation before it
+          stores anything.
+          <Screenshot
+            slot="media"
+            src={importPreviewImg}
+            alt="Checking an Uncoded statement lines file before import, with the newest transaction, the date range, and each bank account marked Recognised or Not imported"
+          />
+        </Step>
+        <Step>
+          Exclude the payments the client doesn't need to explain, such as
+          salaries or transfers between their own accounts. Every other payment
+          goes on the list, and anything you exclude stays excluded when you
+          import next month's report.
+        </Step>
+        <Step>
+          Share the client's link, when and how it suits your practice and the
+          client. Capture doesn't contact the client, so it fits the way you
+          already work with them.
+        </Step>
+        <Step mediaPlacement="beside">
+          Your client opens the link on any device, with no login, and answers
+          each payment with a receipt, a short note, or both.
+          <Screenshot
+            slot="media"
+            src={clientPagePhoneImg}
+            alt="A client's list of payments on a phone, each with a button to send a receipt and a button to add a note"
+            class="mx-auto max-w-[280px]"
+          />
+        </Step>
+        <Step>
+          Receipts go into that client's review queue like any other document,
+          with the note alongside when you review it. You can see which payments
+          are still waiting for an answer.
+        </Step>
+      </StepList>
+      <Aside slot="aside" label="How we used to do it.">
+        <p>
+          In our own practice, this was a Google Sheet for each client. After
+          the bookkeeping, we downloaded the unreconciled payments from Xero
+          into a new tab, then deleted every line the client didn't need to see,
+          including the same ones we'd deleted the month before. The client
+          emailed their receipts and left comments in the sheet.
+        </p>
+      </Aside>
+    </WithAside>
+    <div class="mx-auto max-w-3xl space-y-4 pt-6">
+      <p>
+        The link can go to whoever can find the receipts. That might be several
+        people at the client, such as the people who hold the company cards.
+        Your contact at the client can pass it on, or you can send it to each
+        person yourself. Anyone with the link can see the date, description,
+        amount, and bank account of each payment on the list, and your admins
+        can replace the link or switch the page off at any time.
+      </p>
+      <p>
+        Capture reads only the file you upload. It doesn't read bank
+        transactions through the Xero connection, and it doesn't reconcile
+        anything in Xero. Importing and preparing lists costs nothing extra. The
+        full steps are in the{" "}
+        <a
+          href="https://support.withotto.app/capture/missing-receipts/"
+          class={inlineLink}>
+          step-by-step guide to missing receipts
+        </a>
+        .
+      </p>
+    </div>
+  </CaptureSection>
+
+  <CaptureSection
+    title="Connecting a client's Xero organisation"
+    tone="soft"
+    icon="hugeicons:plug-socket">
+    <p>
+      Each client in Capture connects to one Xero organisation. You add the
+      client, choose Xero, and pick the organisation on Xero's own authorisation
+      screen.
+    </p>
+    <p>
+      Capture then brings across what Otto needs to code and publish: contacts,
+      the chart of accounts, tax rates, currencies, and tracking categories. If
+      you add an account code in Xero later, refresh the client's data in
+      Capture to bring it across.
+    </p>
+    <Screenshot
+      src={syncedDataImg}
+      alt="A client's data brought across from Xero: chart of accounts, tax rates, tracking categories and contacts, each with a refresh button"
+    />
+    <p>
+      You can also start from the Xero App Store. Capture signs you in with your
+      Xero login and fills in what it can.
+    </p>
+    <p>
+      Permissions, and everything Capture brings across, are covered in{" "}
+      <a
+        href="https://support.withotto.app/capture/platforms/xero/"
+        class={inlineLink}>
+        Otto Capture's Xero guide
+      </a>
+      .
+    </p>
+  </CaptureSection>
+
+  <CaptureSection
+    title="How clients send documents"
+    icon="hugeicons:inbox-upload">
+    <p>
+      Each client has its own email address, submission page, and WhatsApp
+      invite link. You choose which of them to give the client, so they use the
+      routes that suit them and your practice.
+    </p>
+    <ul class={bulletList}>
+      <li>
+        <strong>Email:</strong> the client forwards or sends documents to their
+        own address.
+      </li>
+      <li>
+        <strong>Submission page:</strong> they upload files from any device.
+      </li>
+      <li>
+        <strong>WhatsApp:</strong> they send a photo after joining through the
+        invite link.
+      </li>
+    </ul>
+    <p>
+      Whoever holds the receipts uses the route that suits them. They don't
+      create an account or install anything, and you don't register them in
+      advance. You can also upload files yourself. Everything arrives in the
+      same review queue, whichever way it's sent. There's more on each route on{" "}
+      <a href="/capture/" class={inlineLink}>
+        the Otto Capture page
+      </a>
+      .
+    </p>
+  </CaptureSection>
+
+  <!-- Divider between the two white bands, as on /capture/. -->
+  <div>
+    <Container>
+      <div class="mx-auto h-px max-w-5xl bg-[linear-gradient(90deg,transparent,var(--color-muted-strong)_22%,var(--color-muted-strong)_78%,transparent)]"></div>
+    </Container>
+  </div>
+
+  <CaptureSection
+    title="What it costs"
+    width="default"
+    icon="hugeicons:coins-01">
+    <p class="mx-auto max-w-3xl">
+      Otto Capture is priced per client, per month, on three tiers, and each
+      client sits on whichever tier costs least for what it published that
+      month.
+    </p>
+    <CapturePricing variant="compact" />
+    <p class="mx-auto max-w-3xl pt-4">
+      Prices exclude VAT. Full pricing is on{" "}
+      <a href="/capture/" class={inlineLink}>
+        the Otto Capture page
+      </a>
+      .
+    </p>
+  </CaptureSection>
+
+  <CaptureTrialCta
+    title="Try it on your busiest Xero client"
+    secondaryHref="https://apps.xero.com/uk/app/otto-capture"
+    secondaryLabel="Find Otto Capture on the Xero App Store">
+    <p>
+      Pick the Xero client whose paperwork takes longest each month. Connect
+      them, send in a week of their receipts and bills, and review them with
+      every line already read and a code suggested. Then send their missing
+      receipts link instead of this month's spreadsheet.
+    </p>
+    <p>
+      Otto Capture is available to UK accounting and bookkeeping practices, and
+      it's free for 30 days.
+    </p>
+  </CaptureTrialCta>
+</CapturePageLayout>
