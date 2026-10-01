@@ -1,6 +1,10 @@
 // Otto Capture pricing: the one source for /capture/ and the platform pages,
 // rendered by `@components/capture/CapturePricing.astro`.
 
+// The trial button the page kit's hero and closing call to action default to.
+export const trialUrl = "https://capture.withotto.app/register/";
+export const trialLabel = "Start your free trial";
+
 export interface PricingTier {
   name: string;
   price: string;

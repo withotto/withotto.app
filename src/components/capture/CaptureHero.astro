@@ -11,6 +11,7 @@
 // </CaptureHero>
 import Container from "@components/container.astro";
 import Link from "@components/ui/link.astro";
+import { trialLabel, trialUrl } from "@lib/capture";
 import { Icon } from "astro-icon/components";
 
 interface Props {
@@ -20,11 +21,7 @@ interface Props {
   label?: string;
 }
 
-const {
-  title,
-  href = "https://capture.withotto.app/register/",
-  label = "Start your free trial",
-} = Astro.props;
+const { title, href = trialUrl, label = trialLabel } = Astro.props;
 
 const hasAfter = Astro.slots.has("after-cta");
 ---

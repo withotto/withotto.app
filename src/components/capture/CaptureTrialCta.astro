@@ -5,6 +5,7 @@
 // is the standard primary `lg` Link with no lift, as in `CaptureHero`.
 import Container from "@components/container.astro";
 import Link from "@components/ui/link.astro";
+import { trialLabel, trialUrl } from "@lib/capture";
 import { Icon } from "astro-icon/components";
 
 interface Props {
@@ -24,8 +25,8 @@ const {
   title,
   id,
   icon = "hugeicons:login-circle-01",
-  href = "https://capture.withotto.app/register/",
-  label = "Start your free trial",
+  href = trialUrl,
+  label = trialLabel,
   secondaryHref,
   secondaryLabel,
 } = Astro.props;
