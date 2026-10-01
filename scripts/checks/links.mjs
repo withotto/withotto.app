@@ -35,16 +35,31 @@ export function remapArgs(site, distDir) {
   ];
 }
 
+/**
+ * The whole lychee command line for the built site.
+ *
+ * @param {{ site: string, distDir: string }} config
+ * @param {string} distDir Absolute path to the build.
+ * @returns {string[]}
+ */
+export function lycheeArgs(config, distDir) {
+  return [
+    `./${config.distDir}/**/*.html`,
+    "--include-fragments",
+    // A remapped page URL is a directory. Without this, any existing
+    // directory passes, even one whose own page was removed, and a fragment
+    // is looked for in the directory rather than its page.
+    "--index-files",
+    "index.html",
+    ...remapArgs(config.site, distDir),
+  ];
+}
+
 if (import.meta.url === pathToFileURL(process.argv[1]).href) {
   const config = await loadConfig();
-  const distDir = path.resolve(config.distDir);
   const result = spawnSync(
     "lychee",
-    [
-      `./${config.distDir}/**/*.html`,
-      "--include-fragments",
-      ...remapArgs(config.site, distDir),
-    ],
+    lycheeArgs(config, path.resolve(config.distDir)),
     { stdio: "inherit" },
   );
   process.exit(result.status ?? 1);
