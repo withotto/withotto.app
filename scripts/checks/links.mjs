@@ -62,5 +62,10 @@ if (import.meta.url === pathToFileURL(process.argv[1]).href) {
     lycheeArgs(config, path.resolve(config.distDir)),
     { stdio: "inherit" },
   );
+  if (result.error) {
+    console.error(
+      `check:links could not run lychee (${result.error.message}). Install it with mise, which pins it in mise.toml.`,
+    );
+  }
   process.exit(result.status ?? 1);
 }
