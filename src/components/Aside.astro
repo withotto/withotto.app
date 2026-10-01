@@ -1,0 +1,34 @@
+---
+// Related material set apart from the main flow, such as a practice story
+// beside a set of steps. Renders a complementary landmark named by its visible
+// label. The site's layouts have no <main>, so the landmark stays top-level as
+// long as it isn't placed inside another landmark (nav, header, footer).
+// To sit it beside steps, put it in `WithAside`'s `aside` slot.
+interface Props {
+  // Visible label and accessible name, e.g. "How we used to do it."
+  label: string;
+  // Id for the label element. Generated if omitted, unique per instance.
+  id?: string;
+  class?: string;
+}
+
+const {
+  label,
+  id = `aside-label-${Math.random().toString(36).slice(2, 10)}`,
+  class: className,
+} = Astro.props;
+---
+
+<aside
+  aria-labelledby={id}
+  class:list={[
+    "rounded-xl border-l-4 border-terracotta bg-terracotta-soft p-6 text-base text-default",
+    className,
+  ]}>
+  <p id={id} class="font-semibold text-default-strong">
+    {label}
+  </p>
+  <div class="mt-2 space-y-3">
+    <slot />
+  </div>
+</aside>

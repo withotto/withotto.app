@@ -1,0 +1,28 @@
+---
+// Main content (default slot, usually a StepList) with an `Aside` beside it.
+// The main content comes first in source order, so narrow screens and screen
+// readers get it before the aside. From `lg` the aside takes a fixed right
+// column, top-aligned beside the first steps; it neither stretches nor sticks.
+// Use it in a `CaptureSection width="wide"`.
+//
+// <WithAside>
+//   <StepList>…</StepList>
+//   <Aside slot="aside" label="How we used to do it."><p>…</p></Aside>
+// </WithAside>
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<div
+  class:list={[
+    "grid gap-10 lg:grid-cols-[minmax(0,1fr)_18rem] lg:items-start lg:gap-12 xl:grid-cols-[minmax(0,1fr)_20rem]",
+    className,
+  ]}>
+  <div class="min-w-0">
+    <slot />
+  </div>
+  <slot name="aside" />
+</div>

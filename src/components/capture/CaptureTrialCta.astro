@@ -1,0 +1,67 @@
+---
+// Closing call to action for the Otto Capture subpages: an H2, body copy
+// (default slot), the trial button, and an optional secondary text link under
+// it (e.g. an app marketplace listing, or /capture/ for pricing). The button
+// is the standard primary `lg` Link with no lift, as in `CaptureHero`.
+import Container from "@components/container.astro";
+import Link from "@components/ui/link.astro";
+import { Icon } from "astro-icon/components";
+
+interface Props {
+  // The section's H2.
+  title: string;
+  id?: string;
+  // A hugeicons name for the decorative chip above the heading.
+  icon?: string;
+  href?: string;
+  label?: string;
+  // Both needed to show the secondary link. Internal paths end in "/".
+  secondaryHref?: string;
+  secondaryLabel?: string;
+}
+
+const {
+  title,
+  id,
+  icon = "hugeicons:login-circle-01",
+  href = "https://capture.withotto.app/register/",
+  label = "Start your free trial",
+  secondaryHref,
+  secondaryLabel,
+} = Astro.props;
+---
+
+<section id={id} class="scroll-mt-8 bg-primary-soft py-16">
+  <Container>
+    <div class="mx-auto max-w-3xl text-center">
+      <div class="flex flex-col items-center">
+        <span
+          class="inline-flex size-16 shrink-0 items-center justify-center rounded-full bg-primary-strong text-white shadow-sm md:size-20"
+          aria-hidden="true">
+          <Icon name={icon} class="size-7 md:size-8" />
+        </span>
+        <h2 class="mt-5 text-3xl font-bold text-balance text-primary-strong md:text-5xl">
+          {title}
+        </h2>
+      </div>
+      <div class="mt-6 space-y-4 text-lg text-default">
+        <slot />
+      </div>
+      <div class="mt-8 flex justify-center">
+        <Link href={href} size="lg">
+          {label}
+          <Icon name="hugeicons:arrow-right-01" class="size-5" />
+        </Link>
+      </div>
+      {secondaryHref && secondaryLabel && (
+        <p class="mt-6">
+          <a
+            href={secondaryHref}
+            class="rounded-sm font-semibold text-primary-strong underline underline-offset-2 hover:decoration-2 focus-visible:ring-2 focus-visible:ring-primary-strong focus-visible:ring-offset-2 focus-visible:outline-none">
+            {secondaryLabel}
+          </a>
+        </p>
+      )}
+    </div>
+  </Container>
+</section>

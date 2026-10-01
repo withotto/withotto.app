@@ -1,0 +1,65 @@
+---
+// One step in a `StepList`. The default slot is the step's text (inline copy
+// or paragraphs, with links and bold as the copy needs); an optional `title`
+// renders as an H3 above it. Optional media goes in the `media` slot:
+//
+// - mediaPlacement "below" (default): under the step's text at every width.
+// - mediaPlacement "beside": beside the text from `xl` up, stacked below it
+//   until then. The beside column is 280px wide, for a phone screenshot
+//   (pass `class="mx-auto max-w-[280px]"` to its Screenshot so it matches
+//   when stacked). Below `xl` the text column would get too narrow to read.
+interface Props {
+  title?: string;
+  mediaPlacement?: "below" | "beside";
+}
+
+const { title, mediaPlacement = "below" } = Astro.props;
+
+const hasMedia = Astro.slots.has("media");
+const beside = hasMedia && mediaPlacement === "beside";
+---
+
+<li
+  class:list={[
+    "grid grid-cols-[2.5rem_minmax(0,1fr)] gap-x-4 [counter-increment:kit-step]",
+    beside && "xl:grid-cols-[2.5rem_minmax(0,1fr)_19.5rem]",
+  ]}>
+  <span
+    aria-hidden="true"
+    class="col-start-1 row-start-1 flex size-10 shrink-0 items-center justify-center rounded-full border border-primary-medium bg-white font-semibold text-primary-strong before:content-[counter(kit-step)]"></span>
+  <div
+    class:list={[
+      "col-start-2 row-start-1 min-w-0 space-y-3 text-lg text-default",
+      title ? "pt-1" : "pt-1.5",
+    ]}>
+    {title && (
+      <h3 class="text-2xl font-semibold text-primary-strong">{title}</h3>
+    )}
+    <slot />
+  </div>
+  {hasMedia && (
+    <div
+      class:list={[
+        "kit-step-media col-span-2 min-w-0 sm:col-span-1 sm:col-start-2",
+        beside && "kit-step-media-beside xl:col-start-3 xl:row-start-1 xl:pl-8",
+      ]}>
+      <slot name="media" />
+    </div>
+  )}
+</li>
+
+<style>
+  /* Screenshot.astro carries a 2rem flow margin above and below. Inside a
+     step, the step's own spacing does that job; beside the text, the media's
+     top lines up with the circle. */
+  .kit-step-media :global(.screenshot-container) {
+    margin-top: 1.5rem;
+    margin-bottom: 0;
+  }
+
+  @media (width >= 80rem) {
+    .kit-step-media-beside :global(.screenshot-container) {
+      margin-top: 0;
+    }
+  }
+</style>
