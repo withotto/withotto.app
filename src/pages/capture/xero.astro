@@ -189,12 +189,12 @@ const breadcrumbs = [
     title="Chasing missing receipts"
     width="wide"
     icon="hugeicons:file-search">
-    <WithAside>
+    <WithAside steps={5} listAsideFrom={2}>
       <p>
         For clients on Xero, Capture turns the payments you have no paperwork
         for into a list the client answers.
       </p>
-      <StepList class="mt-6">
+      <StepList slot="list">
         <Step>
           Export the client's <strong>Uncoded statement lines</strong> report
           from Xero as a CSV, and upload it on the client's{" "}
@@ -228,22 +228,21 @@ const breadcrumbs = [
           are still waiting for an answer.
         </Step>
       </StepList>
-      <div slot="aside" class="space-y-10">
-        <Aside label="How we used to do it.">
-          <p>
-            In our own practice, this was a Google Sheet for each client. After
-            the bookkeeping, we downloaded the unreconciled payments from Xero
-            into a new tab, then deleted every line the client didn't need to
-            see, including the same ones we'd deleted the month before. The
-            client emailed their receipts and left comments in the sheet.
-          </p>
-        </Aside>
-        <Screenshot
-          src={clientPagePhoneImg}
-          alt="A client's list of payments on a phone, each with a button to send a receipt and a button to add a note"
-          class="mx-auto max-w-[280px]"
-        />
-      </div>
+      <Aside slot="aside" label="How we used to do it.">
+        <p>
+          In our own practice, this was a Google Sheet for each client. After
+          the bookkeeping, we downloaded the unreconciled payments from Xero
+          into a new tab, then deleted every line the client didn't need to see,
+          including the same ones we'd deleted the month before. The client
+          emailed their receipts and left comments in the sheet.
+        </p>
+      </Aside>
+      <Screenshot
+        slot="list-aside"
+        src={clientPagePhoneImg}
+        alt="A client's list of payments on a phone, each with a button to send a receipt and a button to add a note"
+        class="mx-auto max-w-[280px]"
+      />
       <div slot="after" class="space-y-4">
         <p>
           The link can go to whoever can find the receipts. That might be

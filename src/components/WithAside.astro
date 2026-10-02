@@ -1,36 +1,165 @@
 ---
-// Main content (default slot, usually a StepList) with an `Aside` beside it.
+// Main content with an `Aside` beside it, in a `CaptureSection width="wide"`.
 // The main content comes first in source order, so narrow screens and screen
 // readers get it before the aside. From `lg` the aside takes a fixed right
-// column, top-aligned beside the first steps; it neither stretches nor sticks.
-// Content in the optional `after` slot follows the aside on narrow screens and
-// sits under the main column on wide ones, so it keeps the main column's left
-// edge. Use it in a `CaptureSection width="wide"`.
+// column, top-aligned beside the main content; it neither stretches nor
+// sticks. Content in the optional `after` slot sits under the main column on
+// wide screens, keeping its left edge.
 //
-// <WithAside>
-//   <StepList>…</StepList>
+// A `StepList` in the `list` slot (with `steps` set to its number of steps)
+// stays one list, and from `lg` each step takes its own row of this grid, so
+// `list-aside` content (such as a screenshot) can start level with step
+// `listAsideFrom`. The aside then sits beside the rows above that step.
+//
+// The lowest right-column item also spans the `after` row, which is `1fr`: a
+// grid item spanning a flexible row is left out when the rows above it are
+// sized, so a tall screenshot doesn't stretch the steps or push `after` down.
+//
+// On narrow screens everything stacks in source order: main, list, aside,
+// list-aside, after.
+//
+// <WithAside steps={5} listAsideFrom={2}>
+//   <p>…</p>
+//   <StepList slot="list">…</StepList>
 //   <Aside slot="aside" label="How we used to do it."><p>…</p></Aside>
+//   <Screenshot slot="list-aside" … />
 //   <Fragment slot="after"><p>…</p></Fragment>
 // </WithAside>
 interface Props {
   class?: string;
+  // The number of steps in the `list` slot. Required with `list`.
+  steps?: number;
+  // The step `list-aside` starts level with. Defaults to the first.
+  listAsideFrom?: number;
 }
 
-const { class: className } = Astro.props;
+const { class: className, steps = 0, listAsideFrom = 1 } = Astro.props;
+
+const hasMain = Astro.slots.has("default");
+const hasList = Astro.slots.has("list");
+const hasListAside = Astro.slots.has("list-aside");
+const hasAfter = Astro.slots.has("after");
+
+if (hasList && steps < 1) {
+  throw new Error(
+    "WithAside: pass `steps` with the number of steps in `list`.",
+  );
+}
+if (hasListAside && (!hasList || listAsideFrom < 1 || listAsideFrom > steps)) {
+  throw new Error(
+    "WithAside: `list-aside` needs a `list`, and `listAsideFrom` must be one of its steps.",
+  );
+}
+
+// Grid rows from `lg`: main, then one per step, then after.
+let row = 1;
+const mainRow = hasMain ? row++ : 0;
+const listRow = row;
+row += hasList ? steps : 0;
+const afterRow = hasAfter ? row++ : 0;
+const lastRow = row - 1;
+const listAsideRow = listRow + listAsideFrom - 1;
+
+const vars = [
+  // The last row is flexible, so a right-column item reaching it doesn't
+  // stretch the rows above.
+  lastRow > 1 && `--rows: repeat(${lastRow - 1}, auto) 1fr`,
+  hasMain && `--main-row: ${mainRow}`,
+  hasList && `--list-rows: ${listRow} / span ${steps}`,
+  `--aside-rows: 1 / ${hasListAside ? listAsideRow : lastRow + 1}`,
+  hasListAside && `--list-aside-rows: ${listAsideRow} / ${lastRow + 1}`,
+  hasAfter && `--after-row: ${afterRow}`,
+]
+  .filter(Boolean)
+  .join("; ");
 ---
 
 <div
   class:list={[
-    "grid gap-10 lg:grid-cols-[minmax(0,1fr)_18rem] lg:items-start lg:gap-12 xl:grid-cols-[minmax(0,1fr)_20rem]",
+    "with-aside grid gap-10 lg:grid-cols-[minmax(0,1fr)_18rem] lg:items-start lg:gap-x-12 xl:grid-cols-[minmax(0,1fr)_20rem]",
     className,
-  ]}>
-  <div class="min-w-0">
-    <slot />
+  ]}
+  style={vars}>
+  {hasMain && (
+    <div class="with-aside-main min-w-0">
+      <slot />
+    </div>
+  )}
+  {hasList && (
+    <div class="with-aside-list min-w-0">
+      <slot name="list" />
+    </div>
+  )}
+  <div class="with-aside-side with-aside-aside">
+    <slot name="aside" />
   </div>
-  <slot name="aside" />
-  {Astro.slots.has("after") && (
-    <div class="min-w-0 lg:col-start-1">
+  {hasListAside && (
+    <div class="with-aside-side with-aside-list-aside">
+      <slot name="list-aside" />
+    </div>
+  )}
+  {hasAfter && (
+    <div class="with-aside-after min-w-0">
       <slot name="after" />
     </div>
   )}
 </div>
+
+<style>
+  /* Main content leads straight into the list: 1.5rem rather than the
+     grid's 2.5rem gap. */
+  .with-aside-main {
+    margin-bottom: -1rem;
+  }
+
+  /* Screenshot.astro carries a 2rem flow margin above and below; in a side
+     column the grid gap does that job, so the shot starts level with its row. */
+  .with-aside-side > :global(.screenshot-container) {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  @media (width >= 64rem) {
+    .with-aside {
+      grid-template-rows: var(--rows, auto);
+    }
+
+    .with-aside-main {
+      grid-column: 1;
+      grid-row: var(--main-row);
+    }
+
+    /* The list's own <ol> becomes the grid item, sharing this grid's rows
+       (and its 2.5rem row gap, the same as StepList's spacing), so each step
+       has a row the right column can line up with. */
+    .with-aside-list {
+      display: contents;
+    }
+
+    .with-aside-list > :global(ol) {
+      display: grid;
+      grid-column: 1;
+      grid-row: var(--list-rows);
+      grid-template-rows: subgrid;
+    }
+
+    .with-aside-list > :global(ol > li) {
+      margin-block: 0;
+    }
+
+    .with-aside-aside {
+      grid-column: 2;
+      grid-row: var(--aside-rows);
+    }
+
+    .with-aside-list-aside {
+      grid-column: 2;
+      grid-row: var(--list-aside-rows);
+    }
+
+    .with-aside-after {
+      grid-column: 1;
+      grid-row: var(--after-row);
+    }
+  }
+</style>
