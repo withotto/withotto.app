@@ -1,0 +1,87 @@
+---
+// One step in a `StepList`. The default slot is the step's text (inline copy
+// or paragraphs, with links and bold as the copy needs); an optional `title`
+// renders as an H3 above it. Optional media goes in the `media` slot:
+//
+// - mediaPlacement "below" (default): under the step's text at every width.
+// - mediaPlacement "beside": beside the text from `xl` up, stacked below it
+//   until then. The beside column fits a 280px-wide phone screenshot (pass
+//   `class="mx-auto max-w-[280px]"` to its Screenshot so it matches when
+//   stacked). Below `xl` the text column would get too narrow to read.
+// The step number is bold text on the same baseline as the first line (or the
+// title), so it lines up whether the step runs to one line or several. A thin
+// line runs from under the number down to the next step's number; the last
+// step in a list has none.
+interface Props {
+  title?: string;
+  mediaPlacement?: "below" | "beside";
+}
+
+const { title, mediaPlacement = "below" } = Astro.props;
+
+const hasMedia = Astro.slots.has("media");
+const beside = hasMedia && mediaPlacement === "beside";
+---
+
+<li
+  class:list={[
+    "relative grid grid-cols-[1.5rem_minmax(0,1fr)] items-baseline gap-x-4 [counter-increment:kit-step]",
+    beside && "xl:grid-cols-[1.5rem_minmax(0,1fr)_19.5rem]",
+  ]}>
+  <span
+    aria-hidden="true"
+    class="col-start-1 row-start-1 text-center text-lg font-semibold text-primary-strong before:content-[counter(kit-step)]"></span>
+  <span aria-hidden="true" class="kit-step-line"></span>
+  <div class="col-start-2 row-start-1 min-w-0 space-y-3 text-lg text-default">
+    {title && (
+      <h3 class="text-2xl font-semibold text-primary-strong">{title}</h3>
+    )}
+    <slot />
+  </div>
+  {hasMedia && (
+    <div
+      class:list={[
+        "kit-step-media relative col-span-2 min-w-0 self-start sm:col-span-1 sm:col-start-2",
+        beside && "kit-step-media-beside xl:col-start-3 xl:row-start-1 xl:pl-8",
+      ]}>
+      <slot name="media" />
+    </div>
+  )}
+</li>
+
+<style>
+  /* The line starts just under the number and stops just above the next
+     step's number, across StepList's 2.5rem (space-y-10) gap. Media that
+     spans the number column on narrow screens is positioned, so it paints
+     over the line. */
+  .kit-step-line {
+    position: absolute;
+    top: 2rem;
+    bottom: -2.25rem;
+    left: 0.75rem;
+    width: 1px;
+    background-color: var(--color-primary-medium);
+  }
+
+  li:last-child > .kit-step-line {
+    display: none;
+  }
+
+  /* Any media sits 1.5rem below the step's text; beside the text, its top
+     lines up with the step's first line. Screenshot.astro's own 2rem flow margins are
+     cancelled so they don't add to that. */
+  .kit-step-media {
+    margin-top: 1.5rem;
+  }
+
+  .kit-step-media :global(.screenshot-container) {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  @media (width >= 80rem) {
+    .kit-step-media-beside {
+      margin-top: 0;
+    }
+  }
+</style>

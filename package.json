@@ -16,7 +16,7 @@
     "check": "node scripts/checks/all.mjs",
     "check:seo": "node scripts/checks/seo.mjs",
     "check:a11y": "node scripts/checks/a11y.mjs",
-    "check:links": "lychee \"./dist/**/*.html\" --include-fragments",
+    "check:links": "node scripts/checks/links.mjs",
     "test:checks": "node --test \"scripts/checks/**/*.test.mjs\"",
     "check:baseline": "node scripts/checks/baseline.mjs",
     "setup:browsers": "playwright install chromium"

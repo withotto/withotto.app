@@ -1,0 +1,61 @@
+---
+// A content band for the Otto Capture subpages: optional section chip, a
+// centred H2, then the page's content (default slot) in /capture/'s body type.
+// Matches /capture/'s band spacing and chip look. Headings inside the slot
+// stop at H3.
+import Container from "@components/container.astro";
+import { Icon } from "astro-icon/components";
+
+export type CaptureSectionTone = "plain" | "soft";
+export type CaptureSectionWidth = "narrow" | "default" | "wide";
+
+interface Props {
+  // The section's H2.
+  title: string;
+  id?: string;
+  // "soft" is the bg-primary-soft band; "plain" is white.
+  tone?: CaptureSectionTone;
+  // A hugeicons name for the decorative chip above the heading.
+  icon?: string;
+  // narrow (max-w-3xl) suits prose; default (max-w-5xl) suits cards and
+  // pricing; wide (max-w-6xl) suits steps with an aside beside them. Keep
+  // paragraphs in a wide section to about max-w-3xl.
+  width?: CaptureSectionWidth;
+}
+
+const { title, id, tone = "plain", icon, width = "narrow" } = Astro.props;
+
+const widths: Record<CaptureSectionWidth, string> = {
+  narrow: "max-w-3xl",
+  default: "max-w-5xl",
+  wide: "max-w-6xl",
+};
+---
+
+<section
+  id={id}
+  class:list={["scroll-mt-8 py-16", tone === "soft" && "bg-primary-soft"]}>
+  <Container>
+    <div class:list={["mx-auto", widths[width]]}>
+      <div class="flex flex-col items-center text-center">
+        {icon && (
+          <span
+            class="inline-flex size-16 shrink-0 items-center justify-center rounded-full bg-primary-strong text-white shadow-sm md:size-20"
+            aria-hidden="true">
+            <Icon name={icon} class="size-7 md:size-8" />
+          </span>
+        )}
+        <h2
+          class:list={[
+            "text-3xl font-bold text-balance text-primary-strong md:text-5xl",
+            icon && "mt-5",
+          ]}>
+          {title}
+        </h2>
+      </div>
+      <div class="mt-8 space-y-4 text-lg text-default">
+        <slot />
+      </div>
+    </div>
+  </Container>
+</section>

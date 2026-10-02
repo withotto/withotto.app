@@ -6,6 +6,7 @@ import Screenshot from "@components/Screenshot.astro";
 import AddressAnatomy from "@components/AddressAnatomy.astro";
 import type { AddressSegment } from "@components/AddressAnatomy.astro";
 import Link from "@components/ui/link.astro";
+import CapturePricing from "@components/capture/CapturePricing.astro";
 import { Icon } from "astro-icon/components";
 import captureImg from "@assets/capture/step-01-capture.png";
 import reviewImg from "@assets/capture/step-03-review.png";
@@ -183,38 +184,6 @@ const differentiators: {
     icon: "hugeicons:shield-01",
     image: null,
     imageAlt: "",
-  },
-];
-
-const pricingTiers: {
-  name: string;
-  price: string;
-  included: string;
-  extraDocument: string;
-}[] = [
-  { name: "Small", price: "£9", included: "Up to 50", extraDocument: "18p" },
-  { name: "Medium", price: "£15", included: "Up to 125", extraDocument: "12p" },
-  { name: "Large", price: "£29", included: "Up to 350", extraDocument: "8p" },
-];
-
-const pricingPromises: { label: string; intent: string; icon: string }[] = [
-  {
-    label: "No documents, no charge.",
-    intent:
-      "If a client has nothing published in a month, you pay nothing for that client. You are only billed for the clients Otto is actively publishing for.",
-    icon: "hugeicons:invoice-01",
-  },
-  {
-    label: "Always the cheapest tier.",
-    intent:
-      "Each client sits on whichever tier costs least for what it published that month, worked out for you automatically. There is no plan to pick up front, and no need to move clients between plans to chase the best price.",
-    icon: "hugeicons:discount-tag-01",
-  },
-  {
-    label: "No price cliffs.",
-    intent:
-      "Reaching a tier's allowance doesn't tip you straight into the next tier and a much bigger bill. You simply pay the per-document rate for each extra document published, until the next tier works out cheaper, at which point Otto moves that client up for you. Clients busier than the Large tier carry on at the Large per-document rate, so even your highest-volume clients stay predictable.",
-    icon: "hugeicons:chart-up",
   },
 ];
 
@@ -597,6 +566,15 @@ const heroCta =
             receipts for those clients, tell us, because it helps us decide what
             to build first.
           </p>
+          <p>
+            See how it works with Xero on{" "}
+            <a
+              href="/capture/xero/"
+              class="font-semibold text-primary-strong underline underline-offset-2 hover:decoration-2">
+              Otto Capture for Xero
+            </a>
+            .
+          </p>
         </div>
       </div>
     </Container>
@@ -678,58 +656,7 @@ const heroCta =
           always placed on the one that costs least.
         </p>
 
-        <div class="mt-12 grid gap-6 md:grid-cols-3">
-          {pricingTiers.map((tier) => (
-            <div class="flex flex-col rounded-xl border border-muted-strong bg-white p-6 shadow-sm">
-              <h3 class="text-lg font-semibold text-primary-strong">
-                {tier.name}
-              </h3>
-              <p class="mt-3 flex items-baseline gap-1.5">
-                <span class="text-4xl font-bold text-primary-strong">
-                  {tier.price}
-                </span>
-                <span class="text-sm text-default-soft">
-                  per client, per month
-                </span>
-              </p>
-              <dl class="mt-6 space-y-4 border-t border-muted-strong pt-6 text-sm">
-                <div>
-                  <dt class="text-default-soft">
-                    Included published documents
-                  </dt>
-                  <dd class="mt-0.5 text-base font-semibold text-default">
-                    {tier.included}
-                  </dd>
-                </div>
-                <div>
-                  <dt class="text-default-soft">Each extra document</dt>
-                  <dd class="mt-0.5 text-base font-semibold text-default">
-                    {tier.extraDocument}
-                  </dd>
-                </div>
-              </dl>
-            </div>
-          ))}
-        </div>
-        <p class="mt-6 text-center text-sm text-default-soft">
-          Prices exclude VAT.
-        </p>
-
-        <div class="mt-16 space-y-4">
-          {pricingPromises.map((promise) => (
-            <div class="flex items-start gap-4 rounded-xl border border-muted-strong bg-white p-5 md:p-6">
-              <span class="inline-flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary-soft text-primary-strong">
-                <Icon name={promise.icon} class="size-6" />
-              </span>
-              <p class="text-default">
-                <span class="font-semibold text-primary-strong">
-                  {promise.label}
-                </span>{" "}
-                {promise.intent}
-              </p>
-            </div>
-          ))}
-        </div>
+        <CapturePricing variant="full" />
 
         <div class="mx-auto mt-12 max-w-3xl space-y-4 text-lg text-default">
           <p>

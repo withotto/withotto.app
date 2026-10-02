@@ -1,0 +1,51 @@
+---
+// Hero band for the Otto Capture subpages: the H1, a lead (default slot), the
+// trial button, then optional follow-on paragraphs (`after-cta` slot).
+// Sits directly under `CapturePageLayout`'s breadcrumb strip on the same
+// `bg-primary-soft`. The button is the standard primary `lg` Link with no
+// lift: the lifted style is reserved for /capture/'s two hero buttons.
+//
+// <CaptureHero title="…">
+//   One-sentence lead.
+//   <Fragment slot="after-cta"><p>…</p><p>…</p></Fragment>
+// </CaptureHero>
+import Container from "@components/container.astro";
+import CaptureTrialLink from "@components/capture/CaptureTrialLink.astro";
+
+interface Props {
+  // The page's H1.
+  title: string;
+  href?: string;
+  label?: string;
+}
+
+const { title, href, label } = Astro.props;
+
+const hasLead = Astro.slots.has("default");
+const hasAfter = Astro.slots.has("after-cta");
+---
+
+<div class="bg-primary-soft pt-5 md:pt-6">
+  <Container>
+    <div class="mx-auto max-w-screen-xl pb-16">
+      <div class="text-center">
+        <h1 class="mx-auto max-w-4xl text-4xl font-bold text-balance text-primary-strong md:text-6xl">
+          {title}
+        </h1>
+        {hasLead && (
+          <div class="mx-auto max-w-3xl py-6 text-xl leading-normal text-default">
+            <slot />
+          </div>
+        )}
+        <div class:list={["flex justify-center", !hasLead && "mt-6"]}>
+          <CaptureTrialLink href={href} label={label} />
+        </div>
+      </div>
+      {hasAfter && (
+        <div class="mx-auto mt-10 max-w-3xl space-y-4 text-lg text-default">
+          <slot name="after-cta" />
+        </div>
+      )}
+    </div>
+  </Container>
+</div>

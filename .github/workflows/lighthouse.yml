@@ -45,6 +45,7 @@ env:
   LIGHTHOUSE_PATHS: >-
     /
     /capture/
+    /capture/xero/
     /bank-reconciliation/
     /faqs/
     /blog/bank-rule-activity-report/

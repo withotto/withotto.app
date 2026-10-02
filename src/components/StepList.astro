@@ -1,0 +1,25 @@
+---
+// Numbered steps. A real <ol>, so screen readers announce each step's
+// position; the visible numbers come from a CSS counter on an aria-hidden
+// number and are never read twice. Fill it with `Step` items:
+//
+// <StepList>
+//   <Step>Export the report…</Step>
+//   <Step mediaPlacement="beside">
+//     Your client opens the link…
+//     <Screenshot slot="media" src={shot} alt="…" class="mx-auto max-w-[280px]" />
+//   </Step>
+// </StepList>
+//
+// `role="list"` keeps the list semantics in Safari, which drops them from a
+// list with `list-style: none`.
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<ol role="list" class:list={["space-y-10 [counter-reset:kit-step]", className]}>
+  <slot />
+</ol>

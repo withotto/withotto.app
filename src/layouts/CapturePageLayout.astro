@@ -1,0 +1,58 @@
+---
+// Shell for the Otto Capture subpages (platform and feature pages under
+// /capture/). Passes the title and description to `Layout`, builds the
+// BreadcrumbList JSON-LD (and, when `softwareApplication` is set, the Otto
+// Capture SoftwareApplication with one Offer per pricing tier) and renders the
+// visible breadcrumb trail above the page's own content.
+//
+// The breadcrumb strip shares the navbar's `bg-primary-soft`, so it runs
+// straight into `CaptureHero`, which every page using this layout should open
+// with. Canonical, Open Graph and the other meta tags stay with `RootLayout`.
+import Layout from "@layouts/Layout.astro";
+import Container from "@components/container.astro";
+import Breadcrumbs from "@components/Breadcrumbs.astro";
+import {
+  breadcrumbList,
+  captureSoftwareApplication,
+} from "@lib/structured-data";
+import type { BreadcrumbItem } from "@lib/structured-data";
+
+export interface Props {
+  // Short title; RootLayout appends " — With Otto".
+  title: string;
+  description: string;
+  // The trail, from the home page to this page, e.g.
+  // [{ name: "With Otto", path: "/" }, { name: "Otto Capture", path: "/capture/" }, { name: "Xero", path: "/capture/xero/" }]
+  breadcrumbs: BreadcrumbItem[];
+  // Adds the SoftwareApplication JSON-LD. Only for pages whose visible copy
+  // shows Otto Capture's pricing.
+  softwareApplication?: boolean;
+}
+
+const {
+  title,
+  description,
+  breadcrumbs,
+  softwareApplication = false,
+} = Astro.props;
+
+if (!Astro.site) {
+  throw new Error("CapturePageLayout needs `site` set in astro.config.mjs.");
+}
+
+const jsonLd = [
+  breadcrumbList(breadcrumbs, Astro.site),
+  ...(softwareApplication ? [captureSoftwareApplication(Astro.site)] : []),
+];
+---
+
+<Layout title={title} seo={{ description }} jsonLd={jsonLd}>
+  <div class="bg-primary-soft pt-8 md:pt-12">
+    <Container>
+      <div class="mx-auto max-w-screen-xl">
+        <Breadcrumbs items={breadcrumbs} />
+      </div>
+    </Container>
+  </div>
+  <slot />
+</Layout>

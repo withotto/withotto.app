@@ -82,7 +82,7 @@ Use these aliases in imports. Do not write relative `../../` paths:
 | All site checks       | `pnpm check` (builds once, then SEO, accessibility and link checks; `--page /route/` limits the SEO and a11y reports)                                                     |
 | SEO check             | `pnpm check:seo` (over an existing `dist/`)                                                                                                                               |
 | Accessibility check   | `pnpm check:a11y` (over an existing `dist/`; needs `pnpm setup:browsers` once)                                                                                            |
-| Check broken links    | `pnpm check:links` (lychee over an existing `dist/`)                                                                                                                      |
+| Check broken links    | `pnpm check:links` (lychee over an existing `dist/`; links to the site's own origin resolve against `dist/`)                                                              |
 | Check-script tests    | `pnpm test:checks`                                                                                                                                                        |
 | Baseline maintenance  | `pnpm check:baseline --prune` / `--accept`                                                                                                                                |
 | Raw Astro CLI         | `pnpm astro <cmd>`                                                                                                                                                        |
