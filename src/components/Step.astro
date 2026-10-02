@@ -21,7 +21,7 @@ const beside = hasMedia && mediaPlacement === "beside";
 
 <li
   class:list={[
-    "grid grid-cols-[2.5rem_minmax(0,1fr)] gap-x-4 [counter-increment:kit-step]",
+    "grid grid-cols-[2.5rem_minmax(0,1fr)] items-baseline gap-x-4 [counter-increment:kit-step]",
     beside && "xl:grid-cols-[2.5rem_minmax(0,1fr)_19.5rem]",
   ]}>
   <span
@@ -30,7 +30,6 @@ const beside = hasMedia && mediaPlacement === "beside";
   <div
     class:list={[
       "col-start-2 row-start-1 min-w-0 space-y-3 text-lg text-default",
-      title ? "pt-1" : "pt-1.5",
     ]}>
     {title && (
       <h3 class="text-2xl font-semibold text-primary-strong">{title}</h3>
@@ -40,7 +39,7 @@ const beside = hasMedia && mediaPlacement === "beside";
   {hasMedia && (
     <div
       class:list={[
-        "kit-step-media col-span-2 min-w-0 sm:col-span-1 sm:col-start-2",
+        "kit-step-media col-span-2 min-w-0 self-start sm:col-span-1 sm:col-start-2",
         beside && "kit-step-media-beside xl:col-start-3 xl:row-start-1 xl:pl-8",
       ]}>
       <slot name="media" />

@@ -4,7 +4,6 @@ import CaptureHero from "@components/capture/CaptureHero.astro";
 import CaptureSection from "@components/capture/CaptureSection.astro";
 import CaptureTrialCta from "@components/capture/CaptureTrialCta.astro";
 import CapturePricing from "@components/capture/CapturePricing.astro";
-import Container from "@components/container.astro";
 import Screenshot from "@components/Screenshot.astro";
 import StepList from "@components/StepList.astro";
 import Step from "@components/Step.astro";
@@ -190,12 +189,12 @@ const breadcrumbs = [
     title="Chasing missing receipts"
     width="wide"
     icon="hugeicons:file-search">
-    <p class="mx-auto max-w-3xl">
-      For clients on Xero, Capture turns the payments you have no paperwork for
-      into a list the client answers.
-    </p>
-    <WithAside class="pt-6">
-      <StepList>
+    <WithAside>
+      <p>
+        For clients on Xero, Capture turns the payments you have no paperwork
+        for into a list the client answers.
+      </p>
+      <StepList class="mt-6">
         <Step>
           Export the client's <strong>Uncoded statement lines</strong> report
           from Xero as a CSV, and upload it on the client's{" "}
@@ -219,15 +218,9 @@ const breadcrumbs = [
           client. Capture doesn't contact the client, so it fits the way you
           already work with them.
         </Step>
-        <Step mediaPlacement="beside">
+        <Step>
           Your client opens the link on any device, with no login, and answers
           each payment with a receipt, a short note, or both.
-          <Screenshot
-            slot="media"
-            src={clientPagePhoneImg}
-            alt="A client's list of payments on a phone, each with a button to send a receipt and a button to add a note"
-            class="mx-auto max-w-[280px]"
-          />
         </Step>
         <Step>
           Receipts go into that client's review queue like any other document,
@@ -235,38 +228,45 @@ const breadcrumbs = [
           are still waiting for an answer.
         </Step>
       </StepList>
-      <Aside slot="aside" label="How we used to do it.">
+      <div slot="aside" class="space-y-10">
+        <Aside label="How we used to do it.">
+          <p>
+            In our own practice, this was a Google Sheet for each client. After
+            the bookkeeping, we downloaded the unreconciled payments from Xero
+            into a new tab, then deleted every line the client didn't need to
+            see, including the same ones we'd deleted the month before. The
+            client emailed their receipts and left comments in the sheet.
+          </p>
+        </Aside>
+        <Screenshot
+          src={clientPagePhoneImg}
+          alt="A client's list of payments on a phone, each with a button to send a receipt and a button to add a note"
+          class="mx-auto max-w-[280px]"
+        />
+      </div>
+      <div slot="after" class="space-y-4">
         <p>
-          In our own practice, this was a Google Sheet for each client. After
-          the bookkeeping, we downloaded the unreconciled payments from Xero
-          into a new tab, then deleted every line the client didn't need to see,
-          including the same ones we'd deleted the month before. The client
-          emailed their receipts and left comments in the sheet.
+          The link can go to whoever can find the receipts. That might be
+          several people at the client, such as the people who hold the company
+          cards. Your contact at the client can pass it on, or you can send it
+          to each person yourself. Anyone with the link can see the date,
+          description, amount, and bank account of each payment on the list, and
+          your admins can replace the link or switch the page off at any time.
         </p>
-      </Aside>
+        <p>
+          Capture reads only the file you upload. It doesn't read bank
+          transactions through the Xero connection, and it doesn't reconcile
+          anything in Xero. Importing and preparing lists costs nothing extra.
+          The full steps are in the{" "}
+          <a
+            href="https://support.withotto.app/capture/missing-receipts/"
+            class={inlineLink}>
+            step-by-step guide to missing receipts
+          </a>
+          .
+        </p>
+      </div>
     </WithAside>
-    <div class="mx-auto max-w-3xl space-y-4 pt-6">
-      <p>
-        The link can go to whoever can find the receipts. That might be several
-        people at the client, such as the people who hold the company cards.
-        Your contact at the client can pass it on, or you can send it to each
-        person yourself. Anyone with the link can see the date, description,
-        amount, and bank account of each payment on the list, and your admins
-        can replace the link or switch the page off at any time.
-      </p>
-      <p>
-        Capture reads only the file you upload. It doesn't read bank
-        transactions through the Xero connection, and it doesn't reconcile
-        anything in Xero. Importing and preparing lists costs nothing extra. The
-        full steps are in the{" "}
-        <a
-          href="https://support.withotto.app/capture/missing-receipts/"
-          class={inlineLink}>
-          step-by-step guide to missing receipts
-        </a>
-        .
-      </p>
-    </div>
   </CaptureSection>
 
   <CaptureSection
@@ -336,24 +336,18 @@ const breadcrumbs = [
     </p>
   </CaptureSection>
 
-  <!-- Divider between the two white bands, as on /capture/. -->
-  <div>
-    <Container>
-      <div class="mx-auto h-px max-w-5xl bg-[linear-gradient(90deg,transparent,var(--color-muted-strong)_22%,var(--color-muted-strong)_78%,transparent)]"></div>
-    </Container>
-  </div>
-
   <CaptureSection
     title="What it costs"
+    tone="soft"
     width="default"
     icon="hugeicons:coins-01">
-    <p class="mx-auto max-w-3xl">
+    <p class="max-w-3xl">
       Otto Capture is priced per client, per month, on three tiers, and each
       client sits on whichever tier costs least for what it published that
       month.
     </p>
     <CapturePricing variant="compact" />
-    <p class="mx-auto max-w-3xl pt-4">
+    <p class="max-w-3xl pt-4">
       Prices exclude VAT. Full pricing is on{" "}
       <a href="/capture/" class={inlineLink}>
         the Otto Capture page

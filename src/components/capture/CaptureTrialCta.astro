@@ -1,8 +1,10 @@
 ---
 // Closing call to action for the Otto Capture subpages: an H2, body copy
 // (default slot), the trial button, and an optional secondary text link under
-// it (e.g. an app marketplace listing, or /capture/ for pricing). The button
-// is the standard primary `lg` Link with no lift, as in `CaptureHero`.
+// it (e.g. an app marketplace listing, or /capture/ for pricing). The band is
+// white, because the site's newsletter band below it is green; the heading is
+// centred like a section's and the body reads left-aligned. The button is the
+// standard primary `lg` Link with no lift, as in `CaptureHero`.
 import Container from "@components/container.astro";
 import CaptureTrialLink from "@components/capture/CaptureTrialLink.astro";
 import { inlineLink } from "@lib/capture-styles";
@@ -32,10 +34,10 @@ const {
 } = Astro.props;
 ---
 
-<section id={id} class="scroll-mt-8 bg-primary-soft py-16">
+<section id={id} class="scroll-mt-8 py-16">
   <Container>
-    <div class="mx-auto max-w-3xl text-center">
-      <div class="flex flex-col items-center">
+    <div class="mx-auto max-w-3xl">
+      <div class="flex flex-col items-center text-center">
         <span
           class="inline-flex size-16 shrink-0 items-center justify-center rounded-full bg-primary-strong text-white shadow-sm md:size-20"
           aria-hidden="true">
@@ -48,7 +50,7 @@ const {
       <div class="mt-6 space-y-4 text-lg text-default">
         <slot />
       </div>
-      <div class="mt-8 flex justify-center">
+      <div class="mt-8">
         <CaptureTrialLink href={href} label={label} />
       </div>
       {secondaryHref && secondaryLabel && (

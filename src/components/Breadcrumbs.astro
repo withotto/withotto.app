@@ -14,10 +14,10 @@ const { items, class: className } = Astro.props;
 const lastIndex = items.length - 1;
 ---
 
-<nav aria-label="Breadcrumb" class:list={["text-sm", className]}>
-  <ol class="flex flex-wrap items-center gap-x-1.5 gap-y-1">
+<nav aria-label="Breadcrumb" class:list={["text-base", className]}>
+  <ol class="flex flex-wrap items-center justify-center gap-x-2 gap-y-1">
     {items.map((item, index) => (
-      <li class="flex items-center gap-x-1.5">
+      <li class="flex items-center gap-x-2">
         {index < lastIndex ? (
           <>
             <a
@@ -27,7 +27,7 @@ const lastIndex = items.length - 1;
             </a>
             <Icon
               name="hugeicons:arrow-right-01"
-              class="size-3.5 shrink-0 text-default-soft"
+              class="size-4 shrink-0 text-default-soft"
               aria-hidden="true"
             />
           </>

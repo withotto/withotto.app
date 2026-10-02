@@ -3,11 +3,14 @@
 // The main content comes first in source order, so narrow screens and screen
 // readers get it before the aside. From `lg` the aside takes a fixed right
 // column, top-aligned beside the first steps; it neither stretches nor sticks.
-// Use it in a `CaptureSection width="wide"`.
+// Content in the optional `after` slot follows the aside on narrow screens and
+// sits under the main column on wide ones, so it keeps the main column's left
+// edge. Use it in a `CaptureSection width="wide"`.
 //
 // <WithAside>
 //   <StepList>…</StepList>
 //   <Aside slot="aside" label="How we used to do it."><p>…</p></Aside>
+//   <Fragment slot="after"><p>…</p></Fragment>
 // </WithAside>
 interface Props {
   class?: string;
@@ -25,4 +28,9 @@ const { class: className } = Astro.props;
     <slot />
   </div>
   <slot name="aside" />
+  {Astro.slots.has("after") && (
+    <div class="min-w-0 lg:col-start-1">
+      <slot name="after" />
+    </div>
+  )}
 </div>
