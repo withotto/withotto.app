@@ -10,6 +10,7 @@ import { spawnSync } from "node:child_process";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { loadConfig } from "./lib/config.mjs";
+import { runMain } from "./lib/run.mjs";
 
 /**
  * lychee `--remap` arguments sending the site's own URLs to the build.
@@ -55,7 +56,7 @@ export function lycheeArgs(config, distDir) {
   ];
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1]).href) {
+runMain(import.meta.url, "links", async () => {
   const config = await loadConfig();
   const result = spawnSync(
     "lychee",
@@ -67,5 +68,5 @@ if (import.meta.url === pathToFileURL(process.argv[1]).href) {
       `check:links could not run lychee (${result.error.message}). Install it with mise, which pins it in mise.toml.`,
     );
   }
-  process.exit(result.status ?? 1);
-}
+  return result.status ?? 1;
+});

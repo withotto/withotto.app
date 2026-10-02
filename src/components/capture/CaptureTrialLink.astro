@@ -1,0 +1,20 @@
+---
+// The Capture page kit's trial button, shared by `CaptureHero` and
+// `CaptureTrialCta`: the standard primary `lg` Link with the arrow and no lift
+// (the lifted style is reserved for /capture/'s two hero buttons).
+import Link from "@components/ui/link.astro";
+import { trialLabel, trialUrl } from "@lib/capture";
+import { Icon } from "astro-icon/components";
+
+interface Props {
+  href?: string;
+  label?: string;
+}
+
+const { href = trialUrl, label = trialLabel } = Astro.props;
+---
+
+<Link href={href} size="lg">
+  {label}
+  <Icon name="hugeicons:arrow-right-01" class="size-5" />
+</Link>

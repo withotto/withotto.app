@@ -4,8 +4,7 @@
 // it (e.g. an app marketplace listing, or /capture/ for pricing). The button
 // is the standard primary `lg` Link with no lift, as in `CaptureHero`.
 import Container from "@components/container.astro";
-import Link from "@components/ui/link.astro";
-import { trialLabel, trialUrl } from "@lib/capture";
+import CaptureTrialLink from "@components/capture/CaptureTrialLink.astro";
 import { Icon } from "astro-icon/components";
 
 interface Props {
@@ -25,8 +24,8 @@ const {
   title,
   id,
   icon = "hugeicons:login-circle-01",
-  href = trialUrl,
-  label = trialLabel,
+  href,
+  label,
   secondaryHref,
   secondaryLabel,
 } = Astro.props;
@@ -49,10 +48,7 @@ const {
         <slot />
       </div>
       <div class="mt-8 flex justify-center">
-        <Link href={href} size="lg">
-          {label}
-          <Icon name="hugeicons:arrow-right-01" class="size-5" />
-        </Link>
+        <CaptureTrialLink href={href} label={label} />
       </div>
       {secondaryHref && secondaryLabel && (
         <p class="mt-6">

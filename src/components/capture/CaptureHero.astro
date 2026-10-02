@@ -10,9 +10,7 @@
 //   <Fragment slot="after-cta"><p>…</p><p>…</p></Fragment>
 // </CaptureHero>
 import Container from "@components/container.astro";
-import Link from "@components/ui/link.astro";
-import { trialLabel, trialUrl } from "@lib/capture";
-import { Icon } from "astro-icon/components";
+import CaptureTrialLink from "@components/capture/CaptureTrialLink.astro";
 
 interface Props {
   // The page's H1.
@@ -21,7 +19,7 @@ interface Props {
   label?: string;
 }
 
-const { title, href = trialUrl, label = trialLabel } = Astro.props;
+const { title, href, label } = Astro.props;
 
 const hasAfter = Astro.slots.has("after-cta");
 ---
@@ -37,10 +35,7 @@ const hasAfter = Astro.slots.has("after-cta");
           <slot />
         </div>
         <div class="flex justify-center">
-          <Link href={href} size="lg">
-            {label}
-            <Icon name="hugeicons:arrow-right-01" class="size-5" />
-          </Link>
+          <CaptureTrialLink href={href} label={label} />
         </div>
       </div>
       {hasAfter && (

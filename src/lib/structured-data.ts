@@ -15,9 +15,15 @@ export interface BreadcrumbItem {
 type JsonLd = Record<string, unknown>;
 
 function absoluteUrl(path: string, site: URL): string {
-  if (!path.startsWith("/") || !path.endsWith("/")) {
+  // "//host/" and backslashes would resolve to another origin.
+  if (
+    !path.startsWith("/") ||
+    path.startsWith("//") ||
+    path.includes("\\") ||
+    !path.endsWith("/")
+  ) {
     throw new Error(
-      `Structured data path "${path}" must start and end with "/" (trailingSlash: "always").`,
+      `Structured data path "${path}" must be a site path that starts and ends with "/" (trailingSlash: "always").`,
     );
   }
   return new URL(path, site).toString();

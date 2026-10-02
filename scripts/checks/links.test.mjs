@@ -58,26 +58,33 @@ describe(
         { site: "https://example.test", distDir: "dist" },
         dist,
       );
-      const result = spawnSync("lychee", ["--offline", ...args], { cwd: root });
+      const result = spawnSync("lychee", ["--offline", ...args], {
+        cwd: root,
+        encoding: "utf8",
+      });
       fs.rmSync(root, { recursive: true, force: true });
-      return result.status;
+      return {
+        status: result.status,
+        output: `${result.stdout}${result.stderr}`,
+      };
     }
 
     it("fails a link to a section whose own page is gone", () => {
-      const status = check({
+      const { status, output } = check({
         "index.html": '<a href="https://example.test/capture/">Capture</a>',
         "capture/xero/index.html": "<p>Xero</p>",
       });
-      assert.notEqual(status, 0);
+      // lychee exits 2 for broken links; anything else is a different failure.
+      assert.equal(status, 2, output);
     });
 
     it("passes a fragment link to a heading on the site's own page", () => {
-      const status = check({
+      const { status, output } = check({
         "index.html":
           '<a href="https://example.test/capture/#pricing">Pricing</a>',
         "capture/index.html": '<h2 id="pricing">Pricing</h2>',
       });
-      assert.equal(status, 0);
+      assert.equal(status, 0, output);
     });
   },
 );
