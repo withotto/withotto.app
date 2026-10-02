@@ -23,7 +23,7 @@ Tribal knowledge not obvious from reading a single file. Read before touching la
 
 ## Content Collections: Blog
 
-- **Location:** `src/content/blog/<category>/<YYYY-MM-DD-slug>.mdx`. Only `product-updates/` has posts today; `industry-insights/` is an empty scaffold.
+- **Location:** `src/content/blog/<category>/<YYYY-MM-DD-slug>.mdx` (or `.md`: the collection loads both). Two categories have posts: `industry-insights/` and `product-updates/`.
 - **Schema:** `src/content/config.ts` (Zod). Required: `draft, title, excerpt, image, imageAlt, imageDescription, publishDate, category, tags`. Optional: `slug` (overrides filename), `imageCredit`, `imageCreditUrl`, `audioFile`.
 - **Slug generation:** `src/utils/blog.ts → getBlogSlug(entry)` strips the `YYYY-MM-DD-` filename prefix, or uses `frontmatter.slug` if present. Use this helper. Do not re-derive URLs manually.
 - **`category` is a display string** (e.g. `"Product Updates"`), not the folder key. Folder key is recovered via `getBlogFolder(entry)`.
@@ -39,13 +39,13 @@ Tribal knowledge not obvious from reading a single file. Read before touching la
 
 ## Third-Party Integrations: Self-Hosted Subdomains
 
-| Service                    | Endpoint                                                                                           | Component                                  |
-| -------------------------- | -------------------------------------------------------------------------------------------------- | ------------------------------------------ |
-| Bookings                   | `https://bookings.withotto.app` (+ `/embed.js`)                                                    | `BookingForm.astro`                        |
-| Live chat                  | `https://chat.withotto.app` (+ `/packs/js/sdk.js`)                                                 | `ChatwootWidget.astro`                     |
-| Newsletter                 | `https://newsletter.withotto.app/subscription/form` (Listmonk-style)                               | `ui/NewsletterSignup.astro`                |
-| Stats API                  | `PUBLIC_STATS_API_URL` → Supabase edge fn `reconciliation-stats`                                   | `StatsContainer.astro` + `StatsGrid.astro` |
-| QuickBooks Online waitlist | `PUBLIC_QUICKBOOKS_WAITLIST_API_URL` → Supabase edge fn `quickbooks-waitlist` → Listmonk admin API | `pages/capture/quickbooks.astro`           |
+| Service                    | Endpoint                                                                                           | Component                                                                                                               |
+| -------------------------- | -------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| Bookings                   | `https://bookings.withotto.app` (+ `/embed.js`)                                                    | `BookingForm.astro`                                                                                                     |
+| Live chat                  | `https://chat.withotto.app` (+ `/packs/js/sdk.js`)                                                 | `ChatwootWidget.astro`                                                                                                  |
+| Newsletter                 | `https://newsletter.withotto.app/subscription/form` (Listmonk-style)                               | `ui/NewsletterSignup.astro`                                                                                             |
+| Stats API                  | `PUBLIC_STATS_API_URL` → Supabase edge fn `reconciliation-stats`                                   | `StatsContainer.astro` + `StatsGrid.astro`                                                                              |
+| QuickBooks Online waitlist | `PUBLIC_QUICKBOOKS_WAITLIST_API_URL` → Supabase edge fn `quickbooks-waitlist` → Listmonk admin API | None: the page was removed when QuickBooks Online shipped, and the function is retained (see `withotto-app-project.md`) |
 
 Swap embed URLs here; they are not configurable via env var.
 
@@ -96,6 +96,7 @@ import shot from "@assets/capture/step-01-capture.png";
 ## Tailwind: Project Tokens
 
 - **Brand colours** are defined in `src/styles/global.css` (Tailwind 4 `@theme` block, e.g. `--color-primary`, `--color-terracotta`). Canonical palette and copy-friendly hex values live on the `/brand-kit/` page (`src/pages/brand-kit.astro`). Use semantic Tailwind utilities (`bg-primary`, `text-primary-strong`, `border-primary-accent`, `bg-terracotta-soft`, etc.); do not hardcode hex values in components. Token shape: each colour has `.soft / .DEFAULT / .strong` (some also `.accent / .medium`).
+- **Green and contrast:** text, and any fill with text or icons on it, must meet WCAG AA. The brand green, `primary` (`#02ac8a`), is 2.89:1 against white, so it can't carry white text, even large, and can't be text on white. Today that means `primary-strong` (`#105e59`, about 7.6:1) for green text, buttons, and fills with text on them, and `primary` for accents, borders, focus rings, and large decorative shapes. The brand kit's "Which green to use where" note says the same. Inline links in body text are underlined, so they stay distinguishable from body text without relying on colour.
 - **Font:** `font-sans` is `"Rethink Sans Variable"` (loaded via `@fontsource-variable/rethink-sans` in `RootLayout`).
 - **Typography plugin:** Use `prose` / `md:prose-lg` for long-form text. Customise with `prose-li:mt-0` etc.
 - **Form validation pattern:** Forms add a `validated` class on first submit attempt, then CSS targets `[.validated_&]:invalid:...` to reveal error messages. Preserve this pattern when adding new forms.
@@ -111,12 +112,12 @@ import shot from "@assets/capture/step-01-capture.png";
 
 Both take the same `variant` and `size`, so a `<Link>` and a `<Button>` with matching props are visually identical. Extra props (`type`, `download`, `data-*`, `aria-*`) pass through to the element.
 
-| `variant`  | Look                                             | Where it fits                                           |
-| ---------- | ------------------------------------------------ | ------------------------------------------------------- |
-| `primary`  | Solid `bg-primary`, white text (**the default**) | The main CTA on a page or in a form                     |
-| `outline`  | `border-primary`, primary text, transparent fill | A second choice next to a primary                       |
-| `inverted` | White fill, `text-primary-strong`                | On the brand-coloured bands, where solid green vanishes |
-| `subtle`   | Neutral fill and border                          | Navigation rather than conversion (pagination, dismiss) |
+| `variant`  | Look                                                      | Where it fits                                           |
+| ---------- | --------------------------------------------------------- | ------------------------------------------------------- |
+| `primary`  | Solid `bg-primary-strong`, white text (**the default**)   | The main CTA on a page or in a form                     |
+| `outline`  | `border-primary`, `text-primary-strong`, transparent fill | A second choice next to a primary                       |
+| `inverted` | White fill, `text-primary-strong`                         | On the brand-coloured bands, where solid green vanishes |
+| `subtle`   | Neutral fill and border                                   | Navigation rather than conversion (pagination, dismiss) |
 
 | `size` | Padding     | Where it fits                       |
 | ------ | ----------- | ----------------------------------- |
@@ -149,6 +150,7 @@ Dead components not on this system (`pricing-compare.astro`, `clients.astro`, `c
 
 - **Baseline:** `checks-baseline.json` records existing block-level debt, keyed by rule and component (navbar, footer, table of contents), by rule and group (pages the check grouped itself, such as pages sharing a title), or by rule and route, each with a count. Only findings beyond it fail. It holds rule IDs, component names, group names and routes only.
 - **Shrinking needs no approval:** `pnpm check:baseline --prune` removes entries the latest run no longer finds. Fixing debt should always end with a prune.
+- **Brand-green contrast is never baselined.** A `color-contrast` finding involving `primary` is fixed, never accepted: see "Green and contrast" above.
 - **Growing needs Stuart's approval:** never run `--accept` to make a failing check pass. Fix the finding; if it truly cannot be fixed, propose the baseline change in the PR for Stuart to approve.
 - **The accessibility check blocks Chatwoot and the bookings embed** (`blockedHosts`): a headless visit to Chatwoot would create a contact in the live sales inbox, and a slow bookings host would stall the page load. The SEO check never loads a page, and the link check only fetches URLs that appear in the built HTML, which never includes Chatwoot.
 - **The link check reads the site's own URLs from the build.** `scripts/checks/links.mjs` remaps `https://withotto.app/…` to `dist/` and resolves each directory to its `index.html`, so a new page's canonical passes before it is deployed and a link to a page the change removes fails, even when pages below it remain. Netlify serves `/404/` from `404.html`, which has its own rule.
@@ -167,7 +169,7 @@ Removed pages use `301`. The one exception is `/capture/quickbooks/`, a `302` so
 
 ## SEO Defaults
 
-- Default title: `"With Otto — Transform bank reconciliation from tedious to effortless with your new AI assistant"`. When a page passes `title`, it becomes `<title> — With Otto`.
+- The default title and description, and the ` — With Otto` suffix added to a page's `title`, live in `RootLayout.astro`. Read them there rather than restating them here.
 - Default OG image: `/opengraph.png` (in `public/`).
 - Landing pages that should NOT be indexed pass `seo={{ noindex: true }}` (see commit `e74c8a6`).
 - Never hand-roll `<meta>` tags. Extend the `seo` prop instead.
