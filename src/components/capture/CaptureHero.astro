@@ -21,6 +21,7 @@ interface Props {
 
 const { title, href, label } = Astro.props;
 
+const hasLead = Astro.slots.has("default");
 const hasAfter = Astro.slots.has("after-cta");
 ---
 
@@ -31,10 +32,12 @@ const hasAfter = Astro.slots.has("after-cta");
         <h1 class="mx-auto max-w-4xl text-4xl font-bold text-balance text-primary-strong md:text-6xl">
           {title}
         </h1>
-        <div class="mx-auto max-w-3xl py-6 text-xl leading-normal text-default">
-          <slot />
-        </div>
-        <div class="flex justify-center">
+        {hasLead && (
+          <div class="mx-auto max-w-3xl py-6 text-xl leading-normal text-default">
+            <slot />
+          </div>
+        )}
+        <div class:list={["flex justify-center", !hasLead && "mt-6"]}>
           <CaptureTrialLink href={href} label={label} />
         </div>
       </div>

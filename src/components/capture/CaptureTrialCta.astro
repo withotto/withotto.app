@@ -5,6 +5,7 @@
 // is the standard primary `lg` Link with no lift, as in `CaptureHero`.
 import Container from "@components/container.astro";
 import CaptureTrialLink from "@components/capture/CaptureTrialLink.astro";
+import { inlineLink } from "@lib/capture-styles";
 import { Icon } from "astro-icon/components";
 
 interface Props {
@@ -52,9 +53,7 @@ const {
       </div>
       {secondaryHref && secondaryLabel && (
         <p class="mt-6">
-          <a
-            href={secondaryHref}
-            class="rounded-sm font-semibold text-primary-strong underline underline-offset-2 hover:decoration-2 focus-visible:ring-2 focus-visible:ring-primary-strong focus-visible:ring-offset-2 focus-visible:outline-none">
+          <a href={secondaryHref} class={inlineLink}>
             {secondaryLabel}
           </a>
         </p>

@@ -5,9 +5,9 @@
 //
 // - mediaPlacement "below" (default): under the step's text at every width.
 // - mediaPlacement "beside": beside the text from `xl` up, stacked below it
-//   until then. The beside column is 280px wide, for a phone screenshot
-//   (pass `class="mx-auto max-w-[280px]"` to its Screenshot so it matches
-//   when stacked). Below `xl` the text column would get too narrow to read.
+//   until then. The beside column fits a 280px-wide phone screenshot (pass
+//   `class="mx-auto max-w-[280px]"` to its Screenshot so it matches when
+//   stacked). Below `xl` the text column would get too narrow to read.
 interface Props {
   title?: string;
   mediaPlacement?: "below" | "beside";
@@ -49,16 +49,20 @@ const beside = hasMedia && mediaPlacement === "beside";
 </li>
 
 <style>
-  /* Screenshot.astro carries a 2rem flow margin above and below. Inside a
-     step, the step's own spacing does that job; beside the text, the media's
-     top lines up with the circle. */
-  .kit-step-media :global(.screenshot-container) {
+  /* Any media sits 1.5rem below the step's text; beside the text, its top
+     lines up with the circle. Screenshot.astro's own 2rem flow margins are
+     cancelled so they don't add to that. */
+  .kit-step-media {
     margin-top: 1.5rem;
+  }
+
+  .kit-step-media :global(.screenshot-container) {
+    margin-top: 0;
     margin-bottom: 0;
   }
 
   @media (width >= 80rem) {
-    .kit-step-media-beside :global(.screenshot-container) {
+    .kit-step-media-beside {
       margin-top: 0;
     }
   }

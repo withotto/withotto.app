@@ -49,24 +49,29 @@ describe(
      */
     function check(files) {
       const root = fs.mkdtempSync(path.join(os.tmpdir(), "links-test-"));
-      const dist = path.join(root, "dist");
-      for (const [name, content] of Object.entries(files)) {
-        fs.mkdirSync(path.dirname(path.join(dist, name)), { recursive: true });
-        fs.writeFileSync(path.join(dist, name), content);
+      try {
+        const dist = path.join(root, "dist");
+        for (const [name, content] of Object.entries(files)) {
+          fs.mkdirSync(path.dirname(path.join(dist, name)), {
+            recursive: true,
+          });
+          fs.writeFileSync(path.join(dist, name), content);
+        }
+        const args = lycheeArgs(
+          { site: "https://example.test", distDir: "dist" },
+          dist,
+        );
+        const result = spawnSync("lychee", ["--offline", ...args], {
+          cwd: root,
+          encoding: "utf8",
+        });
+        return {
+          status: result.status,
+          output: `${result.stdout}${result.stderr}`,
+        };
+      } finally {
+        fs.rmSync(root, { recursive: true, force: true });
       }
-      const args = lycheeArgs(
-        { site: "https://example.test", distDir: "dist" },
-        dist,
-      );
-      const result = spawnSync("lychee", ["--offline", ...args], {
-        cwd: root,
-        encoding: "utf8",
-      });
-      fs.rmSync(root, { recursive: true, force: true });
-      return {
-        status: result.status,
-        output: `${result.stdout}${result.stderr}`,
-      };
     }
 
     it("fails a link to a section whose own page is gone", () => {

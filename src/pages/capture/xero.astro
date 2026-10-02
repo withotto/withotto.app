@@ -16,6 +16,7 @@ import currencyRateWarningImg from "@assets/capture/xero/currency-rate-warning.p
 import importPreviewImg from "@assets/capture/xero/import-preview.png";
 import clientPagePhoneImg from "@assets/capture/xero/client-page-phone.png";
 import syncedDataImg from "@assets/capture/xero/synced-data.png";
+import { bulletList, inlineLink, subheading } from "@lib/capture-styles";
 
 const description =
   "Otto reads your clients' receipts and bills, suggests account codes from each client's own history, and publishes them to Xero for you to review first.";
@@ -25,12 +26,6 @@ const breadcrumbs = [
   { name: "Otto Capture", path: "/capture/" },
   { name: "Xero", path: "/capture/xero/" },
 ];
-
-// /capture/'s inline link, with the kit's keyboard focus ring.
-const inlineLink =
-  "rounded-sm font-semibold text-primary-strong underline underline-offset-2 hover:decoration-2 focus-visible:ring-2 focus-visible:ring-primary-strong focus-visible:ring-offset-2 focus-visible:outline-none";
-const subheading = "text-2xl font-semibold text-primary-strong";
-const bulletList = "list-disc space-y-2 pl-6 marker:text-primary-medium";
 ---
 
 <CapturePageLayout
