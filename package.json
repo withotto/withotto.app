@@ -43,7 +43,7 @@
     "prettier": "3.9.9",
     "prettier-plugin-astro": "1.1.0",
     "prettier-plugin-tailwindcss": "0.8.1",
-    "supabase": "2.118.0"
+    "supabase": "2.119.0"
   },
   "engines": {
     "pnpm": ">=11 <12"
