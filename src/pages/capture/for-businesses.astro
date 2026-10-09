@@ -7,9 +7,14 @@ import CapturePricing from "@components/capture/CapturePricing.astro";
 import StepList from "@components/StepList.astro";
 import Step from "@components/Step.astro";
 import { bulletList, inlineLink, subheading } from "@lib/capture-styles";
+import type { PriceUnit } from "@lib/capture";
 
 const description =
   "Otto reads your receipts and bills and suggests nominal codes. You review and publish to Xero, FreeAgent, or QuickBooks Online, at the price a practice pays.";
+
+// One value for the tier cards and the SoftwareApplication offers, so the
+// visible unit and the marked-up unit always agree.
+const priceUnit: PriceUnit = "business";
 
 const breadcrumbs = [
   { name: "With Otto", path: "/" },
@@ -23,7 +28,7 @@ const breadcrumbs = [
   description={description}
   breadcrumbs={breadcrumbs}
   softwareApplication
-  priceUnit="business">
+  priceUnit={priceUnit}>
   <CaptureHero title="Receipt capture for businesses that do their own books">
     <p>
       Send Otto your receipts and bills. He reads every line and suggests a
@@ -48,7 +53,7 @@ const breadcrumbs = [
       anything you discard aren't counted. If you publish nothing in a month,
       you pay nothing that month.
     </p>
-    <CapturePricing variant="compact" unit="business" />
+    <CapturePricing variant="compact" unit={priceUnit} />
     <div class="max-w-3xl space-y-4 pt-4">
       <p>Prices exclude VAT.</p>
       <p>
