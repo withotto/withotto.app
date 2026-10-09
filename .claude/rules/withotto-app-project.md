@@ -121,3 +121,5 @@ Use these aliases in imports. Do not write relative `../../` paths:
 ## Redirects
 
 Defined in `public/_redirects` (Netlify syntax). Old/removed pages and legal slugs should be mirrored here, not handled in-app. Netlify reads the file only from the publish directory, `dist/`, so it lives in `public/`, which Astro copies there; at the repo root it is never deployed.
+
+The file also holds the campaign short links under `/l/`, `/f/` and `/n/`, which add UTM tags and send the visitor on. Their format, sources and destinations are set in `link-tracking.md` in shared-rules. Keep the two in step, and don't create pages under those paths.
