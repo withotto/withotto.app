@@ -5,6 +5,15 @@
 export const trialUrl = "https://capture.withotto.app/register/";
 export const trialLabel = "Start your free trial";
 
+// What a tier's price is for. A practice pays it for each client; a business
+// doing its own books pays the same price, so its page says "per month".
+export type PriceUnit = "client" | "business";
+
+export const priceUnitLabels: Record<PriceUnit, string> = {
+  client: "per client, per month",
+  business: "per month",
+};
+
 export interface PricingTier {
   name: string;
   price: string;

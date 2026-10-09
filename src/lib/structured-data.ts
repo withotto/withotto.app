@@ -3,7 +3,8 @@
 // `@components/Breadcrumbs.astro`, and Otto Capture's prices from the same
 // `pricingTiers` the visible pricing block renders, so neither can drift.
 
-import { pricingTiers } from "@lib/capture";
+import { priceUnitLabels, pricingTiers } from "@lib/capture";
+import type { PriceUnit } from "@lib/capture";
 
 export interface BreadcrumbItem {
   // Visible label, e.g. "Otto Capture".
@@ -54,10 +55,14 @@ function poundsToNumber(price: string): number {
   return Number(match[1]);
 }
 
-// One Offer per pricing tier: the tier's monthly price for each client, in GBP,
-// excluding VAT. No AggregateOffer, rating or review (the shared search rules
-// ban ratings, and the per-document rates stay in the visible table only).
-export function captureSoftwareApplication(site: URL): JsonLd {
+// One Offer per pricing tier: the tier's monthly price, in GBP, excluding VAT,
+// with the same unit the page's tier cards show. No AggregateOffer, rating or
+// review (the shared search rules ban ratings, and the per-document rates stay
+// in the visible table only).
+export function captureSoftwareApplication(
+  site: URL,
+  unit: PriceUnit = "client",
+): JsonLd {
   return {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
@@ -76,7 +81,7 @@ export function captureSoftwareApplication(site: URL): JsonLd {
           "@type": "UnitPriceSpecification",
           price,
           priceCurrency: "GBP",
-          unitText: "per client per month",
+          unitText: priceUnitLabels[unit],
           valueAddedTaxIncluded: false,
         },
       };
