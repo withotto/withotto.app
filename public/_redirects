@@ -18,3 +18,49 @@ https://withotto-v2.netlify.app/* https://withotto.app/:splat 301!
 # Legal redirects
 /privacy-and-security/ /bank-rec-security-and-privacy/ 301
 /bank-rec-privacy-and-security/ /bank-rec-security-and-privacy/ 301
+
+# Campaign short links: /<source>/<destination>/<campaign>[/<content>].
+# A link without a campaign still reaches its destination, untagged by campaign.
+# The source letter sets utm_source and utm_medium, and utm_content defaults
+# to the destination name. The rule is link-tracking.md in shared-rules.
+# 302, so a changed rule is never cached.
+
+# Campaign-specific destinations, before the site-wide ones.
+/l/guide/freeagent-missing-receipts https://support.withotto.app/capture/missing-receipts/freeagent/?utm_source=linkedin&utm_medium=social&utm_campaign=freeagent-missing-receipts&utm_content=guide 302
+/f/guide/freeagent-missing-receipts https://support.withotto.app/capture/missing-receipts/freeagent/?utm_source=facebook&utm_medium=social&utm_campaign=freeagent-missing-receipts&utm_content=guide 302
+
+# LinkedIn
+/l/trial/:campaign/:content https://capture.withotto.app/register/?utm_source=linkedin&utm_medium=social&utm_campaign=:campaign&utm_content=:content 302
+/l/trial/:campaign https://capture.withotto.app/register/?utm_source=linkedin&utm_medium=social&utm_campaign=:campaign&utm_content=trial 302
+/l/trial https://capture.withotto.app/register/?utm_source=linkedin&utm_medium=social&utm_content=trial 302
+/l/capture/:campaign/:content /capture/?utm_source=linkedin&utm_medium=social&utm_campaign=:campaign&utm_content=:content 302
+/l/capture/:campaign /capture/?utm_source=linkedin&utm_medium=social&utm_campaign=:campaign&utm_content=capture 302
+/l/capture /capture/?utm_source=linkedin&utm_medium=social&utm_content=capture 302
+/l/bank-rec/:campaign/:content /bank-reconciliation/?utm_source=linkedin&utm_medium=social&utm_campaign=:campaign&utm_content=:content 302
+/l/bank-rec/:campaign /bank-reconciliation/?utm_source=linkedin&utm_medium=social&utm_campaign=:campaign&utm_content=bank-rec 302
+/l/bank-rec /bank-reconciliation/?utm_source=linkedin&utm_medium=social&utm_content=bank-rec 302
+/l/* /?utm_source=linkedin&utm_medium=social 302
+
+# Facebook
+/f/trial/:campaign/:content https://capture.withotto.app/register/?utm_source=facebook&utm_medium=social&utm_campaign=:campaign&utm_content=:content 302
+/f/trial/:campaign https://capture.withotto.app/register/?utm_source=facebook&utm_medium=social&utm_campaign=:campaign&utm_content=trial 302
+/f/trial https://capture.withotto.app/register/?utm_source=facebook&utm_medium=social&utm_content=trial 302
+/f/capture/:campaign/:content /capture/?utm_source=facebook&utm_medium=social&utm_campaign=:campaign&utm_content=:content 302
+/f/capture/:campaign /capture/?utm_source=facebook&utm_medium=social&utm_campaign=:campaign&utm_content=capture 302
+/f/capture /capture/?utm_source=facebook&utm_medium=social&utm_content=capture 302
+/f/bank-rec/:campaign/:content /bank-reconciliation/?utm_source=facebook&utm_medium=social&utm_campaign=:campaign&utm_content=:content 302
+/f/bank-rec/:campaign /bank-reconciliation/?utm_source=facebook&utm_medium=social&utm_campaign=:campaign&utm_content=bank-rec 302
+/f/bank-rec /bank-reconciliation/?utm_source=facebook&utm_medium=social&utm_content=bank-rec 302
+/f/* /?utm_source=facebook&utm_medium=social 302
+
+# Newsletter
+/n/trial/:campaign/:content https://capture.withotto.app/register/?utm_source=newsletter&utm_medium=email&utm_campaign=:campaign&utm_content=:content 302
+/n/trial/:campaign https://capture.withotto.app/register/?utm_source=newsletter&utm_medium=email&utm_campaign=:campaign&utm_content=trial 302
+/n/trial https://capture.withotto.app/register/?utm_source=newsletter&utm_medium=email&utm_content=trial 302
+/n/capture/:campaign/:content /capture/?utm_source=newsletter&utm_medium=email&utm_campaign=:campaign&utm_content=:content 302
+/n/capture/:campaign /capture/?utm_source=newsletter&utm_medium=email&utm_campaign=:campaign&utm_content=capture 302
+/n/capture /capture/?utm_source=newsletter&utm_medium=email&utm_content=capture 302
+/n/bank-rec/:campaign/:content /bank-reconciliation/?utm_source=newsletter&utm_medium=email&utm_campaign=:campaign&utm_content=:content 302
+/n/bank-rec/:campaign /bank-reconciliation/?utm_source=newsletter&utm_medium=email&utm_campaign=:campaign&utm_content=bank-rec 302
+/n/bank-rec /bank-reconciliation/?utm_source=newsletter&utm_medium=email&utm_content=bank-rec 302
+/n/* /?utm_source=newsletter&utm_medium=email 302
