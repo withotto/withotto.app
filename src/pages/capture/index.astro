@@ -7,6 +7,7 @@ import AddressAnatomy from "@components/AddressAnatomy.astro";
 import type { AddressSegment } from "@components/AddressAnatomy.astro";
 import Link from "@components/ui/link.astro";
 import CapturePricing from "@components/capture/CapturePricing.astro";
+import { inlineLink } from "@lib/capture-styles";
 import { Icon } from "astro-icon/components";
 import captureImg from "@assets/capture/step-01-capture.png";
 import reviewImg from "@assets/capture/step-03-review.png";
@@ -644,9 +645,7 @@ const heroCta =
         </p>
         <p class="mt-8 text-lg text-default">
           If you do the books for your own business, see{" "}
-          <a
-            href="/capture/for-businesses/"
-            class="font-semibold text-primary-strong underline underline-offset-2 hover:decoration-2">
+          <a href="/capture/for-businesses/" class={inlineLink}>
             receipt capture for businesses
           </a>
           . It's the same product, at the price a practice pays for each client.
