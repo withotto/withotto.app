@@ -30,23 +30,23 @@ const breadcrumbs = [
   softwareApplication
   priceUnit={priceUnit}>
   <CaptureHero title="Receipt capture for businesses that do their own books">
-    <p>
-      Send Otto your receipts and bills. He reads every line and suggests a
-      nominal code from how you've coded that supplier before. He suggests a tax
-      rate too, taking account of whether your business is VAT-registered and
-      whether the supplier appears to be. You check each document before it goes
-      into your books.
-    </p>
-    <p class="mt-4">
-      A business pays what a practice pays, and gets the same features.
-    </p>
+    A business pays what a practice pays, and gets the same features.
+    <Fragment slot="after-cta">
+      <p>
+        Send Otto your receipts and bills. He reads every line and suggests a
+        nominal code from how you've coded that supplier before. He suggests a
+        tax rate too, taking account of whether your business is VAT-registered
+        and whether the supplier appears to be. You check each document before
+        it goes into your books.
+      </p>
+    </Fragment>
   </CaptureHero>
 
   <CaptureSection
     title="Same price, same features as a practice"
     width="default"
     icon="hugeicons:coins-01">
-    <p class="max-w-3xl">
+    <p class="mx-auto max-w-3xl">
       You don't have to predict how many documents you'll send, or choose a
       plan. Each month, you pay the cheapest tier for the documents you
       published that month. Documents still waiting for review, duplicates, and
@@ -54,7 +54,7 @@ const breadcrumbs = [
       you pay nothing that month.
     </p>
     <CapturePricing variant="compact" unit={priceUnit} />
-    <div class="max-w-3xl space-y-4 pt-4">
+    <div class="mx-auto max-w-3xl space-y-4 pt-4">
       <p>Prices exclude VAT.</p>
       <p>
         Every tier includes every feature, so you have access to everything a
