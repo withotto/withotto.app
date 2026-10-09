@@ -542,16 +542,19 @@ const heroCta =
         <div class="mt-8 space-y-4 text-lg text-default">
           <p>
             Some receipts only come to light when a payment sits on the bank
-            statement with nothing to explain it. For clients on Xero, Otto
-            Capture turns those payments into a list your client can answer.
+            statement with nothing to explain it. For clients on Xero or
+            FreeAgent, Otto Capture turns those payments into a list your client
+            can answer.
           </p>
           <p>
-            Export the client's unreconciled bank transactions from Xero and
-            import them into Capture. Take out anything the client doesn't need
-            to explain, such as salaries or transfers between their own
-            accounts, and share a link to what's left. Your client opens it on
-            any device, with no account to create, and answers each payment with
-            a receipt, a short note, or both.
+            Start with the client's unreconciled bank transactions. For a Xero
+            client, you export them from Xero and upload the file. For a
+            FreeAgent client, Capture fetches them from FreeAgent for the dates
+            you choose. Take out anything the client doesn't need to explain,
+            such as salaries or transfers between their own accounts, and share
+            a link to what's left. Your client opens it on any device, with no
+            account to create, and answers each payment with a receipt, a short
+            note, or both.
           </p>
           <p>
             Receipts they send go straight into that client's review queue with
@@ -561,10 +564,9 @@ const heroCta =
             off whenever you like.
           </p>
           <p class="text-base text-default-soft">
-            You can chase missing receipts for Xero clients today. We're working
-            on FreeAgent and QuickBooks Online, and if you'd like to chase
-            receipts for those clients, tell us, because it helps us decide what
-            to build first.
+            Missing receipts isn't available for QuickBooks Online clients yet.
+            If you'd like it for them, tell us, because it helps us decide what
+            to build next.
           </p>
           <p>
             See how it works with Xero on{" "}
@@ -572,6 +574,12 @@ const heroCta =
               href="/capture/xero/"
               class="font-semibold text-primary-strong underline underline-offset-2 hover:decoration-2">
               Otto Capture for Xero
+            </a>
+            , or read the{" "}
+            <a
+              href="https://support.withotto.app/capture/missing-receipts/"
+              class="font-semibold text-primary-strong underline underline-offset-2 hover:decoration-2">
+              step-by-step guide to missing receipts
             </a>
             .
           </p>
