@@ -1,0 +1,206 @@
+---
+import CapturePageLayout from "@layouts/CapturePageLayout.astro";
+import CaptureHero from "@components/capture/CaptureHero.astro";
+import CaptureSection from "@components/capture/CaptureSection.astro";
+import CaptureTrialCta from "@components/capture/CaptureTrialCta.astro";
+import CapturePricing from "@components/capture/CapturePricing.astro";
+import StepList from "@components/StepList.astro";
+import Step from "@components/Step.astro";
+import { bulletList, inlineLink, subheading } from "@lib/capture-styles";
+import type { PriceUnit } from "@lib/capture";
+
+const description =
+  "Otto reads your receipts and bills and suggests nominal codes. You review and publish to Xero, FreeAgent, or QuickBooks Online, at the price a practice pays.";
+
+// One value for the tier cards and the SoftwareApplication offers, so the
+// visible unit and the marked-up unit always agree.
+const priceUnit: PriceUnit = "business";
+
+const breadcrumbs = [
+  { name: "With Otto", path: "/" },
+  { name: "Otto Capture", path: "/capture/" },
+  { name: "For businesses", path: "/capture/for-businesses/" },
+];
+---
+
+<CapturePageLayout
+  title="Receipt capture for businesses"
+  description={description}
+  breadcrumbs={breadcrumbs}
+  softwareApplication
+  priceUnit={priceUnit}>
+  <CaptureHero title="Receipt capture for businesses that do their own books">
+    A business pays what a practice pays, and gets the same features.
+    <Fragment slot="after-cta">
+      <p>
+        Send Otto your receipts and bills. He reads every line and suggests a
+        nominal code from how you've coded that supplier before. He suggests a
+        tax rate too, taking account of whether your business is VAT-registered
+        and whether the supplier appears to be. You check each document before
+        it goes into your books.
+      </p>
+    </Fragment>
+  </CaptureHero>
+
+  <CaptureSection
+    title="Same price, same features as a practice"
+    width="default"
+    icon="hugeicons:coins-01">
+    <p class="mx-auto max-w-3xl">
+      You don't have to predict how many documents you'll send, or choose a
+      plan. Each month, you pay the cheapest tier for the documents you
+      published that month. Documents still waiting for review, duplicates, and
+      anything you discard aren't counted. If you publish nothing in a month,
+      you pay nothing that month.
+    </p>
+    <CapturePricing variant="compact" unit={priceUnit} />
+    <div class="mx-auto max-w-3xl space-y-4 pt-4">
+      <p>Prices exclude VAT.</p>
+      <p>
+        Every tier includes every feature, so you have access to everything a
+        practice does. Otto reads the line items on every document as standard.
+        Some receipt capture tools charge a business more than a practice pays
+        for each client.
+      </p>
+      <p>
+        If your business uses more than one accounting platform, or is made up
+        of more than one business, connect each one. Each is priced on its own,
+        in the same way.
+      </p>
+    </div>
+  </CaptureSection>
+
+  <CaptureSection
+    title="How it works for your own books"
+    tone="soft"
+    icon="hugeicons:route-01">
+    <p>
+      There's no app to install. You, and anyone in your business who pays for
+      things, send documents whichever way suits:
+    </p>
+    <ul class={bulletList}>
+      <li>
+        <strong>WhatsApp:</strong> take a photo of a receipt and send it, after
+        joining through an invite link.
+      </li>
+      <li>
+        <strong>Email:</strong> forward a bill or a receipt to your business's
+        own Capture email address.
+      </li>
+      <li>
+        <strong>Web page:</strong> upload files on your submission page, from
+        any device.
+      </li>
+    </ul>
+    <p>
+      Whoever sends documents doesn't need a Capture account, and you don't
+      register them in advance.
+    </p>
+    <p>
+      Otto reads each document, matches the supplier to a contact in your books,
+      and suggests a nominal code and tax rate for each line. You check it,
+      change anything that needs it, and click <strong>Publish</strong>. Nothing
+      reaches your books until you do. Bills reach Xero, FreeAgent, or
+      QuickBooks Online with the original document attached. Capture publishes
+      sales invoices to Xero and FreeAgent only.
+    </p>
+    <p>
+      To set up, register, then connect your accounting platform. That adds your
+      business as a client in Capture.
+    </p>
+  </CaptureSection>
+
+  <CaptureSection
+    title="Where you get your time back"
+    icon="hugeicons:clock-01">
+    <div class="space-y-4">
+      <h3 class={subheading}>No line items to key in</h3>
+      <p>
+        Otto reads each line from the document, with its description and amount,
+        so you aren't typing them into your books.
+      </p>
+    </div>
+
+    <div class="space-y-4 pt-8">
+      <h3 class={subheading}>Code suggestions that build with your history</h3>
+      <p>
+        Otto's suggestions draw on the bills you've published through Capture
+        for that supplier, including any changes you made in review. Bills
+        already in your books from before you connected aren't part of that
+        history, so it builds up as you publish. For a supplier you haven't used
+        before, he suggests a code from the document alone.
+      </p>
+    </div>
+
+    <div class="space-y-4 pt-8">
+      <h3 class={subheading}>Missing receipts, without chasing colleagues</h3>
+      <p>
+        On Xero and FreeAgent, Capture lists the bank payments that have no
+        receipt or bill behind them.
+      </p>
+      <StepList>
+        <Step>
+          Leave out the payments nobody needs to explain or shouldn't see, such
+          as transfers between your own accounts, or salaries.
+        </Step>
+        <Step>
+          Share the list's link with whoever made the payments. Capture doesn't
+          send it, so you choose when and how.
+        </Step>
+        <Step>
+          They open it on any device, with no login, and answer each payment
+          with a receipt, a note, or both.
+        </Step>
+        <Step>
+          Receipts arrive in your review queue like any other document.
+        </Step>
+      </StepList>
+      <p>
+        Anyone with the link can see the date, description, amount, and bank
+        account of each payment on the list. You can replace the link or switch
+        the page off at any time. Missing receipts isn't available for
+        QuickBooks Online yet.
+      </p>
+      <p>
+        The full steps are in the{" "}
+        <a
+          href="https://support.withotto.app/capture/missing-receipts/"
+          class={inlineLink}>
+          step-by-step guide to missing receipts
+        </a>
+        .
+      </p>
+    </div>
+  </CaptureSection>
+
+  <CaptureSection
+    title="Is it right for you?"
+    tone="soft"
+    icon="hugeicons:checkmark-circle-02">
+    <p>
+      Otto Capture suits a business of any size that does its own bookkeeping in
+      Xero, FreeAgent, or QuickBooks Online.
+    </p>
+    <p>
+      Everything Capture does for practices, it does for your business too.
+      There's more on{" "}
+      <a href="/capture/" class={inlineLink}>
+        the Otto Capture page
+      </a>
+      .
+    </p>
+  </CaptureSection>
+
+  <CaptureTrialCta title="Try it on this month's receipts">
+    <p>
+      Register, connect your accounting platform, and send in this month's
+      receipts and bills. Review them with every line already read and a code
+      suggested, then publish.
+    </p>
+    <p>
+      It's free for 30 days. You add a card when you register. Nothing is
+      charged during the trial, and after it you pay only if you continue to
+      publish.
+    </p>
+  </CaptureTrialCta>
+</CapturePageLayout>

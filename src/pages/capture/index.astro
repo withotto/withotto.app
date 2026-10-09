@@ -7,6 +7,7 @@ import AddressAnatomy from "@components/AddressAnatomy.astro";
 import type { AddressSegment } from "@components/AddressAnatomy.astro";
 import Link from "@components/ui/link.astro";
 import CapturePricing from "@components/capture/CapturePricing.astro";
+import { inlineLink } from "@lib/capture-styles";
 import { Icon } from "astro-icon/components";
 import captureImg from "@assets/capture/step-01-capture.png";
 import reviewImg from "@assets/capture/step-03-review.png";
@@ -641,6 +642,13 @@ const heroCta =
           documents a month or several hundred. The result is less manual entry
           and cleaner records, which frees up your own time if you work alone,
           and your team's if you don't.
+        </p>
+        <p class="mt-8 text-lg text-default">
+          If you do the books for your own business, see{" "}
+          <a href="/capture/for-businesses/" class={inlineLink}>
+            receipt capture for businesses
+          </a>
+          . It's the same product, at the price a practice pays for each client.
         </p>
       </div>
     </Container>

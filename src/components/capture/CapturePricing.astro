@@ -3,17 +3,20 @@
 // `full` is /capture/'s block: tier cards, the VAT line and every promise with
 // its explanation. `compact` is for platform pages, whose copy carries its own
 // VAT line: tier cards plus the labels of the two promises in
-// `compactPromiseKeys`, with no explanations. The surrounding section (heading,
-// intro and closing copy) belongs to the page.
+// `compactPromiseKeys`, with no explanations. `unit` says what each price is
+// for: "client" on the practice pages, "business" on the page for businesses
+// doing their own books. The surrounding section (heading, intro and closing
+// copy) belongs to the page.
 import { Icon } from "astro-icon/components";
-import { pricingPromises, pricingTiers } from "@lib/capture";
-import type { PricingPromiseKey } from "@lib/capture";
+import { priceUnitLabels, pricingPromises, pricingTiers } from "@lib/capture";
+import type { PriceUnit, PricingPromiseKey } from "@lib/capture";
 
 interface Props {
   variant: "full" | "compact";
+  unit?: PriceUnit;
 }
 
-const { variant } = Astro.props;
+const { variant, unit = "client" } = Astro.props;
 
 const compactPromiseKeys: PricingPromiseKey[] = [
   "no-documents",
@@ -30,7 +33,7 @@ const compactPromises = pricingPromises.filter((promise) =>
       <h3 class="text-lg font-semibold text-primary-strong">{tier.name}</h3>
       <p class="mt-3 flex items-baseline gap-1.5">
         <span class="text-4xl font-bold text-primary-strong">{tier.price}</span>
-        <span class="text-sm text-default-soft">per client, per month</span>
+        <span class="text-sm text-default-soft">{priceUnitLabels[unit]}</span>
       </p>
       <dl class="mt-6 space-y-4 border-t border-muted-strong pt-6 text-sm">
         <div>

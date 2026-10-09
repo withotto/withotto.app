@@ -16,6 +16,7 @@ import {
   captureSoftwareApplication,
 } from "@lib/structured-data";
 import type { BreadcrumbItem } from "@lib/structured-data";
+import type { PriceUnit } from "@lib/capture";
 
 export interface Props {
   // Short title; RootLayout appends " — With Otto".
@@ -27,6 +28,9 @@ export interface Props {
   // Adds the SoftwareApplication JSON-LD. Only for pages whose visible copy
   // shows Otto Capture's pricing.
   softwareApplication?: boolean;
+  // What the pricing on the page is for, so the Offers match the tier cards.
+  // Pass the same value as the page's `CapturePricing`.
+  priceUnit?: PriceUnit;
 }
 
 const {
@@ -34,6 +38,7 @@ const {
   description,
   breadcrumbs,
   softwareApplication = false,
+  priceUnit = "client",
 } = Astro.props;
 
 if (!Astro.site) {
@@ -42,7 +47,9 @@ if (!Astro.site) {
 
 const jsonLd = [
   breadcrumbList(breadcrumbs, Astro.site),
-  ...(softwareApplication ? [captureSoftwareApplication(Astro.site)] : []),
+  ...(softwareApplication
+    ? [captureSoftwareApplication(Astro.site, priceUnit)]
+    : []),
 ];
 ---
 
