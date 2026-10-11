@@ -1,7 +1,8 @@
 ---
 // Closing call to action for the Otto Capture subpages: an H2, body copy
-// (default slot), the trial button, and an optional secondary text link under
-// it (e.g. an app marketplace listing, or /capture/ for pricing). The band is
+// (default slot), the trial button, an optional line of small print under it
+// (`note` slot), and an optional secondary text link (e.g. an app marketplace
+// listing, or /capture/ for pricing). The band is
 // white, because the site's newsletter band below it is green; the heading,
 // button and secondary link are centred like /capture/'s, and the body reads
 // left-aligned. The button is the standard primary `lg` Link with no lift, as
@@ -54,6 +55,11 @@ const {
       <div class="mt-8 flex justify-center">
         <CaptureTrialLink href={href} label={label} />
       </div>
+      {Astro.slots.has("note") && (
+        <p class="mt-4 text-center text-sm text-default-soft">
+          <slot name="note" />
+        </p>
+      )}
       {secondaryHref && secondaryLabel && (
         <p class="mt-6 text-center">
           <a href={secondaryHref} class={inlineLink}>
