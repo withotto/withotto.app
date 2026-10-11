@@ -1,0 +1,349 @@
+---
+import CapturePageLayout from "@layouts/CapturePageLayout.astro";
+import CaptureHero from "@components/capture/CaptureHero.astro";
+import CaptureSection from "@components/capture/CaptureSection.astro";
+import CaptureTrialCta from "@components/capture/CaptureTrialCta.astro";
+import CapturePricing from "@components/capture/CapturePricing.astro";
+import Screenshot from "@components/Screenshot.astro";
+import StepList from "@components/StepList.astro";
+import Step from "@components/Step.astro";
+import WithAside from "@components/WithAside.astro";
+import practiceClientsImg from "@assets/capture/freeagent/practice-clients.png";
+import reviewBillImg from "@assets/capture/freeagent/review-bill.png";
+import missingReceiptsTabImg from "@assets/capture/freeagent/missing-receipts-tab.png";
+import clientPagePhoneImg from "@assets/capture/freeagent/client-page-phone.png";
+import { bulletList, inlineLink, subheading } from "@lib/capture-styles";
+
+const description =
+  "Otto reads your clients' receipts and bills, suggests categories from each client's own history, and publishes them to FreeAgent once you've reviewed them.";
+
+const breadcrumbs = [
+  { name: "With Otto", path: "/" },
+  { name: "Otto Capture", path: "/capture/" },
+  { name: "FreeAgent", path: "/capture/freeagent/" },
+];
+---
+
+<CapturePageLayout
+  title="Receipt capture for FreeAgent"
+  description={description}
+  breadcrumbs={breadcrumbs}
+  softwareApplication>
+  <CaptureHero title="Receipt and bill capture for practices on FreeAgent">
+    Otto reads each receipt and bill your clients send, and suggests a category
+    for each line from how you've coded that client's bills from the same
+    supplier.
+    <Fragment slot="after-cta">
+      <p>
+        You check each document, then publish it to the client's FreeAgent
+        company. Nothing reaches FreeAgent until someone in your practice has
+        reviewed it and clicked <strong>Publish</strong>.
+      </p>
+      <p>
+        Otto learns one client at a time. His suggestions draw on the bills
+        you've published through Capture for that client, including any changes
+        you made in review. Bills already in FreeAgent from before you connected
+        the client aren't part of that history, so it builds up as you publish.
+        He draws on that history only when he's confident the supplier on the
+        document is the contact it belongs to. Otherwise, and for a supplier the
+        client hasn't used before, he suggests a category from the document
+        alone.
+      </p>
+    </Fragment>
+  </CaptureHero>
+
+  <CaptureSection
+    title="Built by a practice, for practices"
+    icon="hugeicons:building-03">
+    <p>
+      We run an accounting practice. We tried a lot of receipt capture tools,
+      and none had the mix of features and pricing that worked for our clients.
+      The small rough edges added up too, using them day in, day out.
+    </p>
+    <p>
+      So we built Otto Capture around the jobs that took our time, and those
+      jobs are the same whichever accounting platform a client is on. Clients
+      send documents without creating an account. They answer their missing
+      receipts from one list, not a spreadsheet. And Otto reads every line and
+      suggests a category from that client's own history.
+    </p>
+  </CaptureSection>
+
+  <CaptureSection
+    title="Connecting your FreeAgent practice"
+    tone="soft"
+    icon="hugeicons:plug-socket">
+    <p>
+      Connect Capture to your Practice Dashboard once, then add clients from it.
+      Capture lists the clients your practice manages, each with its entity
+      type, and you tick the ones to add. Each becomes a client in Capture with
+      its own inbox and settings, and every one shares the practice connection.
+    </p>
+    <p>
+      To add more later, go back to the same list. Clients you've already added
+      show as <strong>Connected</strong>.
+    </p>
+    <p>
+      You can also connect a single FreeAgent company on its own, signed in as a
+      user who can manage bills in it.
+    </p>
+    <p>
+      Capture then brings across what Otto needs to code and publish: contacts,
+      categories, tax rates, currencies, and the company's details. If you add a
+      category in FreeAgent later, refresh the client's data in Capture to bring
+      it across.
+    </p>
+    <Screenshot
+      src={practiceClientsImg}
+      alt="The Add FreeAgent clients page, listing the practice's FreeAgent clients by entity type, with two ticked and one already connected"
+    />
+    <p>
+      Permissions, and everything Capture brings across, are covered in{" "}
+      <a
+        href="https://support.withotto.app/capture/platforms/freeagent/"
+        class={inlineLink}>
+        Otto Capture's FreeAgent guide
+      </a>
+      .
+    </p>
+  </CaptureSection>
+
+  <CaptureSection
+    title="From a client's document to FreeAgent"
+    icon="hugeicons:route-01">
+    <StepList>
+      <Step>
+        Your client sends a receipt or bill by email, through their submission
+        page, or on WhatsApp.
+      </Step>
+      <Step>
+        Otto reads it, line by line, matches the supplier to one of the client's
+        FreeAgent contacts, and suggests a category and tax rate for each line.
+      </Step>
+      <Step>
+        Someone in your practice checks it and changes anything that needs it.
+      </Step>
+      <Step>
+        You click <strong>Publish</strong>, and Otto publishes it to the
+        client's FreeAgent company.
+      </Step>
+    </StepList>
+    <Screenshot
+      src={reviewBillImg}
+      alt="A bill in review, each line with a category and tax rate, ready to publish to FreeAgent"
+    />
+    <p>
+      Otto publishes bills, bill credit notes, sales invoices, and credit notes
+      to FreeAgent.
+    </p>
+
+    <div class="space-y-4 pt-8">
+      <h3 class={subheading}>Line items and categories</h3>
+      <p>
+        Each line item you've reviewed becomes a line on the bill or invoice in
+        FreeAgent, with its category and tax rate.
+      </p>
+    </div>
+
+    <div class="space-y-4 pt-8">
+      <h3 class={subheading}>How each document arrives</h3>
+      <p>
+        Bills and bill credit notes go straight into the client's FreeAgent
+        company, with the original document attached. Sales invoices and credit
+        notes arrive as drafts.
+      </p>
+      <p>
+        Otto attaches the original document up to 5 MB. Where FreeAgent doesn't
+        accept the file type, such as an iPhone photo saved as HEIC or a Word
+        file, Capture attaches a PDF or image version of it. FreeAgent doesn't
+        let Capture attach files to sales invoices or credit notes, so they
+        publish without one, and the original stays in Capture.
+      </p>
+    </div>
+
+    <div class="space-y-4 pt-8">
+      <h3 class={subheading}>Contacts</h3>
+      <p>
+        Otto matches the supplier or customer on each document to the client's
+        FreeAgent contacts. He remembers which contact you published each
+        supplier name against, for that client. Where a name doesn't match a
+        FreeAgent contact exactly, he uses that to match the next document. If
+        the contact isn't in FreeAgent yet, you can create it during review, and
+        Capture adds it to FreeAgent when you publish.
+      </p>
+    </div>
+
+    <div class="space-y-4 pt-8">
+      <h3 class={subheading}>Foreign currency</h3>
+      <p>
+        A document in any currency FreeAgent supports publishes in that
+        currency, and FreeAgent applies its own exchange rate.
+      </p>
+      <p>
+        For a currency FreeAgent doesn't support, convert the document during
+        review. You can also convert a document FreeAgent would accept, for
+        example so the bill matches the amount that cleared the bank. Enter the
+        total the client was actually charged, and Otto restates every line at
+        that rate. He puts anything left over from rounding on the most suitable
+        line, so the lines add up to your total exactly. He also compares your
+        total with the market rate on the document's date. Where the two differ
+        by more than he'd expect, he asks you to check the total before applying
+        it, which catches a mistyped figure.
+      </p>
+    </div>
+  </CaptureSection>
+
+  <CaptureSection
+    title="Chasing missing receipts"
+    tone="soft"
+    width="wide"
+    icon="hugeicons:file-search">
+    <WithAside steps={5} listAsideFrom={2}>
+      <p>
+        Capture turns the payments you have no paperwork for into a list the
+        client answers.
+      </p>
+      <StepList slot="list">
+        <Step>
+          On the client's <strong>Missing receipts</strong> tab, choose the
+          dates and click <strong>Fetch transactions</strong>. Capture reads the
+          unexplained bank transactions from every bank account in the client's
+          FreeAgent company that isn't hidden, credit cards included. The dates
+          start at the last six months, and you can change either one.
+          <Screenshot
+            slot="media"
+            src={missingReceiptsTabImg}
+            alt="A FreeAgent client's Missing receipts tab, with the dates to fetch, the transactions stored, and how many on the client's list are still unanswered"
+          />
+        </Step>
+        <Step>
+          Exclude the payments the client doesn't need to explain, such as
+          transfers between their own accounts, and any that shouldn't be seen
+          by everyone with the link, such as salaries. Every other payment goes
+          on the list.
+        </Step>
+        <Step>
+          Share the client's link, when and how it suits your practice and the
+          client. Capture doesn't contact the client, so it fits the way you
+          already work with them.
+        </Step>
+        <Step>
+          Your client opens the link on any device, with no login, and answers
+          each payment with a receipt, a short note, or both.
+        </Step>
+        <Step>
+          Receipts go into that client's review queue like any other document,
+          with the note alongside when you review it. You can see which payments
+          are still waiting for an answer.
+        </Step>
+      </StepList>
+      <Screenshot
+        slot="list-aside"
+        src={clientPagePhoneImg}
+        alt="A client's list of payments on a phone, each with a button to send a receipt and a button to add a note"
+        class="mx-auto max-w-[280px]"
+      />
+      <div slot="after" class="space-y-4">
+        <p>
+          Fetch again whenever you want the list up to date. A payment explained
+          in FreeAgent since the last fetch comes off the client's list when you
+          next update it. Anything you've excluded stays excluded, and anything
+          the client has answered keeps its answer.
+        </p>
+        <p>
+          The link can go to whoever can find the receipts, such as the people
+          at the client who hold the company cards. Your contact at the client
+          can pass it on, or you can send it to each person yourself. Anyone
+          with the link can see the date, description, amount, and bank account
+          of each payment on the list, and your admins can replace the link or
+          switch the page off at any time.
+        </p>
+        <p>
+          Capture reads the transactions only when you click{" "}
+          <strong>Fetch transactions</strong>, and changes nothing in FreeAgent.
+          Fetching transactions and preparing lists cost nothing extra. The full
+          steps are in the{" "}
+          <a
+            href="https://support.withotto.app/capture/missing-receipts/freeagent/"
+            class={inlineLink}>
+            guide to missing receipts for FreeAgent clients
+          </a>
+          .
+        </p>
+      </div>
+    </WithAside>
+  </CaptureSection>
+
+  <CaptureSection
+    title="How clients send documents"
+    icon="hugeicons:inbox-upload">
+    <p>
+      Each client has its own email address, submission page, and WhatsApp
+      invite link. You choose which of them to give the client, so they use the
+      routes that suit them and your practice.
+    </p>
+    <ul class={bulletList}>
+      <li>
+        <strong>Email:</strong> the client forwards or sends documents to their
+        own address.
+      </li>
+      <li>
+        <strong>Submission page:</strong> they upload files from any device.
+      </li>
+      <li>
+        <strong>WhatsApp:</strong> they send a photo or file after joining
+        through the invite link.
+      </li>
+    </ul>
+    <p>
+      Whoever holds the receipts uses the route that suits them. They don't
+      create an account or install anything, and you don't register them in
+      advance. You can also upload files yourself. Everything arrives in the
+      same review queue, whichever way it's sent. There's more on each route on{" "}
+      <a href="/capture/" class={inlineLink}>
+        the Otto Capture page
+      </a>
+      .
+    </p>
+  </CaptureSection>
+
+  <CaptureSection
+    title="What it costs"
+    tone="soft"
+    width="default"
+    icon="hugeicons:coins-01">
+    <p class="max-w-3xl">
+      Otto Capture is priced per client, per month, on three tiers, and each
+      client sits on whichever tier costs least for what it published that
+      month.
+    </p>
+    <CapturePricing variant="compact" />
+    <p class="max-w-3xl pt-4">
+      Prices exclude VAT. Full pricing is on{" "}
+      <a href="/capture/" class={inlineLink}>
+        the Otto Capture page
+      </a>
+      .
+    </p>
+  </CaptureSection>
+
+  <CaptureTrialCta
+    title="Try it on as many FreeAgent clients as you like"
+    secondaryHref="https://www.freeagent.com/integrations/withotto/"
+    secondaryLabel="Find Otto Capture in FreeAgent's integrations">
+    <p>
+      The free 30-day trial has no limit on clients or documents, so connect
+      your Practice Dashboard and add as many clients as you like. We'd suggest
+      putting Otto through his paces: include the clients whose paperwork takes
+      longest each month, and send in a few weeks of their receipts and bills.
+      Review them with every line already read and a category suggested, then
+      fetch their unexplained transactions and send them their missing receipts
+      link.
+    </p>
+    <p>Otto Capture is available to UK accounting and bookkeeping practices.</p>
+    <Fragment slot="note">
+      Your clients can be on any mix of Xero, FreeAgent, and QuickBooks Online.
+      On QuickBooks Online, Otto publishes purchases.
+    </Fragment>
+  </CaptureTrialCta>
+</CapturePageLayout>

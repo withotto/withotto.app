@@ -3,13 +3,15 @@
 // The main content comes first in source order, so narrow screens and screen
 // readers get it before the aside. From `lg` the aside takes a fixed right
 // column, top-aligned beside the main content; it neither stretches nor
-// sticks. Content in the optional `after` slot sits under the main column on
-// wide screens, keeping its left edge.
+// sticks. The aside is optional: without one, the right column holds only
+// `list-aside`. Content in the optional `after` slot sits under the main
+// column on wide screens, keeping its left edge.
 //
 // A `StepList` in the `list` slot (with `steps` set to its number of steps)
 // stays one list, and from `lg` each step takes its own row of this grid, so
 // `list-aside` content (such as a screenshot) can start level with step
-// `listAsideFrom`. The aside then sits beside the rows above that step.
+// `listAsideFrom`. The aside, if there is one, then sits beside the rows
+// above that step.
 //
 // The lowest right-column item also spans the `after` row, which is `1fr`: a
 // grid item spanning a flexible row is left out when the rows above it are
@@ -37,6 +39,7 @@ const { class: className, steps = 0, listAsideFrom = 1 } = Astro.props;
 
 const hasMain = Astro.slots.has("default");
 const hasList = Astro.slots.has("list");
+const hasAside = Astro.slots.has("aside");
 const hasListAside = Astro.slots.has("list-aside");
 const hasAfter = Astro.slots.has("after");
 
@@ -66,7 +69,7 @@ const vars = [
   lastRow > 1 && `--rows: repeat(${lastRow - 1}, auto) 1fr`,
   hasMain && `--main-row: ${mainRow}`,
   hasList && `--list-rows: ${listRow} / span ${steps}`,
-  `--aside-rows: 1 / ${hasListAside ? listAsideRow : lastRow + 1}`,
+  hasAside && `--aside-rows: 1 / ${hasListAside ? listAsideRow : lastRow + 1}`,
   hasListAside && `--list-aside-rows: ${listAsideRow} / ${lastRow + 1}`,
   hasAfter && `--after-row: ${afterRow}`,
 ]
@@ -90,9 +93,11 @@ const vars = [
       <slot name="list" />
     </div>
   )}
-  <div class="with-aside-side with-aside-aside">
-    <slot name="aside" />
-  </div>
+  {hasAside && (
+    <div class="with-aside-side with-aside-aside">
+      <slot name="aside" />
+    </div>
+  )}
   {hasListAside && (
     <div class="with-aside-side with-aside-list-aside">
       <slot name="list-aside" />
