@@ -29,7 +29,7 @@ const breadcrumbs = [
   description={description}
   breadcrumbs={breadcrumbs}
   softwareApplication>
-  <CaptureHero title="Receipt capture for FreeAgent">
+  <CaptureHero title="Receipt and bill capture for practices on FreeAgent">
     Otto reads each receipt and bill your clients send, and suggests a category
     for each line from how you've coded that client's bills from the same
     supplier.
@@ -53,7 +53,25 @@ const breadcrumbs = [
   </CaptureHero>
 
   <CaptureSection
+    title="Built by a practice, for practices"
+    icon="hugeicons:building-03">
+    <p>
+      We run an accounting practice. We tried a lot of receipt capture tools,
+      and none had the mix of features and pricing that worked for our clients.
+      The small rough edges added up too, using them day in, day out.
+    </p>
+    <p>
+      So we built Otto Capture around the jobs that took our time, and those
+      jobs are the same whichever accounting platform a client is on. Clients
+      send documents without creating an account. They answer their missing
+      receipts from one list, not a spreadsheet. And Otto reads every line and
+      suggests a category from that client's own history.
+    </p>
+  </CaptureSection>
+
+  <CaptureSection
     title="Connecting your FreeAgent practice"
+    tone="soft"
     icon="hugeicons:plug-socket">
     <p>
       Connect Capture to your Practice Dashboard once, then add clients from it.
@@ -92,7 +110,6 @@ const breadcrumbs = [
 
   <CaptureSection
     title="From a client's document to FreeAgent"
-    tone="soft"
     icon="hugeicons:route-01">
     <StepList>
       <Step>
@@ -178,6 +195,7 @@ const breadcrumbs = [
 
   <CaptureSection
     title="Chasing missing receipts"
+    tone="soft"
     width="wide"
     icon="hugeicons:file-search">
     <WithAside steps={5} listAsideFrom={2}>
@@ -258,7 +276,6 @@ const breadcrumbs = [
 
   <CaptureSection
     title="How clients send documents"
-    tone="soft"
     icon="hugeicons:inbox-upload">
     <p>
       Each client has its own email address, submission page, and WhatsApp
@@ -292,6 +309,7 @@ const breadcrumbs = [
 
   <CaptureSection
     title="What it costs"
+    tone="soft"
     width="default"
     icon="hugeicons:coins-01">
     <p class="max-w-3xl">
