@@ -7,6 +7,7 @@ import CapturePricing from "@components/capture/CapturePricing.astro";
 import Screenshot from "@components/Screenshot.astro";
 import StepList from "@components/StepList.astro";
 import Step from "@components/Step.astro";
+import WithAside from "@components/WithAside.astro";
 import practiceClientsImg from "@assets/capture/freeagent/practice-clients.png";
 import reviewBillImg from "@assets/capture/freeagent/review-bill.png";
 import missingReceiptsTabImg from "@assets/capture/freeagent/missing-receipts-tab.png";
@@ -177,80 +178,82 @@ const breadcrumbs = [
 
   <CaptureSection
     title="Chasing missing receipts"
-    width="default"
+    width="wide"
     icon="hugeicons:file-search">
-    <p class="max-w-3xl">
-      Capture turns the payments you have no paperwork for into a list the
-      client answers.
-    </p>
-    <StepList class="pt-4">
-      <Step>
-        On the client's <strong>Missing receipts</strong> tab, choose the dates
-        and click <strong>Fetch transactions</strong>. Capture reads the
-        unexplained bank transactions from every bank account in the client's
-        FreeAgent company that isn't hidden, credit cards included. The dates
-        start at the last six months, and you can change either one.
-        <Screenshot
-          slot="media"
-          src={missingReceiptsTabImg}
-          alt="A FreeAgent client's Missing receipts tab, with the dates to fetch, the transactions stored, and how many on the client's list are still unanswered"
-        />
-      </Step>
-      <Step>
-        Exclude the payments the client doesn't need to explain, such as
-        transfers between their own accounts, and any that shouldn't be seen by
-        everyone with the link, such as salaries. Every other payment goes on
-        the list.
-      </Step>
-      <Step>
-        Share the client's link, when and how it suits your practice and the
-        client. Capture doesn't contact the client, so it fits the way you
-        already work with them.
-      </Step>
-      <Step mediaPlacement="beside">
-        Your client opens the link on any device, with no login, and answers
-        each payment with a receipt, a short note, or both.
-        <Screenshot
-          slot="media"
-          src={clientPagePhoneImg}
-          alt="A client's list of payments on a phone, each with a button to send a receipt and a button to add a note"
-          class="mx-auto max-w-[280px]"
-        />
-      </Step>
-      <Step>
-        Receipts go into that client's review queue like any other document,
-        with the note alongside when you review it. You can see which payments
-        are still waiting for an answer.
-      </Step>
-    </StepList>
-    <div class="max-w-3xl space-y-4 pt-8">
+    <WithAside steps={5} listAsideFrom={2}>
       <p>
-        Fetch again whenever you want the list up to date. A payment explained
-        in FreeAgent since the last fetch comes off the client's list when you
-        next update it. Anything you've excluded stays excluded, and anything
-        the client has answered keeps its answer.
+        Capture turns the payments you have no paperwork for into a list the
+        client answers.
       </p>
-      <p>
-        The link can go to whoever can find the receipts, such as the people at
-        the client who hold the company cards. Your contact at the client can
-        pass it on, or you can send it to each person yourself. Anyone with the
-        link can see the date, description, amount, and bank account of each
-        payment on the list, and your admins can replace the link or switch the
-        page off at any time.
-      </p>
-      <p>
-        Capture reads the transactions only when you click{" "}
-        <strong>Fetch transactions</strong>, and changes nothing in FreeAgent.
-        Fetching transactions and preparing lists cost nothing extra. The full
-        steps are in the{" "}
-        <a
-          href="https://support.withotto.app/capture/missing-receipts/freeagent/"
-          class={inlineLink}>
-          guide to missing receipts for FreeAgent clients
-        </a>
-        .
-      </p>
-    </div>
+      <StepList slot="list">
+        <Step>
+          On the client's <strong>Missing receipts</strong> tab, choose the
+          dates and click <strong>Fetch transactions</strong>. Capture reads the
+          unexplained bank transactions from every bank account in the client's
+          FreeAgent company that isn't hidden, credit cards included. The dates
+          start at the last six months, and you can change either one.
+          <Screenshot
+            slot="media"
+            src={missingReceiptsTabImg}
+            alt="A FreeAgent client's Missing receipts tab, with the dates to fetch, the transactions stored, and how many on the client's list are still unanswered"
+          />
+        </Step>
+        <Step>
+          Exclude the payments the client doesn't need to explain, such as
+          transfers between their own accounts, and any that shouldn't be seen
+          by everyone with the link, such as salaries. Every other payment goes
+          on the list.
+        </Step>
+        <Step>
+          Share the client's link, when and how it suits your practice and the
+          client. Capture doesn't contact the client, so it fits the way you
+          already work with them.
+        </Step>
+        <Step>
+          Your client opens the link on any device, with no login, and answers
+          each payment with a receipt, a short note, or both.
+        </Step>
+        <Step>
+          Receipts go into that client's review queue like any other document,
+          with the note alongside when you review it. You can see which payments
+          are still waiting for an answer.
+        </Step>
+      </StepList>
+      <Screenshot
+        slot="list-aside"
+        src={clientPagePhoneImg}
+        alt="A client's list of payments on a phone, each with a button to send a receipt and a button to add a note"
+        class="mx-auto max-w-[280px]"
+      />
+      <div slot="after" class="space-y-4">
+        <p>
+          Fetch again whenever you want the list up to date. A payment explained
+          in FreeAgent since the last fetch comes off the client's list when you
+          next update it. Anything you've excluded stays excluded, and anything
+          the client has answered keeps its answer.
+        </p>
+        <p>
+          The link can go to whoever can find the receipts, such as the people
+          at the client who hold the company cards. Your contact at the client
+          can pass it on, or you can send it to each person yourself. Anyone
+          with the link can see the date, description, amount, and bank account
+          of each payment on the list, and your admins can replace the link or
+          switch the page off at any time.
+        </p>
+        <p>
+          Capture reads the transactions only when you click{" "}
+          <strong>Fetch transactions</strong>, and changes nothing in FreeAgent.
+          Fetching transactions and preparing lists cost nothing extra. The full
+          steps are in the{" "}
+          <a
+            href="https://support.withotto.app/capture/missing-receipts/freeagent/"
+            class={inlineLink}>
+            guide to missing receipts for FreeAgent clients
+          </a>
+          .
+        </p>
+      </div>
+    </WithAside>
   </CaptureSection>
 
   <CaptureSection
