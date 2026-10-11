@@ -7,6 +7,7 @@ import CapturePricing from "@components/capture/CapturePricing.astro";
 import Screenshot from "@components/Screenshot.astro";
 import StepList from "@components/StepList.astro";
 import Step from "@components/Step.astro";
+import practiceClientsImg from "@assets/capture/freeagent/practice-clients.png";
 import reviewBillImg from "@assets/capture/freeagent/review-bill.png";
 import missingReceiptsTabImg from "@assets/capture/freeagent/missing-receipts-tab.png";
 import clientPagePhoneImg from "@assets/capture/freeagent/client-page-phone.png";
@@ -73,6 +74,10 @@ const breadcrumbs = [
       category in FreeAgent later, refresh the client's data in Capture to bring
       it across.
     </p>
+    <Screenshot
+      src={practiceClientsImg}
+      alt="The Add FreeAgent clients page, listing the practice's FreeAgent clients by entity type, with two ticked and one already connected"
+    />
     <p>
       Permissions, and everything Capture brings across, are covered in{" "}
       <a
