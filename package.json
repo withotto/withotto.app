@@ -46,7 +46,7 @@
     "supabase": "2.119.0"
   },
   "engines": {
-    "pnpm": ">=11 <12"
+    "pnpm": "<13"
   },
-  "packageManager": "pnpm@11.28.5"
+  "packageManager": "pnpm@12.10.1"
 }
