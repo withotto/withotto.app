@@ -24,7 +24,7 @@ Homepage and shared copy should lead with the brand (tools for accountants/bookk
 - **Icons:** `astro-icon` + `@iconify-json/hugeicons`
 - **SEO:** `astro-seo`, `@astrojs/sitemap`
 - **Backend:** Supabase edge functions (Deno) in `supabase/functions/`
-- **Package manager:** pnpm 11.x (pinned via `packageManager` + `engines`; also installable via `mise`)
+- **Package manager:** pnpm 12.x. `packageManager` is the authority, `mise.toml` pins the same exact version, and Renovate's `pnpm` group moves both (and both lockfiles) in one PR
 - **Formatter:** Prettier 3 with `prettier-plugin-astro` + `prettier-plugin-tailwindcss` (2-space indent)
 - **Site checks:** custom SEO script (`cheerio`) and axe-core accessibility check (`@axe-core/playwright`) in `scripts/checks/`, plus `lychee` for links (pinned in `mise.toml`)
 - **CI:** GitHub Actions. `checks.yml` runs the site checks on every PR and push to `main`
@@ -88,7 +88,7 @@ Use these aliases in imports. Do not write relative `../../` paths:
 | Raw Astro CLI         | `pnpm astro <cmd>`                                                                                                                                                        |
 | Supabase CLI          | `pnpm supabase <cmd>` (dev dep, use via pnpm)                                                                                                                             |
 
-**Always use `pnpm`.** Do not introduce `npm` or `yarn` commands; the repo is pinned to pnpm 11.x.
+**Always use `pnpm`.** Do not introduce `npm` or `yarn` commands; the repo is pinned to pnpm 12.x.
 
 ## Conventions
 
