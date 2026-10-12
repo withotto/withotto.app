@@ -189,5 +189,5 @@ What good titles, descriptions, headings, link text, alt text and structured dat
 
 - **Trailing slashes are mandatory** (`trailingSlash: "always"`). Links to `/foo` get a redirect; write `/foo/`.
 - **`public/` vs `src/assets/`**: `public/` is copied verbatim and served from `/`; `src/assets/` goes through Astro's image pipeline. Blog images and anything needing responsive `srcset` must live in `src/assets/`.
-- **pnpm is pinned** (`engines.pnpm: 11.x`, `packageManager: pnpm@11.5.1`). Do not commit a `package-lock.json` or `yarn.lock`.
+- **pnpm is pinned** to an exact 12.x in `packageManager`, the authority, and to the same version in `mise.toml`; Renovate bumps both together. pnpm records that version in `pnpm-lock.yaml` and switches to it itself, so do not add `engines.pnpm` (it only duplicates the pin and has broken Renovate's lockfile updates). Do not commit a `package-lock.json` or `yarn.lock`.
 - **Deno runtime in `supabase/functions/`**: do not import Node-style packages; use `jsr:` / `npm:` / `https://esm.sh/...` imports only.
