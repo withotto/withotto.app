@@ -1,6 +1,6 @@
 # Chatwoot (website live chat)
 
-How the public site's Chatwoot integration works in code, and the checklist for configuring the Chatwoot dashboard for sales. Load when touching the chat widget, its settings, or the sales conversation setup. Chatwoot replaced Intercom on the website in August 2026, so nothing Intercom-related remains in this repo. Intercom is still live in the Otto Capture app and the Bank Rec portal, which are migrating separately, which is why Intercom still appears in the privacy policy's list of third parties.
+How the public site's Chatwoot integration works in code, and the checklist for configuring the Chatwoot dashboard for sales. Load when touching the chat widget, its settings, or the sales conversation setup. Chatwoot replaced Intercom on the website in August 2026, and the Otto Capture app and the Bank Rec portal have since moved to Chatwoot as well. Intercom is retired everywhere and its organisation deleted, so it no longer appears in the privacy policy.
 
 ## What the code does
 
@@ -18,6 +18,7 @@ The website is more likely to bring sales enquiries than the tech-support conver
 ## Before you start
 
 - **Instance:** self-hosted Chatwoot at `https://chat.withotto.app`, with one inbox each for `withotto.app`, `capture.withotto.app`, and `portal.withotto.app`. Inbox-level settings differ per product, but contacts are account-wide and shared across all three.
+- **Hosting:** the instance runs on Hetzner servers in Finland, with attachments and backups in Backblaze (Netherlands). The privacy policy names both hosts, so update it if either moves.
 - **Website token:** the token in `ChatwootWidget.astro` identifies that inbox. It is public by design. Regenerating the inbox means updating the component.
 - **Allowed domains:** if the inbox restricts domains, `withotto.app` has to be listed, or the widget will not load in production.
 

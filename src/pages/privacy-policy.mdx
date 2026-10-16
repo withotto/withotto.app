@@ -1,7 +1,7 @@
 ---
 title: Privacy Policy
 layout: "layouts/MdLayout.astro"
-lastUpdated: 2026-08-14
+lastUpdated: 2026-10-16
 ---
 
 Your privacy is important to us. It is With Otto's policy to respect your privacy and comply with any applicable law and regulation regarding any personal information we may collect about you, including across our website, withotto.app, and other sites we own and operate.
@@ -9,10 +9,6 @@ Your privacy is important to us. It is With Otto's policy to respect your privac
 Personal information is any information about you which can be used to identify you. This includes information about you as a person (such as name, address, and date of birth), your devices, payment details, and even information about how you use a website or online service.
 
 In the event our site contains links to third-party sites and services, please be aware that those sites and services have their own privacy policies. After following a link to any third-party content, you should read their posted privacy policy information about how they collect and use personal information. This Privacy Policy does not apply to any of your activities after you leave our site.
-
-This policy is effective as of 18 June 2026
-
-Last updated: 23 June 2026
 
 ## Information we collect
 
@@ -40,11 +36,30 @@ If you use Otto Capture, our document capture product, we also collect and store
 
 ## How we process your documents
 
-To turn a document into structured data, the contents of that document are sent to a third-party large language model for extraction. We access these models through OpenRouter, which routes our requests to the model provider we have selected. The specific provider may change over time as we evaluate the best available models. We only use providers and models that operate under zero-data-retention terms, which means they do not keep the document contents we send them once they have returned the result, and no data is used for model training.
+To turn a document into structured data, Otto Capture sends the contents of that document to a third-party large language model, which extracts the details. Every request goes through Opper, an AI gateway run by Opper Technology AB, a Swedish company. Opper is hosted in the EU, in the Stockholm region of Amazon Web Services (AWS), and is certified to ISO/IEC 27001. It passes each request to the provider that runs the model we have chosen. We no longer use OpenRouter. The provider and the model may change over time as we evaluate the best available models.
+
+We use a model only when the provider's service meets every one of these zero-data-retention requirements:
+
+- It runs in the UK or an EU member state. This is where the service is hosted, not where the company running it is based.
+- It does not use anything we send to train a model.
+- It does not log the requests we send or the responses it returns.
+- No one at the provider reviews the documents we send. There is one exception, which the law requires: if the provider's automated checks flag content as child sexual abuse material, the provider may keep that content, review it, and report it to the authorities.
+- It keeps nothing once it has returned the result.
+- It does not share a prompt cache with other customers.
+
+The provider may screen documents automatically for safety, and may briefly cache a request in memory while it works. It keeps neither once the result is returned. Opper keeps a usage record of each request for five years, such as the number of tokens and the cost. The only labels we add are our environment and the processing step, so the record holds no identifier for the document, your organisation, or your client.
+
+Documents your clients send by WhatsApp reach us through Meta's WhatsApp Business Platform, so Meta receives them before we do (see [International transfers of personal information](#international-transfers-of-personal-information) below).
 
 Some documents that are not already PDFs are first converted using CloudConvert. Each provider named here processes the document contents only to perform the conversion or extraction, and all are listed under [Third parties we currently use](#disclosure-of-personal-information-to-third-parties) below.
 
-We also keep operational logs to monitor Otto Capture and to investigate and resolve problems, using AWS, PostHog, and Langfuse. Some of these logs include the requests we send for extraction, which can contain information from your documents.
+We also keep operational logs to monitor Otto Capture and to investigate and resolve problems:
+
+- AWS holds our logs and the record of each document's processing. These can include details taken from a document, such as the supplier's name and amounts. We keep logs for one month, and processing records for 90 days after a document finishes processing.
+- PostHog receives our operational logs, error reports, and product analytics. Logs and error reports can include error responses from a connected accounting platform. PostHog keeps logs for 30 days, and error reports and product analytics for one year.
+- Langfuse receives technical details of each request we send for extraction, such as the model, the number of tokens, the cost, the timing, and our internal reference numbers for the document, organisation, and client. It receives no document content and no file names. We delete these records within 28 days.
+
+Before 16 October 2026, Langfuse and PostHog could receive more detail about each extraction request, as this policy then said. We have deleted the Langfuse records that held more than the details above. PostHog stopped receiving extraction requests on 25 September 2026. The copies it holds expire by about 25 October 2026, and we have asked PostHog to delete the summaries it generated from them. Our previous gateway, OpenRouter, also kept copies of extraction requests made before 25 September 2026, and we have asked it to delete them.
 
 ## Connecting your accounting platform
 
@@ -96,16 +111,21 @@ Third parties we currently use include:
 
 - Amazon Web Services (AWS), for hosting, document storage, and operational logs
 - Supabase, for our database
-- OpenRouter, the gateway through which we access third-party large language model providers to extract data from your documents
+- Opper, the gateway through which we access third-party large language model providers to extract data from your documents
+- OpenRouter, our previous AI gateway, which we stopped using on 16 October 2026. It holds copies of extraction requests made before 25 September 2026, which we have asked it to delete
 - CloudConvert, for converting some documents to PDF
-- Langfuse, for monitoring and debugging our document processing
+- Meta, for receiving documents your clients send by WhatsApp
+- Langfuse, for monitoring our document processing
 - Stripe, for processing payments
 - PostHog, for product analytics and monitoring
-- Intercom, for live chat and customer messaging in the Otto Capture app and the Bank Rec portal
+- Hetzner, for hosting our self-hosted live chat, product tours, newsletter, website analytics, meeting scheduling, and secure file sharing, on servers in Finland
+- Backblaze, for storing files and backups for those self-hosted services, in the Netherlands
 
 ## International transfers of personal information
 
-The personal information we collect is stored and/or processed in United Kingdom of Great Britain and Northern Ireland (the), United States of America (the), Germany, or where we or our partners, affiliates, and third-party providers maintain facilities.
+The personal information we collect is stored and/or processed in the United Kingdom, in the European Economic Area (including Sweden, Finland, Germany, Ireland, and the Netherlands), in the United States, or where we or our partners, affiliates, and third-party providers maintain facilities.
+
+The AI provider that reads your documents for Otto Capture processes them in the UK or the EU. Documents your clients send by WhatsApp pass through Meta, which may store and process them in the United States.
 
 The countries to which we store, process, or transfer your personal information may not have the same data protection laws as the country in which you initially provided the information. If we transfer your personal information to third parties in other countries: (i) we will perform those transfers in accordance with the requirements of applicable law; and (ii) we will protect the transferred personal information in accordance with this privacy policy.
 
@@ -146,6 +166,11 @@ At our discretion, we may change our privacy policy to reflect updates to our bu
 If the changes are significant, or if required by applicable law, we will contact you (based on your selected preferences for communications from us) and all our registered users with the new details and links to the updated or changed policy.
 
 If required by law, we will get your permission or give you the opportunity to opt in to or opt out of, as applicable, any new uses of your personal information.
+
+### Major changes
+
+- **16 October 2026:** Otto Capture now sends documents for extraction through Opper instead of OpenRouter. We set out the zero-data-retention requirements every AI provider must meet, and the one exception the law requires. We reduced what our monitoring tools receive, added Meta (WhatsApp), Hetzner, and Backblaze to the third parties we use, removed Intercom, and updated the countries where your information is processed.
+- **18 June 2026:** We added how Otto Capture processes your documents, what it stores from an accounting platform you connect, and our role as data controller for that data.
 
 ## Additional disclosures for UK General Data Protection Regulation (UK GDPR) compliance (UK)
 
