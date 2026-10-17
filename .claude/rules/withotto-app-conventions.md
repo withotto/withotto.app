@@ -36,6 +36,8 @@ Tribal knowledge not obvious from reading a single file. Read before touching la
 - Use `<script is:inline>` for third-party embed scripts (external `src`); they must not be processed by Vite.
 - Use `define:vars={{ ... }}` on `is:inline` scripts to inject server-side values (e.g. `affiliateId`). Do not concatenate strings into the script body.
 - **Custom elements:** `StatsContainer.astro` registers `<stats-container>` via `customElements.define`. The pattern is: server-render skeleton with `data-state="loading|error|content"` children, then the custom element swaps visibility after fetching. Reuse this pattern for other dynamic widgets.
+- **Progressive enhancement without a fetch:** `capture/PricingCalculator.astro` registers `<pricing-calculator>`. The server renders the finished calculator at a starting state with its controls `disabled`, so it reads as a worked example without JavaScript. The element enables the controls and updates that same markup in place, never rebuilding it, so nothing shifts when it takes over. The frontmatter and the script both import the arithmetic from `@lib/capture-estimate`, which keeps the two renders identical, and that module is tested by `pnpm test:site`. Copy the shape for any other interactive widget.
+- **Capture pricing and VAT:** each tier card's unit line ends "excl. VAT" (`CapturePricing.astro`), so a page showing the cards carries no VAT line of its own. `priceUnitLabels` stays without it, because the SoftwareApplication Offers reuse it as `unitText`, and `valueAddedTaxIncluded` states the VAT there.
 
 ## Third-Party Integrations: Self-Hosted Subdomains
 

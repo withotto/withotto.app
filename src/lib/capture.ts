@@ -14,11 +14,52 @@ export const priceUnitLabels: Record<PriceUnit, string> = {
   business: "per month",
 };
 
+// Numbers, so the tier cards, the pricing calculator and the structured data
+// all format from one source. The labels below turn them into display text.
 export interface PricingTier {
   name: string;
-  price: string;
-  included: string;
-  extraDocument: string;
+  // Price per client per month, in pounds, excluding VAT.
+  price: number;
+  // Published documents a month that the price includes.
+  allowance: number;
+  // Each published document over the allowance, in pence.
+  extraDocumentPence: number;
+}
+
+// Built once: a formatter is costly to create, and the pricing calculator
+// formats on every slider step.
+const wholeNumber = new Intl.NumberFormat("en-GB", {
+  maximumFractionDigits: 0,
+});
+const poundsAndPence = new Intl.NumberFormat("en-GB", {
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+});
+
+// 9 -> "£9", 9.5 -> "£9.50", 2899971 -> "£2,899,971".
+export function formatPounds(amount: number): string {
+  const format = Number.isInteger(amount) ? wholeNumber : poundsAndPence;
+  return `£${format.format(amount)}`;
+}
+
+export function includedLabel(tier: PricingTier): string {
+  return `Up to ${wholeNumber.format(tier.allowance)}`;
+}
+
+export function extraDocumentLabel(tier: PricingTier): string {
+  return `${tier.extraDocumentPence}p`;
+}
+
+// The range of published documents a tier's allowance covers, from just above
+// the previous tier's allowance: "51 to 125 documents a month". These are the
+// allowances, not the volumes at which each tier becomes the cheapest.
+export function documentRangeLabel(
+  tiers: PricingTier[],
+  index: number,
+): string {
+  const from = index === 0 ? 1 : tiers[index - 1].allowance + 1;
+  const to = tiers[index].allowance;
+  return `${wholeNumber.format(from)} to ${wholeNumber.format(to)} documents a month`;
 }
 
 export type PricingPromiseKey = "no-documents" | "cheapest-tier" | "no-cliffs";
@@ -32,9 +73,9 @@ export interface PricingPromise {
 }
 
 export const pricingTiers: PricingTier[] = [
-  { name: "Small", price: "£9", included: "Up to 50", extraDocument: "18p" },
-  { name: "Medium", price: "£15", included: "Up to 125", extraDocument: "12p" },
-  { name: "Large", price: "£29", included: "Up to 350", extraDocument: "8p" },
+  { name: "Small", price: 9, allowance: 50, extraDocumentPence: 18 },
+  { name: "Medium", price: 15, allowance: 125, extraDocumentPence: 12 },
+  { name: "Large", price: 29, allowance: 350, extraDocumentPence: 8 },
 ];
 
 export const pricingPromises: PricingPromise[] = [

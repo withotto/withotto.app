@@ -43,20 +43,9 @@ export function breadcrumbList(items: BreadcrumbItem[], site: URL): JsonLd {
   };
 }
 
-// "£9" -> 9, "£9.50" -> 9.5. Fails the build on anything else, so a change of
-// currency or format in `@lib/capture` can't publish a wrong price.
-function poundsToNumber(price: string): number {
-  const match = /^£(\d+(?:\.\d{1,2})?)$/.exec(price.trim());
-  if (!match) {
-    throw new Error(
-      `Pricing tier price "${price}" is not a GBP amount like "£9" or "£9.50".`,
-    );
-  }
-  return Number(match[1]);
-}
-
 // One Offer per pricing tier: the tier's monthly price, in GBP, excluding VAT,
-// with the same unit the page's tier cards show. No AggregateOffer, rating or
+// with the unit the page's tier cards show (the cards add "excl. VAT", which
+// `valueAddedTaxIncluded` carries here). No AggregateOffer, rating or
 // review (the shared search rules ban ratings, and the per-document rates stay
 // in the visible table only).
 export function captureSoftwareApplication(
@@ -71,7 +60,7 @@ export function captureSoftwareApplication(
     operatingSystem: "Web",
     url: absoluteUrl("/capture/", site),
     offers: pricingTiers.map((tier) => {
-      const price = poundsToNumber(tier.price);
+      const { price } = tier;
       return {
         "@type": "Offer",
         name: tier.name,
