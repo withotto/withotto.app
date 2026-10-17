@@ -6,6 +6,7 @@ import { pricingTiers } from "./capture.ts";
 import {
   allocateSquares,
   clientsLabel,
+  DESKTOP_SQUARES,
   displayRows,
   estimate,
   formatCount,
@@ -178,6 +179,13 @@ describe("allocateSquares", () => {
     assert.deepEqual(squares, [8, 20, 8, 4]);
   });
 
+  it("keeps a square for every small tier at once", () => {
+    // 1,000 clients on a phone: 23 per square, so three tiers of one client
+    // each round to nothing and must all take a square from Small.
+    const squares = allocateSquares([1, 997, 1, 1], 44);
+    assert.deepEqual(squares, [1, 41, 1, 1]);
+  });
+
   it("always shows a tier that has clients", () => {
     const squares = allocateSquares([0, 239, 0, 1], 40);
     assert.equal(squares[3], 1);
@@ -202,6 +210,11 @@ describe("gridSquares", () => {
     ]);
     assert.equal(grid.rows.length, 20);
     assert.equal(grid.placeholders, 25);
+  });
+
+  it("pads to the phone grid whatever the cap, since padding only shows on a phone", () => {
+    const { counts } = estimate(pricingTiers, 10, startingMix.rows);
+    assert.equal(gridSquares(counts, 10, DESKTOP_SQUARES).placeholders, 35);
   });
 
   it("needs no padding once the grid is full", () => {
@@ -239,5 +252,6 @@ describe("formatCount and sliderFill", () => {
   it("places a slider by its share of the clients", () => {
     assert.equal(sliderFill(5, 20), "25%");
     assert.equal(sliderFill(0, 20), "0%");
+    assert.equal(sliderFill(0, 0), "0%");
   });
 });

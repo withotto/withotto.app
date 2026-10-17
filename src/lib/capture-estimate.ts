@@ -44,6 +44,7 @@ export function clientsLabel(count: number): string {
 
 // How far along its track a row's slider sits, for the filled part.
 export function sliderFill(value: number, clients: number): string {
+  if (clients <= 0) return "0%";
   return `${(value / clients) * 100}%`;
 }
 
