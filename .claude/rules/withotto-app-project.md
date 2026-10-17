@@ -30,7 +30,7 @@ Homepage and shared copy should lead with the brand (tools for accountants/bookk
 - **CI:** GitHub Actions. `checks.yml` runs the site checks on every PR and push to `main`
 - **Hosting:** Netlify (redirects in `public/_redirects`)
 
-No site test framework and no ESLint. The quality gate is `format:check` plus the `checks` workflow (build, `test:checks`, `check:seo`, `check:a11y`, `check:links`); run the same locally with `pnpm check`. The check scripts' own tests use Node's built-in runner. See `withotto-app-conventions.md`, "Site Checks", for the baseline policy.
+No test framework and no ESLint. The quality gate is `format:check` plus the `checks` workflow (`test:checks`, `test:site`, build, `check:seo`, `check:a11y`, `check:links`); run the same locally with `pnpm check`. Both test commands run Node's built-in runner through `scripts/run-tests.mjs`, which fails when the pattern matches no files (`node --test` alone would pass with zero tests). `test:site` runs `src/**/*.test.ts` through Node's type stripping, so a module under test must have no runtime `@lib` imports (only a top-level `import type`), and its test imports it by a same-directory `./name.ts` path, the one exception to the alias rule. See `withotto-app-conventions.md`, "Site Checks", for the baseline policy.
 
 ## Directory Structure
 
@@ -84,6 +84,7 @@ Use these aliases in imports. Do not write relative `../../` paths:
 | Accessibility check   | `pnpm check:a11y` (over an existing `dist/`; needs `pnpm setup:browsers` once)                                                                                            |
 | Check broken links    | `pnpm check:links` (lychee over an existing `dist/`; links to the site's own origin resolve against `dist/`)                                                              |
 | Check-script tests    | `pnpm test:checks`                                                                                                                                                        |
+| Site code tests       | `pnpm test:site` (`src/**/*.test.ts`, e.g. the pricing calculator's arithmetic)                                                                                           |
 | Baseline maintenance  | `pnpm check:baseline --prune` / `--accept`                                                                                                                                |
 | Raw Astro CLI         | `pnpm astro <cmd>`                                                                                                                                                        |
 | Supabase CLI          | `pnpm supabase <cmd>` (dev dep, use via pnpm)                                                                                                                             |

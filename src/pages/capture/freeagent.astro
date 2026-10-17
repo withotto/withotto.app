@@ -4,6 +4,7 @@ import CaptureHero from "@components/capture/CaptureHero.astro";
 import CaptureSection from "@components/capture/CaptureSection.astro";
 import CaptureTrialCta from "@components/capture/CaptureTrialCta.astro";
 import CapturePricing from "@components/capture/CapturePricing.astro";
+import PricingCalculator from "@components/capture/PricingCalculator.astro";
 import Screenshot from "@components/Screenshot.astro";
 import StepList from "@components/StepList.astro";
 import Step from "@components/Step.astro";
@@ -317,10 +318,12 @@ const breadcrumbs = [
       client sits on whichever tier costs least for what it published that
       month.
     </p>
-    <CapturePricing variant="compact" />
+    <CapturePricing variant="compact">
+      <PricingCalculator />
+    </CapturePricing>
     <p class="max-w-3xl pt-4">
-      Prices exclude VAT. Full pricing is on{" "}
-      <a href="/capture/" class={inlineLink}>
+      Full pricing is on{" "}
+      <a href="/capture/#pricing" class={inlineLink}>
         the Otto Capture page
       </a>
       .

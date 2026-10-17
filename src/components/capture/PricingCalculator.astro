@@ -1,0 +1,552 @@
+---
+// Otto Capture pricing calculator: a visitor sets how their clients split
+// across the tiers and sees a monthly estimate. Rendered inside
+// `CapturePricing`'s slot on /capture/ and the platform pages.
+//
+// The server renders the whole calculator at the starting mix, with the
+// controls disabled, so it reads as a worked example without JavaScript. The
+// `<pricing-calculator>` element then enables the controls and updates the
+// same markup in place, using the same arithmetic and labels
+// (`@lib/capture-estimate`), so nothing moves when it takes over.
+import { documentRangeLabel, formatPounds, pricingTiers } from "@lib/capture";
+import {
+  clientsLabel,
+  estimate,
+  formatCount,
+  gridSquares,
+  PHONE_SQUARES,
+  rowOrder,
+  savingDetail,
+  sliderFill,
+  startingMix,
+} from "@lib/capture-estimate";
+import type { Row } from "@lib/capture-estimate";
+import {
+  calculatorPlaceholder,
+  calculatorSavingHidden,
+  calculatorSquare,
+  calculatorSquareTier,
+} from "@lib/capture-styles";
+
+const { clients, rows } = startingMix;
+const result = estimate(pricingTiers, clients, rows);
+// The starting mix fits on a phone grid, so this is also the desktop grid.
+const grid = gridSquares(result.counts, clients, PHONE_SQUARES);
+const detail = savingDetail(result.counts.none);
+
+// Each paid row's range comes from the tier allowances, in tier order.
+function paidRow(index: number) {
+  const tier = pricingTiers[index];
+  return {
+    range: documentRangeLabel(pricingTiers, index),
+    detail: `${tier.name} · ${formatPounds(tier.price)} per client`,
+  };
+}
+const rowCopy: Record<Row, { range: string; detail: string }> = {
+  none: { range: "No documents published", detail: "No charge that month" },
+  small: paidRow(0),
+  medium: paidRow(1),
+  large: paidRow(2),
+};
+
+const fieldClass =
+  "box-content rounded-lg border border-default-soft bg-white px-2.5 py-2 text-right font-semibold text-default tabular-nums focus-visible:ring-2 focus-visible:ring-primary-strong focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-white disabled:text-default";
+---
+
+<pricing-calculator class="mt-16 block text-left text-base">
+  <div class="rounded-2xl border border-muted-strong bg-white p-8 max-md:rounded-xl max-md:px-4 max-md:py-5">
+    <h3 class="mb-2 text-2xl font-bold text-primary-strong">
+      Estimate your monthly cost
+    </h3>
+    <p class="mb-7 text-default-soft">
+      Tell us how your clients split across the tiers. A best guess is enough,
+      because most clients cost exactly their tier’s price.
+    </p>
+
+    <div class="grid items-start gap-9 md:grid-cols-[minmax(280px,360px)_1fr] max-md:gap-2">
+      <div
+        role="group"
+        aria-label="Your estimate"
+        class="sticky top-0 z-[5] rounded-[14px] border border-muted-strong bg-muted-soft p-5 md:top-5 max-md:-mx-4 max-md:rounded-none max-md:border-x-0 max-md:px-4 max-md:py-3 max-md:shadow-[0_6px_12px_-10px_rgba(0,0,0,0.35)]"
+        data-summary>
+        <div class="max-md:mb-2">
+          <p
+            class="m-0 text-[42px] leading-[1.05] font-extrabold text-primary-strong tabular-nums data-[long]:text-[32px] max-md:text-[30px] max-md:data-[long]:text-[24px]"
+            data-total-line>
+            <span class="text-[21px] font-semibold max-md:text-[17px]">
+              About
+            </span>{" "}
+            <span data-total>{formatPounds(result.total)}</span>
+          </p>
+          <p class="mt-1 mb-4 text-[15px] text-default-soft max-md:m-0 max-md:text-[13px]">
+            per month, excluding VAT
+          </p>
+        </div>
+
+        <p
+          class:list={[
+            "mb-4 rounded-[10px] border border-muted-strong bg-white px-3.5 py-3 max-md:mb-2.5 max-md:flex max-md:items-baseline max-md:gap-2 max-md:px-2.5 max-md:py-1.5",
+            result.saving === 0 && calculatorSavingHidden,
+          ]}
+          data-saving>
+          <strong class="block text-[21px] leading-tight font-bold text-primary-strong max-md:text-[15px] max-md:whitespace-nowrap">
+            <span data-saving-amount>{formatPounds(result.saving)}</span> saved
+          </strong>
+          <span
+            class="mt-0.5 block text-sm text-default-soft max-md:hidden"
+            data-saving-detail>
+            {detail.full}
+          </span>
+          <span
+            class="truncate text-[12.5px] text-default-soft md:hidden"
+            data-saving-detail-phone>
+            {detail.short}
+          </span>
+        </p>
+
+        <div
+          class="grid grid-cols-10 gap-[5px] max-md:grid-cols-15 max-md:gap-[3px]"
+          aria-hidden="true"
+          data-grid>
+          {grid.rows.map((row) => (
+            <div
+              class:list={[calculatorSquare, calculatorSquareTier[row]]}
+              data-square
+            />
+          ))}
+          {Array.from({ length: grid.placeholders }, () => (
+            <div class={calculatorPlaceholder} data-placeholder />
+          ))}
+        </div>
+        <p
+          class="mt-2.5 min-h-[1lh] text-[13px] text-default-soft max-md:mt-1.5 max-md:text-xs"
+          data-note></p>
+      </div>
+
+      <div class="min-w-0">
+        <div class="mb-1.5 flex flex-wrap items-center gap-3.5 border-b border-muted-strong pb-5">
+          <label for="pcalc-clients" class="text-lg font-semibold">
+            How many clients?
+          </label>
+          <input
+            id="pcalc-clients"
+            type="text"
+            inputmode="numeric"
+            autocomplete="off"
+            aria-describedby="pcalc-clients-hint"
+            value={formatCount(clients)}
+            disabled
+            class:list={[fieldClass, "w-[6ch] text-xl"]}
+            data-clients
+          />
+          <span id="pcalc-clients-hint" class="text-sm text-default-soft">
+            Every client you’d connect to Otto Capture
+          </span>
+        </div>
+
+        {rowOrder.map((row) => {
+          const label = `Clients with ${rowCopy[row].range.toLowerCase()}`;
+          return (
+            <div class="grid grid-cols-[18px_1fr_auto] gap-x-3.5 gap-y-2 border-b border-muted-strong py-4">
+              <span
+                class:list={[
+                  "row-span-2 mt-1 size-[18px] rounded border-2",
+                  calculatorSquareTier[row],
+                ]}
+                aria-hidden="true"
+              />
+              <div>
+                <strong class="text-[17px] font-bold">
+                  {rowCopy[row].range}
+                </strong>
+                <span class="block text-sm text-default-soft">
+                  {rowCopy[row].detail}
+                </span>
+              </div>
+              <div class="text-right whitespace-nowrap tabular-nums">
+                <strong
+                  class="block text-lg font-bold max-md:text-base"
+                  data-row-count={row}>
+                  {clientsLabel(result.counts[row])}
+                </strong>
+                <span class="text-sm text-default-soft" data-row-cost={row}>
+                  {formatPounds(result.costs[row])}
+                </span>
+                {row === "none" && (
+                  <span
+                    class:list={[
+                      "block text-[13px] font-semibold text-primary-strong",
+                      result.saving === 0 && "hidden",
+                    ]}
+                    data-row-saved>
+                    {formatPounds(result.saving)} saved
+                  </span>
+                )}
+              </div>
+              {row === "small" ? (
+                <div class="col-span-2 text-sm text-default-soft italic">
+                  Everyone else
+                </div>
+              ) : (
+                <div class="col-span-2 flex items-center gap-3.5">
+                  <input
+                    type="range"
+                    min="0"
+                    max={clients}
+                    step="1"
+                    value={rows[row]}
+                    autocomplete="off"
+                    aria-label={label}
+                    aria-valuetext={clientsLabel(rows[row])}
+                    disabled
+                    style={`--pct: ${sliderFill(rows[row], clients)}`}
+                    class="pcalc-range h-8 min-w-0 flex-1 max-md:scroll-mt-[200px] focus-visible:outline-none disabled:cursor-not-allowed"
+                    data-row-slider={row}
+                  />
+                  <input
+                    type="text"
+                    inputmode="numeric"
+                    autocomplete="off"
+                    aria-label={`Number of ${label.toLowerCase()}`}
+                    value={formatCount(rows[row])}
+                    disabled
+                    class:list={[
+                      fieldClass,
+                      "w-[6ch] max-md:scroll-mt-[200px] text-[17px]",
+                    ]}
+                    data-row-field={row}
+                  />
+                </div>
+              )}
+            </div>
+          );
+        })}
+
+        <p class="mt-4 max-w-[60ch] text-[14.5px] text-default-soft">
+          Some clients busier than their range? There’s no jump to a bigger
+          bill. Extra documents are charged at the tier’s per-document rate
+          until the next tier works out cheaper, and the client then moves up
+          automatically.
+        </p>
+      </div>
+    </div>
+
+    <p class="sr-only" aria-live="polite" data-live></p>
+  </div>
+</pricing-calculator>
+
+<style>
+  /* Range inputs have no utilities for their track and thumb. The thumb's
+     strong border carries the 3:1 non-text contrast; the fill is decoration. */
+  .pcalc-range {
+    appearance: none;
+    background: transparent;
+    margin: 0;
+  }
+  .pcalc-range::-webkit-slider-runnable-track {
+    height: 6px;
+    border-radius: 3px;
+    background: linear-gradient(
+      to right,
+      var(--color-primary) 0 var(--pct),
+      var(--color-muted-strong) var(--pct) 100%
+    );
+  }
+  .pcalc-range::-webkit-slider-thumb {
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    margin-top: -9px;
+    border-radius: 50%;
+    background: white;
+    border: 3px solid var(--color-primary-strong);
+    box-shadow: 0 1px 3px rgb(0 0 0 / 0.2);
+  }
+  .pcalc-range::-moz-range-track {
+    height: 6px;
+    border-radius: 3px;
+    background: var(--color-muted-strong);
+  }
+  .pcalc-range::-moz-range-progress {
+    height: 6px;
+    border-radius: 3px;
+    background: var(--color-primary);
+  }
+  .pcalc-range::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: white;
+    border: 3px solid var(--color-primary-strong);
+  }
+  .pcalc-range:focus-visible::-webkit-slider-thumb {
+    box-shadow:
+      0 0 0 2px white,
+      0 0 0 4px var(--color-primary-strong);
+  }
+  .pcalc-range:focus-visible::-moz-range-thumb {
+    box-shadow:
+      0 0 0 2px white,
+      0 0 0 4px var(--color-primary-strong);
+  }
+</style>
+
+<script>
+  import { formatPounds, pricingTiers } from "@lib/capture";
+  import {
+    clientsLabel,
+    controlledRows,
+    DESKTOP_SQUARES,
+    displayRows,
+    estimate,
+    formatCount,
+    gridSquares,
+    parseCount,
+    parseWholeNumber,
+    PHONE_SQUARES,
+    rowOrder,
+    savingDetail,
+    setRow,
+    sliderFill,
+    startingMix,
+  } from "@lib/capture-estimate";
+  import type {
+    ControlledRow,
+    Estimate,
+    Row,
+    Rows,
+  } from "@lib/capture-estimate";
+  import {
+    calculatorPlaceholder,
+    calculatorSavingHidden,
+    calculatorSquare,
+    calculatorSquareTier,
+  } from "@lib/capture-styles";
+
+  const phone = window.matchMedia("(width < 48rem)");
+  // The longest total that still fits at full size, e.g. "£99,999".
+  const longTotal = 7;
+
+  // Looked up once: the script updates this markup in place, never rebuilds it.
+  function findRefs(root: HTMLElement) {
+    const one = <T extends Element = HTMLElement>(selector: string): T => {
+      const element = root.querySelector<T>(selector);
+      if (!element) {
+        throw new Error(`Pricing calculator is missing ${selector}`);
+      }
+      return element;
+    };
+    const perRow = <T,>(rows: readonly Row[], make: (row: Row) => T) =>
+      Object.fromEntries(rows.map((row) => [row, make(row)])) as Record<Row, T>;
+    return {
+      clients: one<HTMLInputElement>("[data-clients]"),
+      counts: perRow(rowOrder, (row) => one(`[data-row-count="${row}"]`)),
+      costs: perRow(rowOrder, (row) => one(`[data-row-cost="${row}"]`)),
+      controls: perRow(controlledRows, (row) => ({
+        slider: one<HTMLInputElement>(`[data-row-slider="${row}"]`),
+        field: one<HTMLInputElement>(`[data-row-field="${row}"]`),
+      })),
+      total: one("[data-total]"),
+      totalLine: one("[data-total-line]"),
+      saving: one("[data-saving]"),
+      savingAmount: one("[data-saving-amount]"),
+      savingDetail: one("[data-saving-detail]"),
+      savingDetailPhone: one("[data-saving-detail-phone]"),
+      rowSaved: one("[data-row-saved]"),
+      grid: one("[data-grid]"),
+      note: one("[data-note]"),
+      live: one("[data-live]"),
+    };
+  }
+  type Refs = ReturnType<typeof findRefs>;
+
+  class PricingCalculator extends HTMLElement {
+    private clients = startingMix.clients;
+    // The rows the visitor last set; what shows is derived from it.
+    private anchor: Rows = { ...startingMix.rows };
+    private announceTimer: number | undefined;
+    private listeners: AbortController | undefined;
+    private refs!: Refs;
+
+    connectedCallback() {
+      this.refs = findRefs(this);
+      this.listeners = new AbortController();
+      const { signal } = this.listeners;
+      const { clients } = this.refs;
+
+      clients.addEventListener(
+        "input",
+        () => {
+          const count = parseCount(clients.value);
+          if (count === null) return;
+          this.clients = count;
+          // A count over the maximum shows the maximum straight away.
+          if (count !== parseWholeNumber(clients.value)) {
+            clients.value = formatCount(count);
+          }
+          this.update();
+          this.announce();
+        },
+        { signal },
+      );
+      clients.addEventListener(
+        "change",
+        () => {
+          clients.value = formatCount(this.clients);
+        },
+        { signal },
+      );
+
+      for (const row of controlledRows) {
+        const { slider, field } = this.refs.controls[row];
+        slider.addEventListener(
+          "input",
+          () => this.setRow(row, Number(slider.value)),
+          { signal },
+        );
+        field.addEventListener(
+          "input",
+          () => {
+            const value = parseWholeNumber(field.value);
+            if (value === null) return;
+            this.setRow(row, value);
+            // More than the other rows leave shows the limit straight away.
+            const shown = this.shown()[row];
+            if (shown !== value) field.value = formatCount(shown);
+          },
+          { signal },
+        );
+        field.addEventListener(
+          "change",
+          () => {
+            field.value = formatCount(this.shown()[row]);
+          },
+          { signal },
+        );
+      }
+
+      phone.addEventListener("change", () => this.update(), { signal });
+
+      // The controls start from the starting mix, never from the inputs, which
+      // a browser may have refilled from an earlier visit.
+      this.update();
+      this.querySelectorAll<HTMLInputElement>("input").forEach((input) => {
+        input.disabled = false;
+      });
+    }
+
+    disconnectedCallback() {
+      this.listeners?.abort();
+      window.clearTimeout(this.announceTimer);
+    }
+
+    private shown(): Rows {
+      return displayRows(this.anchor, this.clients);
+    }
+
+    private currentEstimate(): Estimate {
+      return estimate(pricingTiers, this.clients, this.shown());
+    }
+
+    private setRow(row: ControlledRow, value: number) {
+      this.anchor = setRow(this.shown(), this.clients, row, value);
+      this.update();
+      this.announce();
+    }
+
+    private update() {
+      const refs = this.refs;
+      const rows = this.shown();
+      const result = estimate(pricingTiers, this.clients, rows);
+      const focused = document.activeElement;
+
+      if (refs.clients !== focused) {
+        refs.clients.value = formatCount(this.clients);
+      }
+
+      for (const row of rowOrder) {
+        refs.counts[row].textContent = clientsLabel(result.counts[row]);
+        refs.costs[row].textContent = formatPounds(result.costs[row]);
+      }
+      for (const row of controlledRows) {
+        const { slider, field } = refs.controls[row];
+        slider.max = String(this.clients);
+        slider.value = String(rows[row]);
+        slider.setAttribute("aria-valuetext", clientsLabel(rows[row]));
+        slider.style.setProperty("--pct", sliderFill(rows[row], this.clients));
+        if (field !== focused) field.value = formatCount(rows[row]);
+      }
+
+      const totalText = formatPounds(result.total);
+      refs.total.textContent = totalText;
+      refs.totalLine.toggleAttribute("data-long", totalText.length > longTotal);
+
+      const noSaving = result.saving === 0;
+      const detail = savingDetail(result.counts.none);
+      for (const className of calculatorSavingHidden.split(" ")) {
+        refs.saving.classList.toggle(className, noSaving);
+      }
+      refs.savingAmount.textContent = formatPounds(result.saving);
+      refs.savingDetail.textContent = detail.full;
+      refs.savingDetailPhone.textContent = detail.short;
+      refs.rowSaved.textContent = `${formatPounds(result.saving)} saved`;
+      refs.rowSaved.classList.toggle("hidden", noSaving);
+
+      this.drawGrid(result.counts);
+    }
+
+    // Tells a screen reader the new total once the visitor stops changing it.
+    private announce() {
+      window.clearTimeout(this.announceTimer);
+      this.announceTimer = window.setTimeout(() => {
+        const { total, saving } = this.currentEstimate();
+        this.refs.live.textContent =
+          `About ${formatPounds(total)} per month, excluding VAT` +
+          (saving > 0 ? `, ${formatPounds(saving)} saved` : "");
+      }, 500);
+    }
+
+    // Keeps the existing squares in place and changes only what differs, so a
+    // slider drag recolours squares rather than redrawing the grid.
+    private drawGrid(counts: Estimate["counts"]) {
+      const { grid, note } = this.refs;
+      const cap = phone.matches ? PHONE_SQUARES : DESKTOP_SQUARES;
+      const { perSquare, rows, placeholders } = gridSquares(
+        counts,
+        this.clients,
+        cap,
+      );
+
+      const squares = [...grid.querySelectorAll<HTMLElement>("[data-square]")];
+      const firstPlaceholder = grid.querySelector("[data-placeholder]");
+      while (squares.length < rows.length) {
+        const square = document.createElement("div");
+        square.dataset.square = "";
+        grid.insertBefore(square, firstPlaceholder);
+        squares.push(square);
+      }
+      squares.splice(rows.length).forEach((square) => square.remove());
+      rows.forEach((row, index) => {
+        const className = `${calculatorSquare} ${calculatorSquareTier[row]}`;
+        if (squares[index].className !== className) {
+          squares[index].className = className;
+        }
+      });
+
+      const pads = [...grid.querySelectorAll("[data-placeholder]")];
+      while (pads.length < placeholders) {
+        const pad = document.createElement("div");
+        pad.dataset.placeholder = "";
+        pad.className = calculatorPlaceholder;
+        grid.append(pad);
+        pads.push(pad);
+      }
+      pads.splice(placeholders).forEach((pad) => pad.remove());
+
+      note.textContent =
+        perSquare > 1 ? `Each square is about ${perSquare} clients` : "";
+    }
+  }
+
+  customElements.define("pricing-calculator", PricingCalculator);
+</script>

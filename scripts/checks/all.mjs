@@ -1,9 +1,9 @@
 /**
  * `pnpm check`: the local mirror of the checks workflow. Tests the check
- * scripts, builds once, then runs every check against that build. Each check
- * runs even when an earlier one fails, so one run reports everything, the same
- * way the CI workflow does. Extra arguments (e.g. `--page /capture/`)
- * go to the SEO and accessibility checks.
+ * scripts and the site's own code, builds once, then runs every check against
+ * that build. Each check runs even when an earlier one fails, so one run
+ * reports everything, the same way the CI workflow does. Extra arguments
+ * (e.g. `--page /capture/`) go to the SEO and accessibility checks.
  */
 import { spawnSync } from "node:child_process";
 
@@ -16,6 +16,7 @@ function run(args) {
 }
 
 if (run(["test:checks"]) !== 0) process.exit(1);
+if (run(["test:site"]) !== 0) process.exit(1);
 if (run(["build"]) !== 0) process.exit(1);
 
 const failed = [

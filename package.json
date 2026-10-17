@@ -17,7 +17,8 @@
     "check:seo": "node scripts/checks/seo.mjs",
     "check:a11y": "node scripts/checks/a11y.mjs",
     "check:links": "node scripts/checks/links.mjs",
-    "test:checks": "node --test \"scripts/checks/**/*.test.mjs\"",
+    "test:checks": "node scripts/run-tests.mjs \"scripts/checks/**/*.test.mjs\"",
+    "test:site": "node scripts/run-tests.mjs \"src/**/*.test.ts\"",
     "check:baseline": "node scripts/checks/baseline.mjs",
     "setup:browsers": "playwright install chromium"
   },

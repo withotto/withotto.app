@@ -66,6 +66,9 @@ jobs:
       - name: Test the check scripts
         run: pnpm test:checks
 
+      - name: Test the site's code
+        run: pnpm test:site
+
       - name: Build
         id: build
         run: pnpm build
