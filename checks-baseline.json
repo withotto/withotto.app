@@ -22,12 +22,6 @@
     {
       "check": "seo",
       "rule": "h1-multiple",
-      "route": "/blog/how-to-get-clients-to-send-receipts/",
-      "count": 1
-    },
-    {
-      "check": "seo",
-      "rule": "h1-multiple",
       "route": "/blog/the-definitive-guide-to-reconciling-stripe-and-amazon-payouts-in-xero/",
       "count": 1
     },
