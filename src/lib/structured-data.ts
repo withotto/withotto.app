@@ -1,7 +1,8 @@
 // JSON-LD builders for pages that pass `jsonLd` to `Layout`. Each describes
 // only what a visitor can see on the page: the breadcrumb trail rendered by
-// `@components/Breadcrumbs.astro`, and Otto Capture's prices from the same
-// `pricingTiers` the visible pricing block renders, so neither can drift.
+// `@components/Breadcrumbs.astro`, Otto Capture's prices from the same
+// `pricingTiers` the visible pricing block renders, so neither can drift, and
+// a blog post from the same frontmatter its page renders.
 
 import { priceUnitLabels, pricingTiers } from "@lib/capture";
 import type { PriceUnit } from "@lib/capture";
@@ -40,6 +41,37 @@ export function breadcrumbList(items: BreadcrumbItem[], site: URL): JsonLd {
       name: item.name,
       item: absoluteUrl(item.path, site),
     })),
+  };
+}
+
+export interface BlogPostingInput {
+  // The post's title, shown as its H1.
+  headline: string;
+  // Site-relative path with a trailing slash, e.g. "/blog/some-post/".
+  path: string;
+  // The publish date shown under the title.
+  publishDate: Date;
+  // Absolute URL of the hero image, cropped as the page shows it.
+  imageUrl: string;
+}
+
+// The post as its page shows it: title, date and hero image, published by
+// With Otto. No author, because posts show no byline.
+export function blogPosting(post: BlogPostingInput, site: URL): JsonLd {
+  const url = absoluteUrl(post.path, site);
+  return {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: post.headline,
+    url,
+    mainEntityOfPage: url,
+    datePublished: post.publishDate.toISOString(),
+    image: post.imageUrl,
+    publisher: {
+      "@type": "Organization",
+      name: "With Otto",
+      url: absoluteUrl("/", site),
+    },
   };
 }
 
