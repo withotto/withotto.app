@@ -170,7 +170,7 @@ Removed pages use `301`. The one exception is `/capture/quickbooks/`, a `302` so
 ## SEO Defaults
 
 - Default title: `"With Otto — Transform bank reconciliation from tedious to effortless with your new AI assistant"`. When a page passes `title`, it becomes `<title> — With Otto`.
-- Default OG image: `/opengraph.png` (in `public/`).
+- Default OG image: `/opengraph.png` (in `public/`), 1200x630. A page can pass its own as `ogImage={{ path, alt }}` to `Layout`. Each blog post does: `src/pages/blog/[slug]/og.jpg.ts` builds `/blog/<slug>/og.jpg` from the post's hero, cropped to 1200x630 with the white logo on a navy panel, so a new post gets one with no extra step.
 - Landing pages that should NOT be indexed pass `seo={{ noindex: true }}` (see commit `e74c8a6`).
 - Never hand-roll `<meta>` tags. Extend the `seo` prop instead.
 

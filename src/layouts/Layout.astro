@@ -9,16 +9,18 @@ export interface Props {
   affiliateProgramId?: string;
   seo?: Partial<SEOProps>;
   jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+  ogImage?: { path: string; alt: string };
 }
 
-const { title, affiliateProgramId, seo, jsonLd } = Astro.props;
+const { title, affiliateProgramId, seo, jsonLd, ogImage } = Astro.props;
 ---
 
 <RootLayout
   title={title}
   affiliateProgramId={affiliateProgramId}
   seo={seo}
-  jsonLd={jsonLd}>
+  jsonLd={jsonLd}
+  ogImage={ogImage}>
   <Navbar />
   <main id="main">
     <slot />
