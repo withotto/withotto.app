@@ -20,7 +20,9 @@ const { title, affiliateProgramId, seo, jsonLd } = Astro.props;
   seo={seo}
   jsonLd={jsonLd}>
   <Navbar />
-  <slot />
+  <main id="main">
+    <slot />
+  </main>
   <Footer />
   <style is:global>
     /* Improve Page speed */

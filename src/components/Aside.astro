@@ -1,8 +1,8 @@
 ---
 // Related material set apart from the main flow, such as a practice story
 // beside a set of steps. Renders a complementary landmark named by its visible
-// label. The site's layouts have no <main>, so the landmark stays top-level as
-// long as it isn't placed inside another landmark (nav, header, footer).
+// label. It sits inside the layout's <main>, which axe accepts; keep it out of
+// the other landmarks (nav, header, footer).
 // To sit it beside steps, put it in `WithAside`'s `aside` slot.
 interface Props {
   // Visible label and accessible name, e.g. "How we used to do it."

@@ -34,7 +34,7 @@ const { page }: { page: Page } = Astro.props;
         Software thinking from a practice that builds its own.
       </Fragment>
     </Sectionhead>
-    <main class="my-16">
+    <div class="my-16">
       <ul class="mx-auto grid gap-16 md:grid-cols-2 lg:grid-cols-3">
         <!-- // Manage Blog in ./content/blog  -->
         {page?.data.map((blogPostEntry, index) => (
@@ -104,6 +104,6 @@ const { page }: { page: Page } = Astro.props;
         ))}
       </ul>
       <Pagination url={page.url} />
-    </main>
+    </div>
   </Container>
 </Layout>
