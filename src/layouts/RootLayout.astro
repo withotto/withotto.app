@@ -27,7 +27,7 @@ const makeTitle = title
 const defaultCanonical = new URL(Astro.url.pathname, Astro.site).toString();
 const defaultImage = new URL("/opengraph.png", Astro.site).toString();
 const defaultDescription =
-  "Practical automation tools for UK accounting and bookkeeping practices. Otto Capture for receipts and bills; Otto Bank Rec supporting existing customers through 2026. Built by a practice that uses its own software.";
+  "Software for UK accountants and bookkeepers: Otto Capture for receipts and bills, and Otto Bank Rec for bank reconciliation. Built by a practice that uses it.";
 ---
 
 <!doctype html>
@@ -78,7 +78,7 @@ const defaultDescription =
           image: defaultImage,
         },
         image: {
-          alt: defaultDescription,
+          alt: "With Otto",
         },
         ...seo.openGraph,
       }}
