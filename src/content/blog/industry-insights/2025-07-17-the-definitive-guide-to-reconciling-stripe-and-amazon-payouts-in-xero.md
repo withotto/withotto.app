@@ -23,8 +23,6 @@ tags:
 audioFile: "/audio/the-definitive-guide-to-reconciling-stripe-and-amazon-payouts-in-xero.mp3"
 ---
 
-# The Definitive Guide to Reconciling Stripe and Amazon Payouts in Xero
-
 Ecommerce clients represent one of the most significant growth opportunities for modern accounting practices. They are
 dynamic, fast-growing, and digitally native. But they come with a unique operational challenge that can quickly turn
 profitable work into a time-consuming headache: bank reconciliation of payment processors. For any bookkeeper or
