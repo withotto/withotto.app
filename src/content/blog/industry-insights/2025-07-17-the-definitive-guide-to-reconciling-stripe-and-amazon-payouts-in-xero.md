@@ -1,7 +1,7 @@
 ---
 draft: false
 title: "The Definitive Guide to Reconciling Stripe and Amazon Payouts in Xero"
-excerpt: "Stop wrestling with Stripe and Amazon payouts in Xero. Our guide details a three-step framework to automate your ecommerce reconciliation, turning a manual bottleneck into a streamlined workflow."
+excerpt: "Reconcile Stripe and Amazon payouts in Xero in three steps: a holding account per processor, bank rules for the volume, and Otto Bank Rec to reconcile each day."
 image: "/src/assets/blog/the-definitive-guide-to-reconciling-stripe-and-amazon-payouts-in-xero.jpg"
 imageAlt: "Turquoise wall with repeating geometric maze pattern"
 imageDescription: "A textured concrete or plaster wall painted in vibrant turquoise features a continuous geometric pattern of interlocking rectangular shapes forming a maze-like design. The pattern creates a sense of systematic organisation and flow, with the lighter blue-grey lines standing out against the turquoise background, suggesting both complexity and order working in harmony."

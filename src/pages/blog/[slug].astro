@@ -22,7 +22,7 @@ const { entry } = Astro.props;
 const { Content } = await render(entry);
 ---
 
-<Layout title={entry.data.title}>
+<Layout title={entry.data.title} seo={{ description: entry.data.excerpt }}>
   <Container>
     <div class="mx-auto mt-14 max-w-3xl text-center">
       <span class="text-sm font-medium tracking-wider text-primary-strong uppercase">

@@ -179,7 +179,7 @@ Removed pages use `301`. The one exception is `/capture/quickbooks/`, a `302` so
 What good titles, descriptions, headings, link text, alt text and structured data are, and the banned tactics, is set by `shared/accessible-copy.md` and `shared/search-pages.md`. Both are rendered from the private shared-rules repo on page paths. This is how this codebase carries them out:
 
 - **Title:** pass a short `title` prop to `Layout`. `RootLayout` appends ` — With Otto` (12 characters), so the prop has roughly 18 to 48 of the 30 to 60. Never put "With Otto" in it.
-- **Description:** `<Layout title="…" seo={{ description: "…" }}>`. `RootLayout` spreads `seo` over its defaults, so a page without one inherits the site-wide default. A blog post's `excerpt` is its listing summary; write it to the same standard.
+- **Description:** `<Layout title="…" seo={{ description: "…" }}>`. `RootLayout` spreads `seo` over its defaults, so a page without one inherits the site-wide default. A blog post's `excerpt` is both its listing summary and its meta description (`src/pages/blog/[slug].astro` passes it as `seo.description`), so write it to the same standard. There is no separate description field.
 - **Canonical:** never in the `seo` prop. `RootLayout` builds it from the page path and the site URL.
 - **Structured data:** the `jsonLd` prop on `Layout`, one object or an array. `RootLayout` renders one `<script type="application/ld+json">` per object.
 - **Headings:** marketing pages stop at H3 (voice rules). Pick the level for structure and style it with classes.

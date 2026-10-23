@@ -55,7 +55,7 @@ Frontmatter fields:
 
 - `title` (sentence case, as it will appear)
 - `publishDate` (ISO date)
-- `description` (one or two sentences, used for meta tags and previews)
+- `excerpt` (one or two sentences, about 70 to 160 characters: the summary on the blog listing and the post's meta description)
 - `author` (a real person's name)
 - `image` (optional hero image)
 
