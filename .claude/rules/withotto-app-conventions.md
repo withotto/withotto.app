@@ -27,6 +27,7 @@ Tribal knowledge not obvious from reading a single file. Read before touching la
 - **Location:** `src/content/blog/<category>/<YYYY-MM-DD-slug>.md` or `.mdx`, under `industry-insights/` or `product-updates/`. Use `.mdx` when the post imports a component.
 - **Schema:** `src/content.config.ts` (Zod). Required: `draft, title, excerpt, image, imageAlt, imageDescription, publishDate, category, tags`. Optional: `slug` (overrides filename), `imageCredit`, `imageCreditUrl`, `audioFile`.
 - **Slug generation:** `src/utils/blog.ts → getBlogSlug(entry)` strips the `YYYY-MM-DD-` filename prefix, or uses `frontmatter.slug` if present. Use this helper. Do not re-derive URLs manually.
+- **Per-post routes:** every route built once per post (`blog/[slug].astro`, `blog/[slug]/og.jpg.ts`) exports `getBlogPostPaths` from `src/utils/blog.ts` as its `getStaticPaths`, so they are generated from the same posts. A new per-post route does the same.
 - **`category` is a display string** (e.g. `"Product Updates"`), not the folder key. Folder key is recovered via `getBlogFolder(entry)`.
 - **Images in frontmatter** use a project-root path like `/src/assets/blog/product-updates.jpg`. Astro's `image()` helper resolves them at build time. Do not put blog images in `public/`.
 - **Audio files:** `frontmatter.audioFile` refers to files under `public/audio/` (rendered by `AudioPlayer.astro`).
@@ -152,7 +153,7 @@ Removed pages use `301`. The one exception is `/capture/quickbooks/`, a `302` so
 ## SEO Defaults
 
 - Default title: `"With Otto — practical software for accountants and bookkeepers"`. When a page passes `title`, it becomes `<title> — With Otto`.
-- Default OG image: `/opengraph.png` (in `public/`).
+- Default OG image: `/opengraph.png` (in `public/`), 1200x630. A page can pass its own as `ogImage={{ path, alt }}` to `Layout`. Each blog post does: `src/pages/blog/[slug]/og.jpg.ts` builds `/blog/<slug>/og.jpg` from the post's hero, cropped to 1200x630 with the white logo on a navy panel, so a new post gets one with no extra step.
 - Landing pages that should NOT be indexed pass `seo={{ noindex: true }}` (see commit `e74c8a6`).
 - Never hand-roll `<meta>` tags. Extend the `seo` prop instead.
 

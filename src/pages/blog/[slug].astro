@@ -1,22 +1,15 @@
 ---
-import { getCollection, render } from "astro:content";
+import { render } from "astro:content";
 import Layout from "@layouts/Layout.astro";
 import Container from "@components/container.astro";
 import { Picture, getImage } from "astro:assets";
 import { Icon } from "astro-icon/components";
 import AudioPlayer from "@components/AudioPlayer.astro";
 import Link from "@components/ui/link.astro";
-import { getBlogSlug } from "@utils/blog";
+import { getBlogPostPaths, getBlogSlug } from "@utils/blog";
 import { blogPosting } from "@lib/structured-data";
 
-// Generate a new path for every collection entry
-export async function getStaticPaths() {
-  const blogEntries = await getCollection("blog");
-  return blogEntries.map((entry) => ({
-    params: { slug: getBlogSlug(entry) },
-    props: { entry },
-  }));
-}
+export const getStaticPaths = getBlogPostPaths;
 
 // Get the entry directly from the prop on render
 const { entry } = Astro.props;
@@ -37,10 +30,20 @@ const structuredImage = await getImage({
   format: "jpg",
 });
 
+const path = `/blog/${getBlogSlug(entry)}/`;
+
+// The hero with the With Otto logo, built by `og.jpg.ts` beside this page.
+const ogImage = {
+  path: `${path}og.jpg`,
+  alt: entry.data.imageAlt
+    ? `${entry.data.imageAlt}, with the With Otto logo`
+    : "With Otto",
+};
+
 const jsonLd = blogPosting(
   {
     headline: entry.data.title,
-    path: `/blog/${getBlogSlug(entry)}/`,
+    path,
     publishDate: entry.data.publishDate,
     imageUrl: new URL(structuredImage.src, Astro.site).toString(),
   },
@@ -51,7 +54,8 @@ const jsonLd = blogPosting(
 <Layout
   title={entry.data.title}
   seo={{ description: entry.data.excerpt }}
-  jsonLd={jsonLd}>
+  jsonLd={jsonLd}
+  ogImage={ogImage}>
   <Container>
     <div class="mx-auto mt-14 max-w-3xl text-center">
       <span class="text-sm font-medium tracking-wider text-primary-strong uppercase">
