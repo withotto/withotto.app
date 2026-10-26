@@ -1,22 +1,15 @@
 ---
-import { getCollection, render } from "astro:content";
+import { render } from "astro:content";
 import Layout from "@layouts/Layout.astro";
 import Container from "@components/container.astro";
 import { Picture, getImage } from "astro:assets";
 import { Icon } from "astro-icon/components";
 import AudioPlayer from "@components/AudioPlayer.astro";
 import Link from "@components/ui/link.astro";
-import { getBlogSlug } from "@utils/blog";
+import { getBlogPostPaths, getBlogSlug } from "@utils/blog";
 import { blogPosting } from "@lib/structured-data";
 
-// Generate a new path for every collection entry
-export async function getStaticPaths() {
-  const blogEntries = await getCollection("blog");
-  return blogEntries.map((entry) => ({
-    params: { slug: getBlogSlug(entry) },
-    props: { entry },
-  }));
-}
+export const getStaticPaths = getBlogPostPaths;
 
 // Get the entry directly from the prop on render
 const { entry } = Astro.props;

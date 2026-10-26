@@ -1,4 +1,4 @@
-import type { CollectionEntry } from "astro:content";
+import { getCollection, type CollectionEntry } from "astro:content";
 
 type BlogEntry = CollectionEntry<"blog">;
 
@@ -9,6 +9,16 @@ export function getBlogSlug(entry: BlogEntry): string {
   // Take the basename, then strip the YYYY-MM-DD- date prefix.
   const basename = entry.id.split("/").pop() ?? entry.id;
   return basename.replace(/^\d{4}-\d{2}-\d{2}-/, "");
+}
+
+// One path per post, shared by every route built per post (the post page and
+// its Open Graph image), so they are always generated from the same posts.
+export async function getBlogPostPaths() {
+  const blogEntries = await getCollection("blog");
+  return blogEntries.map((entry) => ({
+    params: { slug: getBlogSlug(entry) },
+    props: { entry },
+  }));
 }
 
 export function getBlogFolder(entry: BlogEntry): string {

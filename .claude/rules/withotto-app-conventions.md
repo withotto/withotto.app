@@ -26,6 +26,7 @@ Tribal knowledge not obvious from reading a single file. Read before touching la
 - **Location:** `src/content/blog/<category>/<YYYY-MM-DD-slug>.mdx`. Only `product-updates/` has posts today; `industry-insights/` is an empty scaffold.
 - **Schema:** `src/content/config.ts` (Zod). Required: `draft, title, excerpt, image, imageAlt, imageDescription, publishDate, category, tags`. Optional: `slug` (overrides filename), `imageCredit`, `imageCreditUrl`, `audioFile`.
 - **Slug generation:** `src/utils/blog.ts → getBlogSlug(entry)` strips the `YYYY-MM-DD-` filename prefix, or uses `frontmatter.slug` if present. Use this helper. Do not re-derive URLs manually.
+- **Per-post routes:** every route built once per post (`blog/[slug].astro`, `blog/[slug]/og.jpg.ts`) exports `getBlogPostPaths` from `src/utils/blog.ts` as its `getStaticPaths`, so they are generated from the same posts. A new per-post route does the same.
 - **`category` is a display string** (e.g. `"Product Updates"`), not the folder key. Folder key is recovered via `getBlogFolder(entry)`.
 - **Images in frontmatter** use a project-root path like `/src/assets/blog/product-updates.jpg`. Astro's `image()` helper resolves them at build time. Do not put blog images in `public/`.
 - **Audio files:** `frontmatter.audioFile` refers to files under `public/audio/` (rendered by `AudioPlayer.astro`).

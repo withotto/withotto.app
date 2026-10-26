@@ -2,10 +2,9 @@
 // link previews expect, with the With Otto logo on a navy panel in the bottom
 // left corner. Most heroes are abstract and carry no branding of their own.
 import type { APIRoute, GetStaticPaths } from "astro";
-import { getCollection } from "astro:content";
 import sharp from "sharp";
 import logoSvg from "@assets/logo-white.svg?raw";
-import { getBlogSlug } from "@utils/blog";
+import { getBlogPostPaths } from "@utils/blog";
 
 const WIDTH = 1200;
 const HEIGHT = 630;
@@ -16,23 +15,17 @@ const PANEL_PADDING_X = 28;
 const PANEL_PADDING_Y = 22;
 const PANEL_MARGIN = 40;
 
-let logo: Promise<Buffer> | undefined;
+let logo: Promise<{ data: Buffer; info: sharp.OutputInfo }> | undefined;
 
-function renderLogo(): Promise<Buffer> {
+function renderLogo() {
   logo ??= sharp(Buffer.from(logoSvg), { density: 300 })
     .resize({ width: LOGO_WIDTH })
     .png()
-    .toBuffer();
+    .toBuffer({ resolveWithObject: true });
   return logo;
 }
 
-export const getStaticPaths = (async () => {
-  const blogEntries = await getCollection("blog");
-  return blogEntries.map((entry) => ({
-    params: { slug: getBlogSlug(entry) },
-    props: { entry },
-  }));
-}) satisfies GetStaticPaths;
+export const getStaticPaths = getBlogPostPaths satisfies GetStaticPaths;
 
 export const GET: APIRoute = async ({ props }) => {
   const { entry } = props as Awaited<
@@ -47,8 +40,8 @@ export const GET: APIRoute = async ({ props }) => {
     );
   }
 
-  const logoPng = await renderLogo();
-  const { height: logoHeight = 0 } = await sharp(logoPng).metadata();
+  const { data: logoPng, info } = await renderLogo();
+  const logoHeight = info.height;
   const panelWidth = LOGO_WIDTH + PANEL_PADDING_X * 2;
   const panelHeight = logoHeight + PANEL_PADDING_Y * 2;
   const panelLeft = PANEL_MARGIN;
