@@ -26,7 +26,7 @@ Not for:
 
 ## Author voice
 
-Blog posts are written in team voice. The author is a real person, usually a member of the With Otto team. Bylines go to that person, not to Otto. Otto is referenced in third person, the same way any other named thing is.
+Blog posts are written in team voice, by a real person, usually a member of the With Otto team. Posts carry no byline today; if one is ever added, it names that person, never Otto. Otto is referenced in third person, the same way any other named thing is.
 
 The narrator uses "we" for team decisions and "I" sparingly where it adds the author's own perspective. Most sentences have no pronoun at all; they describe what the product does or how something works.
 
@@ -47,26 +47,23 @@ A typical post has:
 
 Avoid "conclusion" or "summary" headings unless the post is long enough to warrant them.
 
-## Slug and metadata
+## Filename and metadata
 
-Slugs are date-prefixed, lowercase, and hyphen-separated: `YYYY-MM-DD-short-descriptive-slug.mdx`. Example: `2025-06-05-bank-rule-activity-report.mdx`.
+Filenames are date-prefixed, lowercase, and hyphen-separated, as `.md`, or `.mdx` when the post uses a component such as `Screenshot`: `YYYY-MM-DD-short-descriptive-slug.mdx`. The URL drops the date, so `2025-06-05-bank-rule-activity-report.mdx` is published at `/blog/bank-rule-activity-report/`.
 
-Frontmatter fields:
+The frontmatter fields that need writing:
 
 - `title` (sentence case, as it will appear)
-- `publishDate` (ISO date)
 - `excerpt` (one or two sentences, about 70 to 160 characters: the summary on the blog listing and the post's meta description)
-- `author` (a real person's name)
-- `image` (optional hero image)
+- `imageAlt` and `imageDescription` for the hero image, which every post has (see "Alt text" in `withotto-app-conventions.md`)
 
-Check `withotto-app-conventions.md` or an existing post for the exact frontmatter schema before publishing.
+The full schema, including `publishDate`, `category`, `tags` and `draft`, is under "Content Collections: Blog" in `withotto-app-conventions.md`. There is no author field.
 
 ## Audio versions
 
 Some posts include an audio version. When one is present:
 
-- The file lives alongside the post assets.
-- The post mentions the audio near the top: "You can also listen to this post."
+- The file lives in `public/audio/`, named in the post's `audioFile` frontmatter. The template shows a player headed "Listen to" and the title between the hero image and the body, so the post itself doesn't need to mention the audio.
 - Audio narration matches the post's voice, which is team voice. The audio shouldn't be framed as Otto reading the post.
 
 ## Tagline
@@ -79,7 +76,7 @@ This replaces the previous Bank Rec-specific tagline ("Otto's guide to working s
 
 ## What not to do
 
-- Don't sign posts "Otto" or "The Otto team". Use real names.
+- Don't sign posts "Otto" or "The Otto team". A sign-off, where a post has one, names a real person.
 - Don't frame Otto as the author ("In this post, I'm going to walk you through…"). Otto is a topic in the post, not its narrator.
 - Don't open posts with "In today's fast-paced world…" or any variation.
 - Don't end posts with "Let us know in the comments!" (there are no comments).

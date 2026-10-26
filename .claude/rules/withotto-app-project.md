@@ -1,6 +1,6 @@
 # Project: withotto.app (v2)
 
-**Last Updated:** 2026-09-30
+**Last Updated:** 2026-10-23
 
 ## Overview
 
@@ -38,11 +38,12 @@ No test framework and no ESLint. The quality gate is `format:check` plus the `ch
 .
 ├── src/
 │   ├── pages/          # Routes (.astro + .mdx). [slug].astro for dynamic pages.
-│   ├── layouts/        # RootLayout, Layout, LandingLayout, MdLayout
-│   ├── components/     # Reusable .astro components (home/, navbar/, faq/, ui/, blog/, brand-kit/)
-│   ├── content/        # Content collections — schema in src/content/config.ts
+│   ├── layouts/        # RootLayout, Layout, CapturePageLayout, LandingLayout, MdLayout
+│   ├── components/     # Reusable .astro components (capture/, home/, navbar/, faq/, ui/, brand-kit/)
+│   ├── content/        # Content collections — schema in src/content.config.ts
 │   │   └── blog/       # Subfolders: industry-insights/, product-updates/
-│   ├── assets/         # Images referenced from content/components (blog/, testimonials/)
+│   ├── assets/         # Images referenced from content/components (blog/, capture/, testimonials/)
+│   ├── lib/            # Capture pricing and estimate (tested by test:site), JSON-LD builders
 │   ├── utils/          # Pure TS helpers (blog.ts)
 │   ├── types/          # Shared TS types
 │   └── styles/         # global.css — Tailwind 4 @theme brand tokens
@@ -96,7 +97,7 @@ Use these aliases in imports. Do not write relative `../../` paths:
 - **Components:** `.astro` files. Named exports for helper types (e.g. `export interface Props`). Use `Astro.props` destructuring.
 - **Layouts:** Nest `Layout` → `RootLayout`. `Layout` adds Navbar + Footer; `RootLayout` handles `<head>` and SEO.
 - **SEO:** Pages pass `title` and optional `seo?: Partial<SEOProps>` to `Layout`.
-- **Content collections:** Blog entries are MDX in `src/content/blog/<category>/<YYYY-MM-DD-slug>.mdx`. Schema defined in `src/content/config.ts` (Zod). Clean URL slugs derived by `src/utils/blog.ts` (`getBlogSlug` strips the date prefix).
+- **Content collections:** Blog entries are Markdown or MDX in `src/content/blog/<category>/<YYYY-MM-DD-slug>.md` (or `.mdx`). Schema defined in `src/content.config.ts` (Zod). Clean URL slugs derived by `src/utils/blog.ts` (`getBlogSlug` strips the date prefix).
 - **Images:** Use Astro's `image()` helper in content schemas. Site defaults to `layout: "constrained"` with `responsiveStyles: true`.
 - **Legal / policy pages:** `.mdx` under `src/pages/` (privacy-policy, cookie-policy, terms-and-conditions, acceptable-use-policy, bank-rec-security-and-privacy).
 - **Formatting:** Always 2-space, no tabs, `bracketSameLine: true`. Run `pnpm format` before committing.
@@ -115,8 +116,6 @@ Use these aliases in imports. Do not write relative `../../` paths:
 
 - `.env.development` holds local dev values. Never commit `.env.production` or secret keys.
 - Public stats endpoint: `PUBLIC_STATS_API_URL` (browser-exposed; `PUBLIC_` prefix required by Astro).
-- QuickBooks Online waitlist endpoint: `PUBLIC_QUICKBOOKS_WAITLIST_API_URL` (browser-exposed). Nothing on the site reads it any more: the `/capture/quickbooks/` waitlist page was removed when QuickBooks Online shipped, and that path now redirects to `/capture/`. The variable and the function behind it are retained until someone decides what happens to the sign-up list.
-- Listmonk admin credentials for the `quickbooks-waitlist` function are Supabase function secrets, never site env vars: `LISTMONK_API_URL`, `LISTMONK_API_USER`, `LISTMONK_API_TOKEN`, `LISTMONK_QBO_LIST_ID` (the numeric list ID, not the UUID).
 - Supabase: `PROD_SUPABASE_URL`, `PROD_SUPABASE_ANON_KEY` (anon key only; never ship service-role keys to the site bundle).
 
 ## Redirects

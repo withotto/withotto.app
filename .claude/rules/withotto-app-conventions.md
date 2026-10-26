@@ -6,25 +6,26 @@ description: Component, layout, integration and content conventions specific to 
 
 Tribal knowledge not obvious from reading a single file. Read before touching layouts, content, forms, or embeds.
 
-## Layouts: Four Roles
+## Layouts: Five Roles
 
-| Layout                | Used by                           | Notes                                                                                                                                                                                                                                                                       |
-| --------------------- | --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `RootLayout.astro`    | Never directly, wrapped by others | Sets `<head>`, SEO (`astro-seo`), fonts, canonical, default OG image. Title suffix is `" — With Otto"`.                                                                                                                                                                     |
-| `Layout.astro`        | `.astro` pages                    | Wraps `RootLayout` + `Navbar` + `Footer`. The default for pages.                                                                                                                                                                                                            |
-| `MdLayout.astro`      | Legal/policy `.mdx` pages         | Used via MDX frontmatter `layout: "layouts/MdLayout.astro"`. Renders Tailwind `prose`, Table of Contents, optional `lastUpdated` date, optional `pdfFilename` download link (resolves to `/files/<name>` under `public/`). Receives `{ frontmatter, headings }` from Astro. |
-| `LandingLayout.astro` | (currently unused)                | Accepts `frontmatter.title / subtitle / affiliateProgramId / seo`. Kept for future landing pages. Safe to reuse, but not safe to delete without checking.                                                                                                                   |
+| Layout                    | Used by                                                                                     | Notes                                                                                                                                                                                                                                                                       |
+| ------------------------- | ------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `RootLayout.astro`        | Never directly, wrapped by others                                                           | Sets `<head>`, SEO (`astro-seo`), fonts, canonical, default OG image. Title suffix is `" — With Otto"`.                                                                                                                                                                     |
+| `Layout.astro`            | `.astro` pages                                                                              | Wraps `RootLayout` + `Navbar` + `Footer`. The default for pages.                                                                                                                                                                                                            |
+| `MdLayout.astro`          | Legal/policy `.mdx` pages                                                                   | Used via MDX frontmatter `layout: "layouts/MdLayout.astro"`. Renders Tailwind `prose`, Table of Contents, optional `lastUpdated` date, optional `pdfFilename` download link (resolves to `/files/<name>` under `public/`). Receives `{ frontmatter, headings }` from Astro. |
+| `CapturePageLayout.astro` | Otto Capture subpages (`/capture/xero/`, `/capture/freeagent/`, `/capture/for-businesses/`) | Wraps `Layout`. Takes `title`, `description` and the `breadcrumbs` trail, renders the visible breadcrumbs, and builds the BreadcrumbList JSON-LD (plus the SoftwareApplication with `softwareApplication`). Open each page with `CaptureHero`.                              |
+| `LandingLayout.astro`     | (currently unused)                                                                          | Accepts `frontmatter.title / subtitle / affiliateProgramId / seo`. Kept for future landing pages. Safe to reuse, but not safe to delete without checking.                                                                                                                   |
 
 **MDX `layout:` frontmatter**: Astro auto-passes `frontmatter` and `headings` to the layout. Do not re-declare these as props in MDX.
 
 ## Affiliate Program Threading
 
-`affiliateProgramId` is threaded Page → `Layout` → `RootLayout` → `BookingForm`. The booking embed reads `ref` from `window.affiliateId` or query param and appends it to `data-query`. Preserve this prop name and chain.
+`affiliateProgramId` is threaded Page → `Layout` (or `LandingLayout`, from its frontmatter) → `RootLayout`, which loads the Pushlap affiliate tracker with that program ID. No page passes one today. Separately, `BookingForm` (on `/bank-reconciliation/`) takes an `affiliateId` prop, falls back to `window.affiliateId`, and appends it as `ref` to the booking embed's `data-query`. Preserve both prop names and the chain.
 
 ## Content Collections: Blog
 
-- **Location:** `src/content/blog/<category>/<YYYY-MM-DD-slug>.mdx`. Only `product-updates/` has posts today; `industry-insights/` is an empty scaffold.
-- **Schema:** `src/content/config.ts` (Zod). Required: `draft, title, excerpt, image, imageAlt, imageDescription, publishDate, category, tags`. Optional: `slug` (overrides filename), `imageCredit`, `imageCreditUrl`, `audioFile`.
+- **Location:** `src/content/blog/<category>/<YYYY-MM-DD-slug>.md` or `.mdx`, under `industry-insights/` or `product-updates/`. Use `.mdx` when the post imports a component.
+- **Schema:** `src/content.config.ts` (Zod). Required: `draft, title, excerpt, image, imageAlt, imageDescription, publishDate, category, tags`. Optional: `slug` (overrides filename), `imageCredit`, `imageCreditUrl`, `audioFile`.
 - **Slug generation:** `src/utils/blog.ts → getBlogSlug(entry)` strips the `YYYY-MM-DD-` filename prefix, or uses `frontmatter.slug` if present. Use this helper. Do not re-derive URLs manually.
 - **Per-post routes:** every route built once per post (`blog/[slug].astro`, `blog/[slug]/og.jpg.ts`) exports `getBlogPostPaths` from `src/utils/blog.ts` as its `getStaticPaths`, so they are generated from the same posts. A new per-post route does the same.
 - **`category` is a display string** (e.g. `"Product Updates"`), not the folder key. Folder key is recovered via `getBlogFolder(entry)`.
@@ -42,42 +43,23 @@ Tribal knowledge not obvious from reading a single file. Read before touching la
 
 ## Third-Party Integrations: Self-Hosted Subdomains
 
-| Service                    | Endpoint                                                                                           | Component                                  |
-| -------------------------- | -------------------------------------------------------------------------------------------------- | ------------------------------------------ |
-| Bookings                   | `https://bookings.withotto.app` (+ `/embed.js`)                                                    | `BookingForm.astro`                        |
-| Live chat                  | `https://chat.withotto.app` (+ `/packs/js/sdk.js`)                                                 | `ChatwootWidget.astro`                     |
-| Newsletter                 | `https://newsletter.withotto.app/subscription/form` (Listmonk-style)                               | `ui/NewsletterSignup.astro`                |
-| Stats API                  | `PUBLIC_STATS_API_URL` → Supabase edge fn `reconciliation-stats`                                   | `StatsContainer.astro` + `StatsGrid.astro` |
-| QuickBooks Online waitlist | `PUBLIC_QUICKBOOKS_WAITLIST_API_URL` → Supabase edge fn `quickbooks-waitlist` → Listmonk admin API | `pages/capture/quickbooks.astro`           |
+| Service    | Endpoint                                                             | Component                                  |
+| ---------- | -------------------------------------------------------------------- | ------------------------------------------ |
+| Bookings   | `https://bookings.withotto.app` (+ `/embed.js`)                      | `BookingForm.astro`                        |
+| Live chat  | `https://chat.withotto.app` (+ `/packs/js/sdk.js`)                   | `ChatwootWidget.astro`                     |
+| Newsletter | `https://newsletter.withotto.app/subscription/form` (Listmonk-style) | `ui/NewsletterSignup.astro`                |
+| Stats API  | `PUBLIC_STATS_API_URL` → Supabase edge fn `reconciliation-stats`     | `StatsContainer.astro` + `StatsGrid.astro` |
 
 Swap embed URLs here; they are not configurable via env var.
 
-**Listmonk's public subscription endpoint takes only `email`, `name`, and list UUIDs** (`processSubForm` in listmonk's `cmd/public.go`), and sends no CORS headers. Any form that needs to store extra answers, or to show its own success and error states, has to go through a Supabase edge function that calls the authenticated admin API and writes the answers as subscriber `attribs`. `quickbooks-waitlist` is the worked example.
-
-### Listmonk API user permissions
-
-The `website` API user needs exactly this. Each line is load-bearing; all four user permissions and the list role were established by failing live calls, not guessed.
-
-| Where     | Grant                                                          | Why                                                                                                                                                                                                                      |
-| --------- | -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| User role | `subscribers:get`                                              | Read a subscriber record.                                                                                                                                                                                                |
-| User role | `subscribers:get_all`                                          | The email lookup searches across all lists. Without it, someone on the newsletter list only comes back as new, and the create call then fails with a 409.                                                                |
-| User role | `subscribers:manage`                                           | Create, PATCH attribs, add to a list, send opt-in.                                                                                                                                                                       |
-| User role | `lists:get_all`                                                | Every subscriber write passes through `hasSubPerm`, which denies unless the subscriber already belongs to a permitted list. This short-circuits it, so a subscriber on some other list can still be updated. Read-only.  |
-| List role | list `Otto Capture x QBO waitlist`: `list:get` + `list:manage` | `ManageSubscriberLists` filters target lists with `FilterListsByPerm(PermTypeManage, ...)`, so manage on that specific list is what permits the add. Not redundant with `lists:get_all`, which is a get-type permission. |
-
-Deliberately withheld:
-
-- **`lists:manage_all`** would satisfy `hasSubPerm` too, but also allows creating, updating, and deleting lists (`POST /api/lists` requires it). A public form endpoint should not be able to delete lists.
-- **`subscribers:sql_query`** grants arbitrary SQL against the subscriber table. The `?query=` lookup needs it; `?search=` with a regex-escaped term does not, which is why the function uses `search` and narrows to an exact address in code.
-- Everything under Campaigns, Bounces, Media, Templates, Users, and Settings, plus `subscribers:import` and `tx:send`, is unused.
+**Listmonk's public subscription endpoint takes only `email`, `name`, and list UUIDs** (`processSubForm` in listmonk's `cmd/public.go`), and sends no CORS headers. Any form that needs to store extra answers, or to show its own success and error states, has to go through a Supabase edge function that calls the authenticated admin API and writes the answers as subscriber `attribs`. The QuickBooks Online waitlist function did this until it was removed in October 2026; its code, and the Listmonk API user permissions it needed, are in git history.
 
 **Chatwoot (live chat)** is rendered once in `RootLayout.astro` for every page, with no env-var gate: both the endpoint and the public website token live in `ChatwootWidget.astro`. See `.claude/rules/withotto-app-chatwoot.md` for how it works and the sales-oriented dashboard checklist. It replaced Intercom in August 2026.
 
 ## Icons
 
 - **Remote set:** `astro-icon` + `@iconify-json/hugeicons`. Example: `<Icon name="hugeicons:calendar-03" size={32} class="..." />`
-- **Local SVGs:** `src/components/ui/icons/index.js` exports SVG strings. Render with `<Fragment set:html={IconName} />` (e.g. `Circles` decorative pattern in Hero).
+- **Local SVGs:** import the file from `src/assets/` with `?raw` and render it with `<Fragment set:html={svg} />` (e.g. the `Circles` pattern in `hero.astro`, from `assets/frame.svg?raw`), or import it without `?raw` to use it as a component (the footer's `Logo`). `src/components/ui/icons/index.js` exports a `Tick` component that nothing imports.
 
 ## Screenshots
 
@@ -170,7 +152,7 @@ Removed pages use `301`. The one exception is `/capture/quickbooks/`, a `302` so
 
 ## SEO Defaults
 
-- Default title: `"With Otto — Transform bank reconciliation from tedious to effortless with your new AI assistant"`. When a page passes `title`, it becomes `<title> — With Otto`.
+- Default title: `"With Otto — practical software for accountants and bookkeepers"`. When a page passes `title`, it becomes `<title> — With Otto`.
 - Default OG image: `/opengraph.png` (in `public/`), 1200x630. A page can pass its own as `ogImage={{ path, alt }}` to `Layout`. Each blog post does: `src/pages/blog/[slug]/og.jpg.ts` builds `/blog/<slug>/og.jpg` from the post's hero, cropped to 1200x630 with the white logo on a navy panel, so a new post gets one with no extra step.
 - Landing pages that should NOT be indexed pass `seo={{ noindex: true }}` (see commit `e74c8a6`).
 - Never hand-roll `<meta>` tags. Extend the `seo` prop instead.
