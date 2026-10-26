@@ -116,8 +116,6 @@ Use these aliases in imports. Do not write relative `../../` paths:
 
 - `.env.development` holds local dev values. Never commit `.env.production` or secret keys.
 - Public stats endpoint: `PUBLIC_STATS_API_URL` (browser-exposed; `PUBLIC_` prefix required by Astro).
-- QuickBooks Online waitlist endpoint: `PUBLIC_QUICKBOOKS_WAITLIST_API_URL` (browser-exposed). Nothing on the site reads it any more: the `/capture/quickbooks/` waitlist page was removed when QuickBooks Online shipped, and that path now redirects to `/capture/`. The variable and the function behind it are retained until someone decides what happens to the sign-up list.
-- Listmonk admin credentials for the `quickbooks-waitlist` function are Supabase function secrets, never site env vars: `LISTMONK_API_URL`, `LISTMONK_API_USER`, `LISTMONK_API_TOKEN`, `LISTMONK_QBO_LIST_ID` (the numeric list ID, not the UUID).
 - Supabase: `PROD_SUPABASE_URL`, `PROD_SUPABASE_ANON_KEY` (anon key only; never ship service-role keys to the site bundle).
 
 ## Redirects

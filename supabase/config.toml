@@ -275,11 +275,6 @@ inspector_port = 8083
 [functions.reconciliation-stats]
 verify_jwt = false
 
-# Public waitlist endpoint for /capture/quickbooks/, posted to by anonymous
-# visitors with no Authorization header, so JWT verification must stay disabled.
-[functions.quickbooks-waitlist]
-verify_jwt = false
-
 [analytics]
 enabled = true
 port = 54327
