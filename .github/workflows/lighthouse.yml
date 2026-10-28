@@ -245,6 +245,13 @@ jobs:
       # Full reports go to a run artifact, not temporary-public-storage. This
       # repo is public, so any signed-in GitHub user can download them; they
       # hold only Lighthouse results for public preview pages.
+      #
+      # Each run's reports are 12-20 MB and every preview of every PR makes a
+      # run, so they are kept for 3 days rather than 30: long enough to dig
+      # into a failing preview while its PR is open, short enough that they
+      # do not fill the organisation's shared Actions storage, which blocks
+      # every artifact upload in every repo once it is full. The scores
+      # themselves live on in the PR comment.
       - name: Upload the reports
         id: reports
         if: ${{ !cancelled() }}
@@ -256,7 +263,7 @@ jobs:
             .lighthouseci/assertion-results.json
           include-hidden-files: true
           if-no-files-found: warn
-          retention-days: 30
+          retention-days: 3
 
       - name: Fail when an assertion failed
         if: ${{ steps.assert.outcome == 'failure' }}
