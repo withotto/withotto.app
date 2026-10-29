@@ -44,3 +44,6 @@ pnpm-debug.log*
 /.claude/rules/withotto-app-voice-common.md
 /.claude/rules/withotto-app-products.md
 .claude/worktrees/
+
+# Compound Engineering prototypes
+.context/compound-engineering/
