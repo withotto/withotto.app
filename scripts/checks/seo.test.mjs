@@ -9,6 +9,7 @@ import { mergeFindings } from "./lib/findings.mjs";
 import { finishRun } from "./lib/run.mjs";
 import {
   analyseSite,
+  decodePath,
   extractHead,
   parseRedirects,
   validateJsonLd,
@@ -28,6 +29,24 @@ const analyse = (name) => analyseSite(fixtureConfig(name));
 const withRule = (findings, rule) => findings.filter((f) => f.rule === rule);
 const summary = (findings) =>
   findings.map((f) => `${f.severity} ${f.rule} ${f.route}`).sort();
+
+describe("decodePath", () => {
+  it("decodes each segment but never adds or removes one", () => {
+    for (const [encoded, decoded] of [
+      ["/files/Price%20list.pdf", "/files/Price list.pdf"],
+      ["/posts/price%20list/", "/posts/price list/"],
+      // An encoded separator or dot segment would let a path leave dist/.
+      ["/..%2Foutside.xml", "/..%2Foutside.xml"],
+      ["/a%2Fb/", "/a%2Fb/"],
+      ["/a%5Cb/", "/a%5Cb/"],
+      ["/%2E%2E/", "/%2E%2E/"],
+      // A malformed escape leaves only its own segment as written.
+      ["/bad%E0%A4%A/ok%20page/", "/bad%E0%A4%A/ok page/"],
+    ]) {
+      assert.equal(decodePath(encoded), decoded, encoded);
+    }
+  });
+});
 
 describe("extractHead", () => {
   const html = `<!doctype html><html><head><title> Head title  text </title>
@@ -522,6 +541,17 @@ describe("an unreadable sitemap", () => {
     ]);
     assert.equal(found[0].distFile, "dist/sitemap-index-missing-child.xml");
     assert.match(found[0].message, /sitemap-9\.xml/);
+    assert.match(found[0].message, /does not exist/);
+  });
+
+  it("never reads a child sitemap from outside dist/", () => {
+    // outside.xml, beside dist/, is a valid sitemap: an index that reaches it
+    // through ..%2F must be told the child is not in the build.
+    const findings = withIndex("sitemap-index-escape.xml");
+    const found = withRule(findings, "sitemap-unreadable");
+    assert.deepEqual(summary(blocking(findings)), [
+      "block sitemap-unreadable /",
+    ]);
     assert.match(found[0].message, /does not exist/);
   });
 

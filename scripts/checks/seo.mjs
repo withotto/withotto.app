@@ -175,19 +175,25 @@ function stripSlash(pathname) {
  * A URL path as built file and directory names spell it: a link to
  * `/files/Price%20list.pdf` names `dist/files/Price list.pdf`. Every
  * comparison of a URL path with the build goes through this. Each segment is
- * decoded on its own, so a malformed escape leaves only that segment as it is.
+ * decoded on its own and keeps its place: one whose escape is malformed, or
+ * that would decode to a separator or a dot segment (`..%2F`), stays as
+ * written, so decoding can never lead a path out of `dist/`.
  *
  * @param {string} pathname
  */
-function decodePath(pathname) {
+export function decodePath(pathname) {
   return pathname
     .split("/")
     .map((segment) => {
+      let decoded;
       try {
-        return decodeURIComponent(segment);
+        decoded = decodeURIComponent(segment);
       } catch {
         return segment;
       }
+      return /[/\\]/.test(decoded) || decoded === "." || decoded === ".."
+        ? segment
+        : decoded;
     })
     .join("/");
 }
