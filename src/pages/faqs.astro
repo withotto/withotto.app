@@ -49,7 +49,7 @@ const faqs: CategorisedFaqItem[] = [
     question: "How is Otto different for businesses and accountancy practices?",
     answer: `
         <p class="py-2">Otto's reconciliation features are identical. The only difference is how he is given access to the Xero accounts he needs to work with. Neither way is better or worse, we just tailor the steps depending on whether you are a business or a practice.</p>
-        <p class="py-2">Billing works exactly the same way: you pay based on credits for correct reconciliations made.</p>
+        <p class="py-2">Billing works exactly the same way: each reconciliation Otto makes uses credits. If you flag a SmartMatch he made at 90% confidence or above as incorrect, it isn't charged.</p>
     `,
   },
   {
@@ -116,7 +116,7 @@ const faqs: CategorisedFaqItem[] = [
     answer: `
         <p class="py-2">Our primary goal with Otto is that he should not make an incorrect match. We don't want you to have to constantly check what he has done because you can't trust he's done the right thing. SmartMatch allows us to make sure Otto is really unlikely to do the wrong thing.</p>
         <p class="py-2">Sometimes SmartMatch will mean Otto is not as confident about a match as you might expect. This is more likely if the information on the bank statement is confusing: for example, where the description runs the payee, reference, date, and address together, or where the payee is completely blank.</p>
-        <p class="py-2">SmartMatch needs a certain amount of previous reconciliation data to train with, around 100 matches in our testing. Accuracy will be higher with more examples, but Otto is trained to skip reconciliations he is not sure of, so you should not see incorrect reconciliations even with a low volume of training data.</p>
+        <p class="py-2">SmartMatch needs a certain amount of previous reconciliation data to train with, around 100 matches in our testing. Accuracy will be higher with more examples. Otto is trained to skip reconciliations he is not sure of, but he can still occasionally reconcile something incorrectly. If he does, you can flag it in the portal.</p>
         <p class="py-2 font-bold">We are constantly working to improve how accurate Otto's work is, and you will automatically benefit from these improvements.</p>
     `,
   },
@@ -125,7 +125,7 @@ const faqs: CategorisedFaqItem[] = [
     question: "What's GuidedMatch?",
     answer: `
         <p class="py-2">GuidedMatch lets you tell Otto to reconcile something when he isn't confident enough to do that himself.</p>
-        <p class="py-2">When you tell Otto he should have matched a transaction he didn't reconcile, he will see your feedback the next day and reconcile that transaction. There's no cost for GuidedMatch, so you give Otto the feedback he needs to improve <i>and</i> you don't have to go into Xero to reconcile the transaction yourself.</p>
+        <p class="py-2">When you tell Otto he should have matched a transaction he didn't reconcile, he will see your feedback on his next scheduled run and reconcile that transaction, as long as SmartMatch is enabled for the client rather than in monitor mode. There's no cost for GuidedMatch, so you give Otto the feedback he needs to improve <i>and</i> you don't have to go into Xero to reconcile the transaction yourself.</p>
         <p class="py-2">GuidedMatch is separate from the fortnightly training, so Otto isn't learning from what you have told him at this point. He trusts your decision and follows it.</p>
     `,
   },
@@ -143,7 +143,7 @@ const faqs: CategorisedFaqItem[] = [
     question: "Will Otto just reconcile any green match he sees?",
     answer: `
         <p class="py-2">No. We're about matching the correct transactions and avoiding mistakes, not clicking the OK button as many times as possible. We would rather skip some possible matches than match something incorrectly.</p>
-        <p class="py-2">Otto will only reconcile a green match when he is at least 90% confident the statement and bill are a match.</p>
+        <p class="py-2">By default, Otto will only reconcile a green match when he is at least 90% confident the statement and bill are a match. You can lower this for a client, to a minimum of 70%.</p>
     `,
   },
   {
@@ -246,9 +246,9 @@ const faqs: CategorisedFaqItem[] = [
       "What happens if Otto reconciles more transactions than are included in my plan?",
     answer: `
         <p class="py-2">You can choose how to handle additional reconciliation needs.</p>
-        <p class="py-2"><b>Fixed billing</b>: Otto will pause reconciliation when your credits run out and resume automatically when your plan renews. This ensures you never exceed your planned budget.</p>
-        <p class="py-2"><b>Fixed billing with limit</b>: This works the same as fixed billing, but you decide how many extra credits Otto can use before he stops.</p>
-        <p class="py-2"><b>Uncapped billing</b>: Otto will continue reconciling and charge any extra credits at your plan's standard rate at the end of the month. This keeps your workflow smooth during busy periods.</p>
+        <p class="py-2"><b>Fixed billing</b>: when your credits run out, Otto stops making reconciliations that cost credits until your next billing period starts. Free reconciliations, such as GuidedMatches and those in your practice's own books, carry on.</p>
+        <p class="py-2"><b>Fixed billing with limit</b>: This works the same as fixed billing, but you decide how many extra credits Otto can use before he stops. Any extra credits he uses are charged at your plan's per-credit price.</p>
+        <p class="py-2"><b>Uncapped billing</b>: Otto will continue reconciling and charge any extra credits at your plan's per-credit price on your next bill. This keeps your workflow smooth during busy periods.</p>
         <p class="py-2">You get complete visibility of credit usage with all options, and you can change your preference at any time through your practice settings.</p>
       `,
   },

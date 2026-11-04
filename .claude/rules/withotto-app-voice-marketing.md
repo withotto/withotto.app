@@ -32,7 +32,7 @@ Default everywhere else is team voice with Otto in third person.
 
 ## Hero and landing page patterns
 
-Hero headlines should name a specific benefit, not a vague category. "Receipt capture that learns how your practice codes" beats "AI-powered receipt capture for modern practices". Lead with the differentiator.
+Hero headlines should name a specific benefit, not a vague category. "Receipt capture that learns how you code each client's suppliers" beats "AI-powered receipt capture for modern practices". Lead with the differentiator.
 
 Subheaders do one job: explain the headline in one sentence. Not two.
 

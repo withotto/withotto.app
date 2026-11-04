@@ -3,14 +3,8 @@ import Container from "./container.astro";
 import FaqList from "@components/faq/FaqList.astro";
 import { type FaqItem } from "../types";
 import { Icon } from "astro-icon/components";
-interface Label {
-  title: string;
-  classes: string;
-}
-
 interface PricingPlan {
   name: string;
-  label?: Label;
   price: number;
   credits: number;
 }
@@ -18,10 +12,6 @@ interface PricingPlan {
 const plans: PricingPlan[] = [
   {
     name: "Plan A",
-    label: {
-      title: "Solo",
-      classes: "bg-info-strong text-white",
-    },
     price: 25.0,
     credits: 100,
   },
@@ -32,10 +22,6 @@ const plans: PricingPlan[] = [
   },
   {
     name: "Plan C",
-    label: {
-      title: "Most popular",
-      classes: "bg-warning text-black",
-    },
     price: 100.0,
     credits: 500,
   },
@@ -61,10 +47,6 @@ const plans: PricingPlan[] = [
   },
   {
     name: "Plan H",
-    label: {
-      title: "Enterprise",
-      classes: "bg-primary-strong text-white",
-    },
     price: 1400.0,
     credits: 10000,
   },
@@ -92,9 +74,9 @@ const faqs: FaqItem[] = [
     question: "What happens if I need more credits mid-month?",
     answer: `
       <p class="py-2">You can choose how to handle additional reconciliation needs.</p>
-      <p class="py-2"><b>Fixed billing</b>: Otto will pause reconciliation when your credits run out and resume automatically when your plan renews. This ensures you never exceed your planned budget.</p>
-      <p class="py-2"><b>Fixed billing with limit</b>: This works the same as fixed billing, but you decide how many extra credits Otto can use before he stops.</p>
-      <p class="py-2"><b>Uncapped billing</b>: Otto will continue reconciling and charge any extra credits at your plan's standard rate at the end of the month. This keeps your workflow smooth during busy periods.</p>
+      <p class="py-2"><b>Fixed billing</b>: when your credits run out, Otto stops making reconciliations that cost credits until your next billing period starts. Free reconciliations, such as GuidedMatches and those in your practice's own books, carry on.</p>
+      <p class="py-2"><b>Fixed billing with limit</b>: This works the same as fixed billing, but you decide how many extra credits Otto can use before he stops. Any extra credits he uses are charged at your plan's per-credit price.</p>
+      <p class="py-2"><b>Uncapped billing</b>: Otto will continue reconciling and charge any extra credits at your plan's per-credit price on your next bill. This keeps your workflow smooth during busy periods.</p>
       <p class="py-2">You get complete visibility of credit usage with all options, and you can change your preference anytime through your practice settings.</p>
      `,
   },
@@ -105,7 +87,7 @@ const faqs: FaqItem[] = [
       <ul class="list-disc pl-5">
         <li>Choose whether to use bank rule matching (1 credit)</li>
         <li>Enable or disable SmartMatch ML-powered reconciliation (4 credits)</li>
-        <li>GuidedMatch remains available at no cost as long as SmartMatch isn't disabled</li>
+        <li>GuidedMatch is free, and Otto makes GuidedMatches only while SmartMatch is enabled for the client, not while it's in monitor mode</li>
       </ul>
       <p class="py-2">This granular control helps you optimise credit usage by choosing the right level of automation for each client's needs. For example, you might use SmartMatch for clients with complex transactions and stick to bank rules for simpler accounts.</p>
     `,
@@ -212,24 +194,20 @@ const faqs: FaqItem[] = [
                 <tr
                   class={`${index % 2 === 0 ? "bg-white" : "bg-primary-soft"}`}>
                   <td class="sticky left-0 bg-inherit px-6 py-4 whitespace-nowrap">
-                    <div class="flex items-center gap-3">
-                      <span class="font-medium text-default">{plan.name}</span>
-                      {plan.label && (
-                        <span
-                          class={`inline-flex rounded-full px-3 py-1 text-sm font-medium ${plan.label.classes}`}>
-                          {plan.label.title}
-                        </span>
-                      )}
-                    </div>
+                    <span class="font-medium text-default">{plan.name}</span>
                   </td>
                   <td class="px-6 py-4 text-right whitespace-nowrap">
                     <div class="font-bold text-default">
-                      £{plan.price.toFixed(2).toLocaleString()}
+                      £
+                      {plan.price.toLocaleString("en-GB", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}
                     </div>
                   </td>
                   <td class="px-6 py-4 text-right whitespace-nowrap">
                     <div class="text-default">
-                      {plan.credits.toLocaleString()}
+                      {plan.credits.toLocaleString("en-GB")}
                     </div>
                   </td>
                   <td class="px-6 py-4 text-right whitespace-nowrap">
@@ -254,14 +232,16 @@ const faqs: FaqItem[] = [
           class="size-7 shrink-0 text-primary-strong"
         />
         <span class="ml-3">
-          Want to calculate your monthly costs?{" "}
+          Not sure where to start? Most practices use between 20 and 70 credits
+          a month for each client Otto reconciles. Your trial shows your own
+          figure, and our{" "}
           <a
             href="/files/With%20Otto%20pricing%20calculator.xlsx"
             class="text-primary-strong underline underline-offset-2 hover:decoration-2"
             download>
-            Download our pricing spreadsheet
+            pricing spreadsheet (Excel)
           </a>{" "}
-          to see exactly how much Otto will cost to work with your clients.
+          works out which plan is cheapest for the reconciliations you expect.
         </span>
       </div>
 

@@ -33,7 +33,8 @@ const howItWorksSteps: {
     intent:
       "Receipts and invoices arrive by upload, by email to an address branded to your practice, over WhatsApp, or through a client's own submission page.",
     image: captureImg,
-    imageAlt: "A receipt being submitted to Otto Capture by email",
+    imageAlt:
+      "A client's Processing tab in Otto Capture, with a bill that arrived by email being extracted",
   },
   {
     name: "Extract",
@@ -115,7 +116,8 @@ const differentiators: {
       "Otto extracts line items as standard, not as a paid extra, so the detail is there when you need it.",
     icon: "hugeicons:check-list",
     image: lineItemImg,
-    imageAlt: "Line items extracted from a receipt",
+    imageAlt:
+      "Line items extracted from a bill, each with its quantity, price, VAT rate and nominal code",
   },
   {
     title: "Practice-branded submission addresses",
@@ -220,7 +222,7 @@ const heroCta =
           </span>
         </div>
         <h1 class="mx-auto max-w-4xl text-4xl font-bold text-primary-strong md:text-6xl">
-          Receipt capture that learns how your practice codes
+          Receipt capture that learns how you code each client's suppliers
         </h1>
         <p class="mx-auto max-w-3xl py-6 text-xl leading-normal text-default">
           Otto reads each document and extracts the detail, suggests the coding
@@ -342,9 +344,9 @@ const heroCta =
           ))}
         </div>
         <p class="mx-auto mt-6 max-w-2xl text-center text-sm text-default-soft">
-          On QuickBooks Online, Otto publishes purchases: bills and supplier
-          credits. Sales invoices and sales credit notes are not supported there
-          at present.
+          On QuickBooks Online, Capture publishes purchases only: bills and
+          supplier credits. It publishes sales invoices and sales credit notes
+          to Xero and FreeAgent.
         </p>
       </div>
     </Container>
@@ -451,9 +453,10 @@ const heroCta =
           </h2>
           <p class="mx-auto mt-6 max-w-3xl text-left text-lg text-default">
             The people holding the receipts are often not the ones who deal with
-            you, and they rarely want to set up another account. So Otto gives
-            them two ways to send documents straight through to you, with no new
-            app to install and nothing to sign in to.
+            you, and they rarely want to set up another account. So as well as
+            each client's own email address, Otto gives them two more ways to
+            send documents straight through to you, with no new app to install
+            and nothing to sign in to.
           </p>
         </div>
         <div class="mt-12 grid items-start gap-10 md:grid-cols-2 md:items-center">
@@ -521,7 +524,7 @@ const heroCta =
           </div>
           <Screenshot
             src={submissionPageImg}
-            alt="A client's submission page on a phone, headed 'Send documents to The Number Ninja', with an area to choose files and a short note explaining what happens after they are sent"
+            alt="A client's submission page on a phone, headed 'Send documents to Willowbrook Accountants', with an area to choose files and a short note explaining what happens after they are sent"
             class="mx-auto max-w-[280px]"
           />
         </div>

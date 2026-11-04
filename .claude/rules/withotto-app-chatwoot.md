@@ -1,6 +1,6 @@
 # Chatwoot (website live chat)
 
-How the public site's Chatwoot integration works in code, and the checklist for configuring the Chatwoot dashboard for sales. Load when touching the chat widget, its settings, or the sales conversation setup. Chatwoot replaced Intercom on the website in August 2026, and the Otto Capture app and the Bank Rec portal have since moved to Chatwoot as well. Intercom is retired everywhere and its organisation deleted, so it no longer appears in the privacy policy.
+How the public site's Chatwoot integration works in code, and the checklist for configuring the Chatwoot dashboard for sales. Load when touching the chat widget, its settings, or the sales conversation setup. Chatwoot replaced Intercom on the website in August 2026, and the Otto Capture app and the Bank Rec portal have since moved to Chatwoot as well. In the portal, the chat opens from the Usertour help launcher's **Chat with support** row rather than a Chatwoot bubble. Intercom is retired everywhere and its organisation deleted, so it no longer appears in the privacy policy.
 
 ## What the code does
 
