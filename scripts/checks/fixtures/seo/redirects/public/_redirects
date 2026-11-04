@@ -8,3 +8,5 @@ https://old.example.com/* https://withotto.app/:splat 301!
 /api/* https://example.com/api/:splat 200
 /files/old-price-list.pdf /new-page/ 301
 /posts/:slug /new-page/ 301
+/feeds/:name /new-page/ 301
+/old-feed /feeds/latest 301

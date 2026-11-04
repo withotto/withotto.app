@@ -363,6 +363,7 @@ describe("redirects", () => {
   it("warns when a redirect source is a built static file, not only a page", () => {
     const shadowed = withRule(findings, "redirect-shadowed");
     assert.deepEqual(summary(shadowed), [
+      "warn redirect-shadowed /feeds/latest",
       "warn redirect-shadowed /files/old-price-list.pdf",
       "warn redirect-shadowed /old-page/",
       "warn redirect-shadowed /posts/kept/",
@@ -397,6 +398,17 @@ describe("redirects", () => {
       .map((f) => f.snippet.match(/href="([^"]+)"/)[1])
       .sort();
     assert.deepEqual(hrefs, ["/forced-page/", "/posts/retired/"]);
+  });
+
+  it("treats a link to a built file with no extension as served, not as a page", () => {
+    // dist/feeds/latest is a file: Netlify serves it in place of /feeds/:name,
+    // and a link to it needs no trailing slash.
+    assert.deepEqual(
+      findings.filter(
+        (f) => f.severity === "block" && f.snippet?.includes("/feeds/latest"),
+      ),
+      [],
+    );
   });
 });
 

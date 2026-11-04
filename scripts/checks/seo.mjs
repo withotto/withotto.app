@@ -520,6 +520,9 @@ export function analyseSite(config, pageFilter = null) {
       return { urlPath, distFile: rel(path.join(distAbs, file)) };
     })
     .sort((a, b) => a.urlPath.localeCompare(b.urlPath));
+  // Paths Netlify serves as files, including any with no extension, which
+  // the route helpers would otherwise read as pages.
+  const filePaths = new Set(staticFiles.map((f) => f.urlPath));
 
   // Every 3xx rule. Netlify decides shadowing per request path, so the link
   // check below skips a non-forced rule only for a path that has a file.
@@ -555,6 +558,7 @@ export function analyseSite(config, pageFilter = null) {
       rule.targetPath !== null &&
       !/[*:]/.test(rule.targetPath) &&
       !isFilePath(rule.targetPath, routes) &&
+      !filePaths.has(rule.targetPath) &&
       !routes.has(canonicalRoute(rule.targetPath))
     ) {
       add({
@@ -649,9 +653,7 @@ export function analyseSite(config, pageFilter = null) {
       }
 
       const servedAsIs =
-        target !== null
-          ? routes.has(target)
-          : staticFiles.some((f) => f.urlPath === pathname);
+        filePaths.has(pathname) || (target !== null && routes.has(target));
       const legacy = effectiveRedirects.find(
         (r) =>
           r.matches(pathname) &&
@@ -670,7 +672,8 @@ export function analyseSite(config, pageFilter = null) {
       if (
         pathname !== "/" &&
         !pathname.endsWith("/") &&
-        !isFilePath(pathname, routes)
+        !isFilePath(pathname, routes) &&
+        !filePaths.has(pathname)
       ) {
         add({
           ...at(page, el),
