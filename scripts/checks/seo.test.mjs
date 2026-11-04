@@ -341,6 +341,8 @@ https://old.example.com/* https://withotto.app/:splat 301!
     assert.equal(store.target, "/capture/");
     assert.ok(!store.conditionsMet(new URLSearchParams("")));
     assert.ok(store.conditionsMet(new URLSearchParams("id=4")));
+    // Netlify needs exactly the listed parameters, so another one misses.
+    assert.ok(!store.conditionsMet(new URLSearchParams("id=4&utm_source=x")));
     assert.ok(!shop.conditionsMet(new URLSearchParams("sort=name")));
     assert.ok(shop.conditionsMet(new URLSearchParams("sort=price")));
     // Visitor conditions follow the status code, as Netlify writes them.
@@ -355,6 +357,10 @@ https://old.example.com/* https://withotto.app/:splat 301!
     assert.ok(!query.conditionsMet(new URLSearchParams("")));
     assert.ok(query.conditionsMet(new URLSearchParams("Country=gb")));
     assert.ok(rules.every((r) => r.conditionsMet(new URLSearchParams(""))));
+    // A rule with no query conditions matches whatever the link carries.
+    assert.ok(
+      rules.every((r) => r.conditionsMet(new URLSearchParams("utm_source=x"))),
+    );
   });
 
   it("matches a source with or without its trailing slash", () => {
@@ -385,6 +391,7 @@ describe("redirects", () => {
       "warn redirect-shadowed /files/old-price-list.pdf",
       "warn redirect-shadowed /old-page/",
       "warn redirect-shadowed /posts/kept/",
+      "warn redirect-shadowed /posts/price list/",
     ]);
     const asset = shadowed.find((f) => f.route.endsWith(".pdf"));
     assert.equal(asset.distFile, "dist/files/old-price-list.pdf");
@@ -427,6 +434,19 @@ describe("redirects", () => {
       ),
       [],
     );
+  });
+
+  it("compares a percent-encoded path with the built page it names", () => {
+    // dist/posts/price list/ is linked, listed in the sitemap, named as its
+    // own canonical and targeted by a redirect, each as /posts/price%20list/.
+    const encoded = findings.filter(
+      (f) =>
+        /price( |%20)list|old-price\/$/.test(f.route) ||
+        f.snippet?.includes("price%20list"),
+    );
+    assert.deepEqual(summary(encoded), [
+      "warn redirect-shadowed /posts/price list/",
+    ]);
   });
 
   it("treats a link to a built file with no extension as served, not as a page", () => {

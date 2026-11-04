@@ -144,6 +144,31 @@ describe("finishRun", () => {
     );
   });
 
+  it("names a filtered page as a group finding's location", () => {
+    const shared = (/** @type {string} */ route) =>
+      createFinding({
+        check: "seo",
+        rule: "title-duplicate",
+        severity: "warn",
+        route,
+        distFile: `dist${route}index.html`,
+        source: `src/pages${route}index.astro`,
+        message: "Shared title.",
+        group: "title:same",
+      });
+    finishRun({
+      check: "seo",
+      findings: [shared("/a/"), shared("/b/")],
+      pages: ["/b/"],
+      config: config(),
+    });
+    const [found] = readReport().findings;
+    assert.deepEqual(
+      [found.route, found.distFile, found.source, found.routes],
+      ["/b/", "dist/b/index.html", "src/pages/b/index.astro", ["/b/"]],
+    );
+  });
+
   it("counts component findings on the filtered pages only", () => {
     writeBaselineFile(
       JSON.stringify({

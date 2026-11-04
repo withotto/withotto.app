@@ -27,7 +27,7 @@ describe("loadConfig", () => {
     }
   });
 
-  it("passes on a missing import inside an existing config", async () => {
+  it("surfaces a missing import inside an existing config as itself", async () => {
     const dir = fs.mkdtempSync(path.join(os.tmpdir(), "checks-"));
     try {
       fs.writeFileSync(

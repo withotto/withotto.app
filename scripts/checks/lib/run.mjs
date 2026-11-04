@@ -158,17 +158,23 @@ export function finishRun({ check, findings, pages, config }) {
   // debt elsewhere cannot mark an old finding on a filtered page as new.
   const isGroup = (/** @type {(typeof findings)[number]} */ f) =>
     Boolean(!f.component && f.group);
-  const applied = applyBaseline(
-    mergeFindings(
-      findings.filter(
-        (f) =>
-          !excluded.has(f.route) &&
-          (pages === null || isGroup(f) || pages.includes(f.route)),
-      ),
-    ),
-    baseline,
-    { checks: [check], complete: pages === null },
+  const scoped = findings.filter(
+    (f) =>
+      !excluded.has(f.route) &&
+      (pages === null || isGroup(f) || pages.includes(f.route)),
   );
+  // A merged finding takes its route, file and source from its first finding,
+  // so a filtered page's findings go first and the report names that page.
+  if (pages !== null) {
+    scoped.sort(
+      (a, b) =>
+        Number(pages.includes(b.route)) - Number(pages.includes(a.route)),
+    );
+  }
+  const applied = applyBaseline(mergeFindings(scoped), baseline, {
+    checks: [check],
+    complete: pages === null,
+  });
   // The report then covers only the filtered pages, as before.
   const shown =
     pages === null

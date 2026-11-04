@@ -155,9 +155,10 @@ export function validateJsonLd(text) {
  * @property {(pathname: string) => boolean} matches  Whether a link path hits
  *   this rule, ignoring a trailing slash on either side.
  * @property {(search: URLSearchParams) => boolean} conditionsMet  Whether a
- *   link with this query string meets the rule's conditions. A query-parameter
- *   condition, written between source and target, needs the parameter (and its
- *   value, unless that is a :placeholder). A visitor condition (Country,
+ *   link with this query string meets the rule's conditions. Query-parameter
+ *   conditions, written between source and target, need exactly the listed
+ *   parameters and no others (each value must match unless it is a
+ *   :placeholder), as Netlify matches them. A visitor condition (Country,
  *   Language, Role, Cookie), written after the status code, is never met, since
  *   a link cannot carry it.
  */
@@ -168,6 +169,27 @@ const VISITOR_CONDITIONS = new Set(["Country", "Language", "Role", "Cookie"]);
 /** @param {string} pathname */
 function stripSlash(pathname) {
   return pathname.length > 1 ? pathname.replace(/\/+$/, "") : pathname;
+}
+
+/**
+ * A URL path as built file and directory names spell it: a link to
+ * `/files/Price%20list.pdf` names `dist/files/Price list.pdf`. Every
+ * comparison of a URL path with the build goes through this. Each segment is
+ * decoded on its own, so a malformed escape leaves only that segment as it is.
+ *
+ * @param {string} pathname
+ */
+function decodePath(pathname) {
+  return pathname
+    .split("/")
+    .map((segment) => {
+      try {
+        return decodeURIComponent(segment);
+      } catch {
+        return segment;
+      }
+    })
+    .join("/");
 }
 
 /**
@@ -225,7 +247,7 @@ export function parseRedirects(text, site = "https://withotto.app") {
     let targetPath = null;
     try {
       const url = new URL(target, origin);
-      if (url.origin === origin) targetPath = url.pathname;
+      if (url.origin === origin) targetPath = decodePath(url.pathname);
     } catch {
       targetPath = null;
     }
@@ -254,11 +276,13 @@ export function parseRedirects(text, site = "https://withotto.app") {
       matches: (pathname) => pattern.test(stripSlash(pathname)),
       conditionsMet: (search) =>
         visitor.length === 0 &&
-        query.every(
-          ([key, value]) =>
-            search.has(key) &&
-            (value.startsWith(":") || search.get(key) === value),
-        ),
+        (query.length === 0 ||
+          ([...search.keys()].every((key) => query.some(([k]) => k === key)) &&
+            query.every(
+              ([key, value]) =>
+                search.has(key) &&
+                (value.startsWith(":") || search.get(key) === value),
+            ))),
     });
   });
   return rules;
@@ -417,7 +441,7 @@ function readSitemap(distAbs, indexFile, origin) {
         });
         return;
       }
-      const child = path.join(distAbs, ...url.pathname.split("/"));
+      const child = path.join(distAbs, ...decodePath(url.pathname).split("/"));
       if (!fs.existsSync(child) || !fs.statSync(child).isFile()) {
         errors.push({
           file,
@@ -658,21 +682,16 @@ export function analyseSite(config, pageFilter = null) {
         return;
       }
       if (!/^https?:$/.test(url.protocol) || url.origin !== origin) return;
+      // Rules match the path as written; the build is compared decoded.
       const pathname = url.pathname;
+      const decoded = decodePath(pathname);
 
-      const target = pathToRoute(pathname, routes);
+      const target = pathToRoute(decoded, routes);
       if (target !== null && target !== page.route && !page.is404) {
         if (!incoming.has(target)) incoming.set(target, new Set());
         /** @type {Set<string>} */ (incoming.get(target)).add(page.route);
       }
 
-      // `pathname` is percent-encoded; built file names are not.
-      let decoded = pathname;
-      try {
-        decoded = decodeURIComponent(pathname);
-      } catch {
-        // A malformed escape names no built file.
-      }
       const isFile = filePaths.has(decoded);
       const servedAsIs = isFile || (target !== null && routes.has(target));
       const legacy = effectiveRedirects.find(
@@ -758,7 +777,7 @@ export function analyseSite(config, pageFilter = null) {
         message: `Canonical ${head.canonical} has no trailing slash, so it names a URL that redirects. Use ${origin}${canonicalPath}/.`,
       });
     }
-    const target = pathToRoute(canonicalPath, routes);
+    const target = pathToRoute(decodePath(canonicalPath), routes);
     if (target === null || !routes.has(target)) {
       add({
         ...pageAt(page, { selector, snippet }),
@@ -930,7 +949,9 @@ export function analyseSite(config, pageFilter = null) {
         url = null;
       }
       const route =
-        url && url.origin === origin ? pathToRoute(url.pathname, routes) : null;
+        url && url.origin === origin
+          ? pathToRoute(decodePath(url.pathname), routes)
+          : null;
       if (route !== null) sitemapRoutes.add(route);
       if (route === null || !routes.has(route)) {
         add({
