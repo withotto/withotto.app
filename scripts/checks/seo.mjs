@@ -154,7 +154,15 @@ export function validateJsonLd(text) {
  * @property {boolean} isRedirect  3xx; a 200 rewrite or a 404 rule is not.
  * @property {(pathname: string) => boolean} matches  Whether a link path hits
  *   this rule, ignoring a trailing slash on either side.
+ * @property {(search: URLSearchParams) => boolean} conditionsMet  Whether a
+ *   link with this query string meets the rule's conditions. A query-parameter
+ *   condition needs the parameter (and its value, unless that is a :placeholder);
+ *   a visitor condition (Country, Language, Role, Cookie) is never met, since a
+ *   link cannot carry it.
  */
+
+/** Netlify redirect conditions on the visitor rather than the URL. */
+const VISITOR_CONDITIONS = new Set(["Country", "Language", "Role", "Cookie"]);
 
 /** @param {string} pathname */
 function stripSlash(pathname) {
@@ -179,15 +187,20 @@ export function parseRedirects(text, site = "https://withotto.app") {
     const tokens = line.split(/\s+/);
     const source = tokens[0];
     if (/^([a-z]+:)?\/\//i.test(source)) return;
-    // Query-parameter conditions (key=value) sit between source and target.
+    // Conditions (key=value) sit between source and target.
     let i = 1;
+    /** @type {Array<[string, string]>} */
+    const conditions = [];
     while (
       i < tokens.length &&
       tokens[i].includes("=") &&
       !tokens[i].startsWith("/") &&
       !/^[a-z]+:\/\//i.test(tokens[i])
-    )
+    ) {
+      const at = tokens[i].indexOf("=");
+      conditions.push([tokens[i].slice(0, at), tokens[i].slice(at + 1)]);
       i += 1;
+    }
     const target = tokens[i];
     if (target === undefined) return;
     const statusToken = tokens[i + 1];
@@ -225,6 +238,13 @@ export function parseRedirects(text, site = "https://withotto.app") {
       forced,
       isRedirect: status >= 300 && status < 400,
       matches: (pathname) => pattern.test(stripSlash(pathname)),
+      conditionsMet: (search) =>
+        conditions.every(
+          ([key, value]) =>
+            !VISITOR_CONDITIONS.has(key) &&
+            search.has(key) &&
+            (value.startsWith(":") || search.get(key) === value),
+        ),
     });
   });
   return rules;
@@ -327,13 +347,16 @@ function listRoutes(items) {
  * @param {string} distAbs
  * @param {string} indexFile Relative to dist.
  * @param {string} origin
- * @returns {{ urls: string[], files: string[], errors: SitemapError[] } | null}
- *   null when the index is missing.
+ * @returns {{ urls: string[], urlFiles: string[], files: string[], errors: SitemapError[] } | null}
+ *   null when the index is missing. `urlFiles[i]` is the file that listed
+ *   `urls[i]`.
  */
 function readSitemap(distAbs, indexFile, origin) {
   const first = path.join(distAbs, indexFile);
   if (!fs.existsSync(first)) return null;
   const urls = [];
+  /** @type {string[]} */
+  const urlFiles = [];
   const files = [];
   /** @type {SitemapError[]} */
   const errors = [];
@@ -394,9 +417,10 @@ function readSitemap(distAbs, indexFile, origin) {
     });
     $("url > loc").each((_, el) => {
       urls.push($(el).text().trim());
+      urlFiles.push(file);
     });
   }
-  return { urls, files, errors };
+  return { urls, urlFiles, files, errors };
 }
 
 /**
@@ -624,7 +648,9 @@ export function analyseSite(config, pageFilter = null) {
         /** @type {Set<string>} */ (incoming.get(target)).add(page.route);
       }
 
-      const legacy = effectiveRedirects.find((r) => r.matches(pathname));
+      const legacy = effectiveRedirects.find(
+        (r) => r.matches(pathname) && r.conditionsMet(url.searchParams),
+      );
       if (legacy) {
         add({
           ...at(page, el),
@@ -865,8 +891,7 @@ export function analyseSite(config, pageFilter = null) {
         message: `${config.distDir}/${config.sitemapIndex} resolves to no page URLs, although the build has indexable pages, so search engines get an empty sitemap. Check the sitemap integration and its filter in the Astro config.`,
       });
     }
-    const sitemapFile = rel(sitemap.files[sitemap.files.length - 1]);
-    for (const loc of sitemap.urls) {
+    for (const [index, loc] of sitemap.urls.entries()) {
       let url;
       try {
         url = new URL(loc);
@@ -879,7 +904,7 @@ export function analyseSite(config, pageFilter = null) {
       if (route === null || !routes.has(route)) {
         add({
           route: route ?? "/",
-          distFile: sitemapFile,
+          distFile: rel(sitemap.urlFiles[index]),
           source: "unknown",
           rule: "sitemap-url-missing",
           severity: "block",

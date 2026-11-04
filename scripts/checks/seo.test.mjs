@@ -263,12 +263,23 @@ describe("internal links", () => {
   });
 
   it("blocks links to /business/ and /business as legacy, not as a missing slash", () => {
-    assert.equal(legacy.length, 2);
-    for (const f of legacy) {
+    const business = legacy.filter((f) => f.snippet.includes("/business"));
+    assert.equal(business.length, 2);
+    for (const f of business) {
       assert.equal(f.severity, "block");
       assert.match(f.message, /\/capture\//);
     }
     assert.ok(!slash.some((f) => f.snippet.includes("/business")));
+  });
+
+  it("blocks a link to a conditional redirect only when the link meets its conditions", () => {
+    const hrefs = legacy
+      .map((f) => f.snippet.match(/href="([^"]+)"/)[1])
+      .filter((href) => !href.includes("/business"))
+      .sort();
+    // /store/ needs an id query parameter; /uk/ needs a visitor country a
+    // link cannot carry.
+    assert.deepEqual(hrefs, ["/store/?id=4"]);
   });
 
   it("merges the same bad footer link across pages under the footer component", () => {
@@ -313,6 +324,20 @@ https://old.example.com/* https://withotto.app/:splat 301!
     const api = rules.find((r) => r.source === "/api/*");
     assert.equal(api.status, 200);
     assert.equal(api.isRedirect, false);
+  });
+
+  it("records query and visitor conditions and only meets the ones a link can carry", () => {
+    const conditional = parseRedirects(
+      "/store id=:id /capture/ 301\n/shop sort=price /capture/ 301\n/uk Country=gb /capture/ 301\n",
+    );
+    const [store, shop, uk] = conditional;
+    assert.equal(store.target, "/capture/");
+    assert.ok(!store.conditionsMet(new URLSearchParams("")));
+    assert.ok(store.conditionsMet(new URLSearchParams("id=4")));
+    assert.ok(!shop.conditionsMet(new URLSearchParams("sort=name")));
+    assert.ok(shop.conditionsMet(new URLSearchParams("sort=price")));
+    assert.ok(!uk.conditionsMet(new URLSearchParams("")));
+    assert.ok(rules.every((r) => r.conditionsMet(new URLSearchParams(""))));
   });
 
   it("matches a source with or without its trailing slash", () => {
@@ -503,6 +528,15 @@ describe("an unreadable sitemap", () => {
         index,
       );
     }
+  });
+
+  it("names the child sitemap that lists a missing URL, not the last one read", () => {
+    const found = withRule(
+      withIndex("sitemap-index-ghost-first.xml"),
+      "sitemap-url-missing",
+    );
+    assert.deepEqual(summary(found), ["block sitemap-url-missing /ghost/"]);
+    assert.equal(found[0].distFile, "dist/sitemap-ghost.xml");
   });
 
   it("still blocks a missing index as sitemap-missing", () => {

@@ -1,2 +1,4 @@
 /business /capture/ 301
 /trial /capture/#start-a-trial 301
+/store/ id=:id /capture/ 301
+/uk Country=gb /capture/ 301

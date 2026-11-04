@@ -6,7 +6,7 @@ import { afterEach, beforeEach, describe, it } from "node:test";
 import { fileURLToPath } from "node:url";
 import { loadConfig } from "./config.mjs";
 import { createFinding } from "./findings.mjs";
-import { finishRun } from "./run.mjs";
+import { finishRun, listPages } from "./run.mjs";
 
 const repoRoot = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -104,6 +104,84 @@ describe("finishRun", () => {
     );
   });
 
+  it("counts a group finding across every page when a page filter is set", () => {
+    writeBaselineFile(
+      JSON.stringify({
+        schemaVersion: 1,
+        entries: [
+          {
+            check: "seo",
+            rule: "title-duplicate",
+            group: "title:same",
+            count: 2,
+          },
+        ],
+      }),
+    );
+    const shared = (/** @type {string} */ route) =>
+      createFinding({
+        check: "seo",
+        rule: "title-duplicate",
+        severity: "block",
+        route,
+        distFile: `dist${route}index.html`,
+        message: "Shared title.",
+        group: "title:same",
+      });
+    // A third page joined a group baselined at two. Filtering to /a/ must
+    // not hide that, and a finding on an unfiltered page stays out.
+    const code = finishRun({
+      check: "seo",
+      findings: [shared("/a/"), shared("/b/"), shared("/c/"), blocking("/b/")],
+      pages: ["/a/"],
+      config: config(),
+    });
+    assert.equal(code, 1);
+    const report = readReport();
+    assert.deepEqual(
+      report.findings.map((/** @type {any} */ f) => [f.rule, f.status]),
+      [["title-duplicate", "new"]],
+    );
+  });
+
+  it("escapes finding text in the job summary", () => {
+    const file = path.join(root, "summary.md");
+    process.env.GITHUB_STEP_SUMMARY = file;
+    finishRun({
+      check: "seo",
+      findings: [
+        createFinding({
+          check: "seo",
+          rule: "title-missing",
+          severity: "block",
+          route: "/a/",
+          distFile: "dist/a/index.html",
+          message: "Title [review](https://attacker.example) <img src=x> a|b",
+        }),
+        createFinding({
+          check: "seo",
+          rule: "title-missing",
+          severity: "block",
+          route: "/b/",
+          distFile: "dist/b/index.html",
+          message: "Has `code` in it",
+        }),
+      ],
+      pages: null,
+      config: config(),
+    });
+    const text = fs.readFileSync(file, "utf8");
+    // Each cell is a code span, which Markdown renders literally, and a pipe
+    // inside it is escaped so the table keeps its columns.
+    assert.ok(
+      text.includes(
+        "| ` Title [review](https://attacker.example) <img src=x> a\\|b ` |",
+      ),
+      text,
+    );
+    assert.ok(text.includes("| `` Has `code` in it `` |"), text);
+  });
+
   it("drops findings on an excluded route, in any spelling", () => {
     const code = finishRun({
       check: "seo",
@@ -115,6 +193,17 @@ describe("finishRun", () => {
     assert.deepEqual(
       readReport().findings.map((/** @type {any} */ f) => f.route),
       ["/b/"],
+    );
+  });
+});
+
+describe("listPages", () => {
+  it("throws when dist/ holds no HTML pages, so no check passes on nothing", () => {
+    fs.mkdirSync(path.join(root, "dist"));
+    fs.writeFileSync(path.join(root, "dist", "robots.txt"), "");
+    assert.throws(
+      () => listPages(path.join(root, "dist"), root),
+      /no HTML pages/,
     );
   });
 });

@@ -53,7 +53,7 @@ export function listPages(distAbs, root) {
       `${path.relative(root, distAbs)}/ not found. Run \`pnpm build\` first.`,
     );
   }
-  return fs
+  const pages = fs
     .readdirSync(distAbs, { recursive: true, encoding: "utf8" })
     .filter((rel) => rel.endsWith(".html"))
     .map((rel) => ({
@@ -64,6 +64,14 @@ export function listPages(distAbs, root) {
       route: distFileToRoute(rel),
     }))
     .sort((a, b) => a.route.localeCompare(b.route));
+  // An empty or half-written build would otherwise pass every check with
+  // nothing checked.
+  if (pages.length === 0) {
+    throw new Error(
+      `${path.relative(root, distAbs)}/ has no HTML pages. Run \`pnpm build\` first.`,
+    );
+  }
+  return pages;
 }
 
 /**
@@ -144,15 +152,28 @@ export function finishRun({ check, findings, pages, config }) {
   }
 
   const excluded = new Set(config.exclusions.routes.map(canonicalRoute));
-  const inScope = findings.filter(
-    (f) =>
-      !excluded.has(f.route) && (pages === null || pages.includes(f.route)),
+  // The baseline is applied before the page filter, so a group finding counts
+  // every page in it: a page joining a baselined group is new debt even when
+  // the run is filtered to another page of that group.
+  const applied = applyBaseline(
+    mergeFindings(findings.filter((f) => !excluded.has(f.route))),
+    baseline,
+    { checks: [check], complete: pages === null },
   );
-  const applied = applyBaseline(mergeFindings(inScope), baseline, {
-    checks: [check],
-    complete: pages === null,
+  // The report then covers only the filtered pages, as before.
+  const shown =
+    pages === null
+      ? applied.findings
+      : applied.findings.flatMap((f) => {
+          const routes = f.routes.filter((route) => pages.includes(route));
+          return routes.length > 0 ? [{ ...f, routes }] : [];
+        });
+  const report = buildReport({
+    check,
+    pageFilter: pages,
+    findings: shown,
+    stale: applied.stale,
   });
-  const report = buildReport({ check, pageFilter: pages, ...applied });
   const file = writeReport(report, config.abs(config.outputDir));
 
   console.log(formatReport(report));

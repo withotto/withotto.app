@@ -1,3 +1,4 @@
+import fs from "node:fs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 
@@ -31,17 +32,14 @@ import { pathToFileURL } from "node:url";
  */
 export async function loadConfig(root = process.cwd()) {
   const file = path.join(root, "checks.config.mjs");
-  let config;
-  try {
-    ({ default: config } = await import(pathToFileURL(file).href));
-  } catch (error) {
-    if (/** @type {any} */ (error)?.code === "ERR_MODULE_NOT_FOUND") {
-      throw new Error(
-        `No checks.config.mjs in ${root}. Run the checks from the repo root.`,
-      );
-    }
-    throw error;
+  // Checked before the import, so a missing import inside an existing config
+  // surfaces as itself rather than as a missing config.
+  if (!fs.existsSync(file)) {
+    throw new Error(
+      `No checks.config.mjs in ${root}. Run the checks from the repo root.`,
+    );
   }
+  const { default: config } = await import(pathToFileURL(file).href);
   const problems = validateConfig(config);
   if (problems.length > 0) {
     throw new Error(`checks.config.mjs is invalid: ${problems.join("; ")}`);
