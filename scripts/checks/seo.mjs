@@ -521,7 +521,8 @@ export function analyseSite(config, pageFilter = null) {
     })
     .sort((a, b) => a.urlPath.localeCompare(b.urlPath));
 
-  // Effective redirects: 3xx rules that fire, i.e. forced or not shadowed.
+  // Every 3xx rule. Netlify decides shadowing per request path, so the link
+  // check below skips a non-forced rule only for a path that has a file.
   const effectiveRedirects = [];
   for (const rule of redirects.filter((r) => r.isRedirect)) {
     const shadowing = rule.forced
@@ -548,8 +549,7 @@ export function analyseSite(config, pageFilter = null) {
         message: `${config.redirectsFile} line ${rule.line} redirects ${rule.source} to ${rule.target}, but ${file.distFile} exists, so Netlify serves the file and the redirect never fires. If the file was retired, delete it from the source that copies it into ${config.distDir}/ (usually public/); if it is live, remove the redirect line; to redirect anyway, force it with "${rule.status}!".`,
       });
     }
-    if (shadowing.length === 0 && shadowingFiles.length === 0)
-      effectiveRedirects.push(rule);
+    effectiveRedirects.push(rule);
 
     if (
       rule.targetPath !== null &&
@@ -648,8 +648,15 @@ export function analyseSite(config, pageFilter = null) {
         /** @type {Set<string>} */ (incoming.get(target)).add(page.route);
       }
 
+      const servedAsIs =
+        target !== null
+          ? routes.has(target)
+          : staticFiles.some((f) => f.urlPath === pathname);
       const legacy = effectiveRedirects.find(
-        (r) => r.matches(pathname) && r.conditionsMet(url.searchParams),
+        (r) =>
+          r.matches(pathname) &&
+          r.conditionsMet(url.searchParams) &&
+          (r.forced || !servedAsIs),
       );
       if (legacy) {
         add({

@@ -365,6 +365,7 @@ describe("redirects", () => {
     assert.deepEqual(summary(shadowed), [
       "warn redirect-shadowed /files/old-price-list.pdf",
       "warn redirect-shadowed /old-page/",
+      "warn redirect-shadowed /posts/kept/",
     ]);
     const asset = shadowed.find((f) => f.route.endsWith(".pdf"));
     assert.equal(asset.distFile, "dist/files/old-price-list.pdf");
@@ -383,8 +384,19 @@ describe("redirects", () => {
 
   it("does not block a link to a shadowed source, but does to a forced one", () => {
     const blocking = findings.filter((f) => f.severity === "block");
-    assert.deepEqual(summary(blocking), ["block link-legacy /"]);
-    assert.match(blocking[0].snippet, /forced-page/);
+    const hrefs = blocking.map((f) => f.snippet.match(/href="([^"]+)"/)[1]);
+    assert.ok(hrefs.includes("/forced-page/"));
+    assert.ok(!hrefs.includes("/old-page/"));
+  });
+
+  it("decides shadowing per link path, as Netlify does, not per rule", () => {
+    // /posts/:slug has a built /posts/kept/ page, which Netlify serves, but
+    // it still redirects /posts/retired/, which has no file.
+    const blocking = findings.filter((f) => f.severity === "block");
+    const hrefs = blocking
+      .map((f) => f.snippet.match(/href="([^"]+)"/)[1])
+      .sort();
+    assert.deepEqual(hrefs, ["/forced-page/", "/posts/retired/"]);
   });
 });
 
