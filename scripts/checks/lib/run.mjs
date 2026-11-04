@@ -152,11 +152,20 @@ export function finishRun({ check, findings, pages, config }) {
   }
 
   const excluded = new Set(config.exclusions.routes.map(canonicalRoute));
-  // The baseline is applied before the page filter, so a group finding counts
-  // every page in it: a page joining a baselined group is new debt even when
-  // the run is filtered to another page of that group.
+  // A group finding counts every page in it, so a page joining a baselined
+  // group is new debt even when the run is filtered to another page of that
+  // group. Page and component findings count only the filtered pages, so new
+  // debt elsewhere cannot mark an old finding on a filtered page as new.
+  const isGroup = (/** @type {(typeof findings)[number]} */ f) =>
+    Boolean(!f.component && f.group);
   const applied = applyBaseline(
-    mergeFindings(findings.filter((f) => !excluded.has(f.route))),
+    mergeFindings(
+      findings.filter(
+        (f) =>
+          !excluded.has(f.route) &&
+          (pages === null || isGroup(f) || pages.includes(f.route)),
+      ),
+    ),
     baseline,
     { checks: [check], complete: pages === null },
   );

@@ -328,15 +328,32 @@ https://old.example.com/* https://withotto.app/:splat 301!
 
   it("records query and visitor conditions and only meets the ones a link can carry", () => {
     const conditional = parseRedirects(
-      "/store id=:id /capture/ 301\n/shop sort=price /capture/ 301\n/uk Country=gb /capture/ 301\n",
+      [
+        "/store id=:id /capture/ 301",
+        "/shop sort=price /capture/ 301",
+        "/uk /capture/ 302 Country=gb",
+        "/products /en/products/ 301! Language=en",
+        "/au /capture/ Country=au",
+        "/query Country=gb /capture/ 301",
+      ].join("\n"),
     );
-    const [store, shop, uk] = conditional;
+    const [store, shop, uk, products, au, query] = conditional;
     assert.equal(store.target, "/capture/");
     assert.ok(!store.conditionsMet(new URLSearchParams("")));
     assert.ok(store.conditionsMet(new URLSearchParams("id=4")));
     assert.ok(!shop.conditionsMet(new URLSearchParams("sort=name")));
     assert.ok(shop.conditionsMet(new URLSearchParams("sort=price")));
+    // Visitor conditions follow the status code, as Netlify writes them.
+    assert.equal(uk.status, 302);
     assert.ok(!uk.conditionsMet(new URLSearchParams("")));
+    assert.ok(products.forced);
+    assert.ok(!products.conditionsMet(new URLSearchParams("")));
+    // With no status code, the default 301 applies and the condition stands.
+    assert.equal(au.status, 301);
+    assert.ok(!au.conditionsMet(new URLSearchParams("")));
+    // Before the target, any key is a query parameter, Country included.
+    assert.ok(!query.conditionsMet(new URLSearchParams("")));
+    assert.ok(query.conditionsMet(new URLSearchParams("Country=gb")));
     assert.ok(rules.every((r) => r.conditionsMet(new URLSearchParams(""))));
   });
 
@@ -363,6 +380,7 @@ describe("redirects", () => {
   it("warns when a redirect source is a built static file, not only a page", () => {
     const shadowed = withRule(findings, "redirect-shadowed");
     assert.deepEqual(summary(shadowed), [
+      "warn redirect-shadowed /downloads/Price list.pdf",
       "warn redirect-shadowed /feeds/latest",
       "warn redirect-shadowed /files/old-price-list.pdf",
       "warn redirect-shadowed /old-page/",
@@ -398,6 +416,17 @@ describe("redirects", () => {
       .map((f) => f.snippet.match(/href="([^"]+)"/)[1])
       .sort();
     assert.deepEqual(hrefs, ["/forced-page/", "/posts/retired/"]);
+  });
+
+  it("matches a percent-encoded link to the built file it names", () => {
+    // dist/downloads/Price list.pdf shadows /downloads/*, so Netlify serves
+    // the file to /downloads/Price%20list.pdf rather than redirecting.
+    assert.deepEqual(
+      findings.filter(
+        (f) => f.severity === "block" && f.snippet?.includes("/downloads/"),
+      ),
+      [],
+    );
   });
 
   it("treats a link to a built file with no extension as served, not as a page", () => {

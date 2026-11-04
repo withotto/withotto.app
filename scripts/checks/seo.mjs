@@ -156,9 +156,10 @@ export function validateJsonLd(text) {
  *   this rule, ignoring a trailing slash on either side.
  * @property {(search: URLSearchParams) => boolean} conditionsMet  Whether a
  *   link with this query string meets the rule's conditions. A query-parameter
- *   condition needs the parameter (and its value, unless that is a :placeholder);
- *   a visitor condition (Country, Language, Role, Cookie) is never met, since a
- *   link cannot carry it.
+ *   condition, written between source and target, needs the parameter (and its
+ *   value, unless that is a :placeholder). A visitor condition (Country,
+ *   Language, Role, Cookie), written after the status code, is never met, since
+ *   a link cannot carry it.
  */
 
 /** Netlify redirect conditions on the visitor rather than the URL. */
@@ -187,18 +188,25 @@ export function parseRedirects(text, site = "https://withotto.app") {
     const tokens = line.split(/\s+/);
     const source = tokens[0];
     if (/^([a-z]+:)?\/\//i.test(source)) return;
-    // Conditions (key=value) sit between source and target.
+    const pair = (/** @type {string} */ token) => {
+      const at = token.indexOf("=");
+      return /** @type {[string, string]} */ ([
+        token.slice(0, at),
+        token.slice(at + 1),
+      ]);
+    };
+    // Query-parameter conditions (key=value) sit between source and target,
+    // whatever their key: Netlify reads `/uk Country=gb /x/` as ?Country=gb.
     let i = 1;
     /** @type {Array<[string, string]>} */
-    const conditions = [];
+    const query = [];
     while (
       i < tokens.length &&
       tokens[i].includes("=") &&
       !tokens[i].startsWith("/") &&
       !/^[a-z]+:\/\//i.test(tokens[i])
     ) {
-      const at = tokens[i].indexOf("=");
-      conditions.push([tokens[i].slice(0, at), tokens[i].slice(at + 1)]);
+      query.push(pair(tokens[i]));
       i += 1;
     }
     const target = tokens[i];
@@ -207,6 +215,12 @@ export function parseRedirects(text, site = "https://withotto.app") {
     const statusMatch = statusToken?.match(/^(\d{3})(!?)$/);
     const status = statusMatch ? Number(statusMatch[1]) : 301;
     const forced = statusMatch ? statusMatch[2] === "!" : false;
+    // Visitor conditions follow the status code, e.g. `302 Country=gb`.
+    const visitor = tokens
+      .slice(statusMatch ? i + 2 : i + 1)
+      .filter((token) => token.includes("="))
+      .map(pair)
+      .filter(([key]) => VISITOR_CONDITIONS.has(key));
 
     let targetPath = null;
     try {
@@ -239,9 +253,9 @@ export function parseRedirects(text, site = "https://withotto.app") {
       isRedirect: status >= 300 && status < 400,
       matches: (pathname) => pattern.test(stripSlash(pathname)),
       conditionsMet: (search) =>
-        conditions.every(
+        visitor.length === 0 &&
+        query.every(
           ([key, value]) =>
-            !VISITOR_CONDITIONS.has(key) &&
             search.has(key) &&
             (value.startsWith(":") || search.get(key) === value),
         ),
@@ -652,8 +666,15 @@ export function analyseSite(config, pageFilter = null) {
         /** @type {Set<string>} */ (incoming.get(target)).add(page.route);
       }
 
-      const servedAsIs =
-        filePaths.has(pathname) || (target !== null && routes.has(target));
+      // `pathname` is percent-encoded; built file names are not.
+      let decoded = pathname;
+      try {
+        decoded = decodeURIComponent(pathname);
+      } catch {
+        // A malformed escape names no built file.
+      }
+      const isFile = filePaths.has(decoded);
+      const servedAsIs = isFile || (target !== null && routes.has(target));
       const legacy = effectiveRedirects.find(
         (r) =>
           r.matches(pathname) &&
@@ -673,7 +694,7 @@ export function analyseSite(config, pageFilter = null) {
         pathname !== "/" &&
         !pathname.endsWith("/") &&
         !isFilePath(pathname, routes) &&
-        !filePaths.has(pathname)
+        !isFile
       ) {
         add({
           ...at(page, el),

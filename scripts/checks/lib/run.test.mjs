@@ -144,6 +144,51 @@ describe("finishRun", () => {
     );
   });
 
+  it("counts component findings on the filtered pages only", () => {
+    writeBaselineFile(
+      JSON.stringify({
+        schemaVersion: 1,
+        entries: [
+          {
+            check: "seo",
+            rule: "link-trailing-slash",
+            component: "toc",
+            count: 1,
+          },
+        ],
+      }),
+    );
+    const toc = (/** @type {string} */ route, /** @type {string} */ selector) =>
+      createFinding({
+        check: "seo",
+        rule: "link-trailing-slash",
+        severity: "block",
+        route,
+        distFile: `dist${route}index.html`,
+        message: "No trailing slash.",
+        component: "toc",
+        selector,
+      });
+    // The baselined link is on /a/; a new one is on /b/ only. The full run
+    // fails, but a run filtered to /a/ has no new debt to report.
+    const findings = [
+      toc("/a/", "nav > a:nth-child(1)"),
+      toc("/b/", "nav > a:nth-child(2)"),
+    ];
+    assert.equal(
+      finishRun({ check: "seo", findings, pages: null, config: config() }),
+      1,
+    );
+    assert.equal(
+      finishRun({ check: "seo", findings, pages: ["/a/"], config: config() }),
+      0,
+    );
+    assert.deepEqual(
+      readReport().findings.map((/** @type {any} */ f) => [f.routes, f.status]),
+      [[["/a/"], "baselined"]],
+    );
+  });
+
   it("escapes finding text in the job summary", () => {
     const file = path.join(root, "summary.md");
     process.env.GITHUB_STEP_SUMMARY = file;
