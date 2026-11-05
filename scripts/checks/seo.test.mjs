@@ -9,6 +9,7 @@ import { mergeFindings } from "./lib/findings.mjs";
 import { finishRun } from "./lib/run.mjs";
 import {
   analyseSite,
+  decodePath,
   extractHead,
   parseRedirects,
   validateJsonLd,
@@ -28,6 +29,24 @@ const analyse = (name) => analyseSite(fixtureConfig(name));
 const withRule = (findings, rule) => findings.filter((f) => f.rule === rule);
 const summary = (findings) =>
   findings.map((f) => `${f.severity} ${f.rule} ${f.route}`).sort();
+
+describe("decodePath", () => {
+  it("decodes each segment but never adds or removes one", () => {
+    for (const [encoded, decoded] of [
+      ["/files/Price%20list.pdf", "/files/Price list.pdf"],
+      ["/posts/price%20list/", "/posts/price list/"],
+      // An encoded separator or dot segment would let a path leave dist/.
+      ["/..%2Foutside.xml", "/..%2Foutside.xml"],
+      ["/a%2Fb/", "/a%2Fb/"],
+      ["/a%5Cb/", "/a%5Cb/"],
+      ["/%2E%2E/", "/%2E%2E/"],
+      // A malformed escape leaves only its own segment as written.
+      ["/bad%E0%A4%A/ok%20page/", "/bad%E0%A4%A/ok page/"],
+    ]) {
+      assert.equal(decodePath(encoded), decoded, encoded);
+    }
+  });
+});
 
 describe("extractHead", () => {
   const html = `<!doctype html><html><head><title> Head title  text </title>
@@ -263,12 +282,23 @@ describe("internal links", () => {
   });
 
   it("blocks links to /business/ and /business as legacy, not as a missing slash", () => {
-    assert.equal(legacy.length, 2);
-    for (const f of legacy) {
+    const business = legacy.filter((f) => f.snippet.includes("/business"));
+    assert.equal(business.length, 2);
+    for (const f of business) {
       assert.equal(f.severity, "block");
       assert.match(f.message, /\/capture\//);
     }
     assert.ok(!slash.some((f) => f.snippet.includes("/business")));
+  });
+
+  it("blocks a link to a conditional redirect only when the link meets its conditions", () => {
+    const hrefs = legacy
+      .map((f) => f.snippet.match(/href="([^"]+)"/)[1])
+      .filter((href) => !href.includes("/business"))
+      .sort();
+    // /store/ needs an id query parameter; /uk/ needs a visitor country a
+    // link cannot carry.
+    assert.deepEqual(hrefs, ["/store/?id=4"]);
   });
 
   it("merges the same bad footer link across pages under the footer component", () => {
@@ -315,6 +345,43 @@ https://old.example.com/* https://withotto.app/:splat 301!
     assert.equal(api.isRedirect, false);
   });
 
+  it("records query and visitor conditions and only meets the ones a link can carry", () => {
+    const conditional = parseRedirects(
+      [
+        "/store id=:id /capture/ 301",
+        "/shop sort=price /capture/ 301",
+        "/uk /capture/ 302 Country=gb",
+        "/products /en/products/ 301! Language=en",
+        "/au /capture/ Country=au",
+        "/query Country=gb /capture/ 301",
+      ].join("\n"),
+    );
+    const [store, shop, uk, products, au, query] = conditional;
+    assert.equal(store.target, "/capture/");
+    assert.ok(!store.conditionsMet(new URLSearchParams("")));
+    assert.ok(store.conditionsMet(new URLSearchParams("id=4")));
+    // Netlify needs exactly the listed parameters, so another one misses.
+    assert.ok(!store.conditionsMet(new URLSearchParams("id=4&utm_source=x")));
+    assert.ok(!shop.conditionsMet(new URLSearchParams("sort=name")));
+    assert.ok(shop.conditionsMet(new URLSearchParams("sort=price")));
+    // Visitor conditions follow the status code, as Netlify writes them.
+    assert.equal(uk.status, 302);
+    assert.ok(!uk.conditionsMet(new URLSearchParams("")));
+    assert.ok(products.forced);
+    assert.ok(!products.conditionsMet(new URLSearchParams("")));
+    // With no status code, the default 301 applies and the condition stands.
+    assert.equal(au.status, 301);
+    assert.ok(!au.conditionsMet(new URLSearchParams("")));
+    // Before the target, any key is a query parameter, Country included.
+    assert.ok(!query.conditionsMet(new URLSearchParams("")));
+    assert.ok(query.conditionsMet(new URLSearchParams("Country=gb")));
+    assert.ok(rules.every((r) => r.conditionsMet(new URLSearchParams(""))));
+    // A rule with no query conditions matches whatever the link carries.
+    assert.ok(
+      rules.every((r) => r.conditionsMet(new URLSearchParams("utm_source=x"))),
+    );
+  });
+
   it("matches a source with or without its trailing slash", () => {
     const business = rules.find((r) => r.source === "/business");
     assert.ok(business.matches("/business/"));
@@ -338,8 +405,12 @@ describe("redirects", () => {
   it("warns when a redirect source is a built static file, not only a page", () => {
     const shadowed = withRule(findings, "redirect-shadowed");
     assert.deepEqual(summary(shadowed), [
+      "warn redirect-shadowed /downloads/Price list.pdf",
+      "warn redirect-shadowed /feeds/latest",
       "warn redirect-shadowed /files/old-price-list.pdf",
       "warn redirect-shadowed /old-page/",
+      "warn redirect-shadowed /posts/kept/",
+      "warn redirect-shadowed /posts/price list/",
     ]);
     const asset = shadowed.find((f) => f.route.endsWith(".pdf"));
     assert.equal(asset.distFile, "dist/files/old-price-list.pdf");
@@ -358,8 +429,54 @@ describe("redirects", () => {
 
   it("does not block a link to a shadowed source, but does to a forced one", () => {
     const blocking = findings.filter((f) => f.severity === "block");
-    assert.deepEqual(summary(blocking), ["block link-legacy /"]);
-    assert.match(blocking[0].snippet, /forced-page/);
+    const hrefs = blocking.map((f) => f.snippet.match(/href="([^"]+)"/)[1]);
+    assert.ok(hrefs.includes("/forced-page/"));
+    assert.ok(!hrefs.includes("/old-page/"));
+  });
+
+  it("decides shadowing per link path, as Netlify does, not per rule", () => {
+    // /posts/:slug has a built /posts/kept/ page, which Netlify serves, but
+    // it still redirects /posts/retired/, which has no file.
+    const blocking = findings.filter((f) => f.severity === "block");
+    const hrefs = blocking
+      .map((f) => f.snippet.match(/href="([^"]+)"/)[1])
+      .sort();
+    assert.deepEqual(hrefs, ["/forced-page/", "/posts/retired/"]);
+  });
+
+  it("matches a percent-encoded link to the built file it names", () => {
+    // dist/downloads/Price list.pdf shadows /downloads/*, so Netlify serves
+    // the file to /downloads/Price%20list.pdf rather than redirecting.
+    assert.deepEqual(
+      findings.filter(
+        (f) => f.severity === "block" && f.snippet?.includes("/downloads/"),
+      ),
+      [],
+    );
+  });
+
+  it("compares a percent-encoded path with the built page it names", () => {
+    // dist/posts/price list/ is linked, listed in the sitemap, named as its
+    // own canonical and targeted by a redirect, each as /posts/price%20list/.
+    const encoded = findings.filter(
+      (f) =>
+        /price( |%20)list|old-price\/$/.test(f.route) ||
+        f.snippet?.includes("price%20list"),
+    );
+    assert.deepEqual(summary(encoded), [
+      "warn redirect-shadowed /posts/price list/",
+    ]);
+  });
+
+  it("treats a link to a built file with no extension as served, not as a page", () => {
+    // dist/feeds/latest is a file: Netlify serves it in place of /feeds/:name,
+    // and a link to it needs no trailing slash.
+    assert.deepEqual(
+      findings.filter(
+        (f) => f.severity === "block" && f.snippet?.includes("/feeds/latest"),
+      ),
+      [],
+    );
   });
 });
 
@@ -424,6 +541,17 @@ describe("an unreadable sitemap", () => {
     ]);
     assert.equal(found[0].distFile, "dist/sitemap-index-missing-child.xml");
     assert.match(found[0].message, /sitemap-9\.xml/);
+    assert.match(found[0].message, /does not exist/);
+  });
+
+  it("never reads a child sitemap from outside dist/", () => {
+    // outside.xml, beside dist/, is a valid sitemap: an index that reaches it
+    // through ..%2F must be told the child is not in the build.
+    const findings = withIndex("sitemap-index-escape.xml");
+    const found = withRule(findings, "sitemap-unreadable");
+    assert.deepEqual(summary(blocking(findings)), [
+      "block sitemap-unreadable /",
+    ]);
     assert.match(found[0].message, /does not exist/);
   });
 
@@ -503,6 +631,15 @@ describe("an unreadable sitemap", () => {
         index,
       );
     }
+  });
+
+  it("names the child sitemap that lists a missing URL, not the last one read", () => {
+    const found = withRule(
+      withIndex("sitemap-index-ghost-first.xml"),
+      "sitemap-url-missing",
+    );
+    assert.deepEqual(summary(found), ["block sitemap-url-missing /ghost/"]);
+    assert.equal(found[0].distFile, "dist/sitemap-ghost.xml");
   });
 
   it("still blocks a missing index as sitemap-missing", () => {

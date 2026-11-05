@@ -209,8 +209,19 @@ export function formatSummaryMarkdown(report) {
       "| --- | --- | --- | --- | --- |",
     );
     for (const f of rows) {
-      const cell = (/** @type {string} */ s) =>
-        s.replaceAll("|", "\\|").replaceAll("\n", " ");
+      // Finding text can come from the PR (a page title, a link), so each
+      // cell is a code span: Markdown renders it literally, with no links,
+      // images, autolinks or HTML. The fence is longer than any run of
+      // backticks inside, and a pipe is escaped so it cannot end the cell.
+      const cell = (/** @type {string} */ s) => {
+        const text = s.replaceAll(/[\r\n]+/g, " ").replaceAll("|", "\\|");
+        const longest = Math.max(
+          0,
+          ...(text.match(/`+/g) ?? []).map((run) => run.length),
+        );
+        const fence = "`".repeat(longest + 1);
+        return `${fence} ${text} ${fence}`;
+      };
       // A merged component or group finding names every page it covers, as
       // the text report does.
       const label = f.component ?? f.group;

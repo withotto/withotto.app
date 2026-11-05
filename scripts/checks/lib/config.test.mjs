@@ -27,6 +27,24 @@ describe("loadConfig", () => {
     }
   });
 
+  it("surfaces a missing import inside an existing config as itself", async () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), "checks-"));
+    try {
+      fs.writeFileSync(
+        path.join(dir, "checks.config.mjs"),
+        'import "./missing-helper.mjs";\nexport default {};\n',
+      );
+      await assert.rejects(
+        loadConfig(dir),
+        (error) =>
+          /** @type {any} */ (error).code === "ERR_MODULE_NOT_FOUND" &&
+          /missing-helper\.mjs/.test(/** @type {Error} */ (error).message),
+      );
+    } finally {
+      fs.rmSync(dir, { recursive: true });
+    }
+  });
+
   it("rejects a config with a misspelled key", async () => {
     const dir = fs.mkdtempSync(path.join(os.tmpdir(), "checks-"));
     try {

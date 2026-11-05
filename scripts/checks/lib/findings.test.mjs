@@ -261,7 +261,7 @@ describe("report", () => {
     assert.doesNotMatch(text, /title:same \(/);
     assert.match(
       formatSummaryMarkdown(report),
-      /\| title:same on \/f\/, \/g\/ \|/,
+      /\| ` title:same on \/f\/, \/g\/ ` \|/,
     );
   });
 

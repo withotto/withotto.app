@@ -53,7 +53,7 @@ export function listPages(distAbs, root) {
       `${path.relative(root, distAbs)}/ not found. Run \`pnpm build\` first.`,
     );
   }
-  return fs
+  const pages = fs
     .readdirSync(distAbs, { recursive: true, encoding: "utf8" })
     .filter((rel) => rel.endsWith(".html"))
     .map((rel) => ({
@@ -64,6 +64,14 @@ export function listPages(distAbs, root) {
       route: distFileToRoute(rel),
     }))
     .sort((a, b) => a.route.localeCompare(b.route));
+  // An empty or half-written build would otherwise pass every check with
+  // nothing checked.
+  if (pages.length === 0) {
+    throw new Error(
+      `${path.relative(root, distAbs)}/ has no HTML pages. Run \`pnpm build\` first.`,
+    );
+  }
+  return pages;
 }
 
 /**
@@ -144,15 +152,43 @@ export function finishRun({ check, findings, pages, config }) {
   }
 
   const excluded = new Set(config.exclusions.routes.map(canonicalRoute));
-  const inScope = findings.filter(
+  // A group finding counts every page in it, so a page joining a baselined
+  // group is new debt even when the run is filtered to another page of that
+  // group. Page and component findings count only the filtered pages, so new
+  // debt elsewhere cannot mark an old finding on a filtered page as new.
+  const isGroup = (/** @type {(typeof findings)[number]} */ f) =>
+    Boolean(!f.component && f.group);
+  const scoped = findings.filter(
     (f) =>
-      !excluded.has(f.route) && (pages === null || pages.includes(f.route)),
+      !excluded.has(f.route) &&
+      (pages === null || isGroup(f) || pages.includes(f.route)),
   );
-  const applied = applyBaseline(mergeFindings(inScope), baseline, {
+  // A merged finding takes its route, file and source from its first finding,
+  // so a filtered page's findings go first and the report names that page.
+  if (pages !== null) {
+    scoped.sort(
+      (a, b) =>
+        Number(pages.includes(b.route)) - Number(pages.includes(a.route)),
+    );
+  }
+  const applied = applyBaseline(mergeFindings(scoped), baseline, {
     checks: [check],
     complete: pages === null,
   });
-  const report = buildReport({ check, pageFilter: pages, ...applied });
+  // The report then covers only the filtered pages, as before.
+  const shown =
+    pages === null
+      ? applied.findings
+      : applied.findings.flatMap((f) => {
+          const routes = f.routes.filter((route) => pages.includes(route));
+          return routes.length > 0 ? [{ ...f, routes }] : [];
+        });
+  const report = buildReport({
+    check,
+    pageFilter: pages,
+    findings: shown,
+    stale: applied.stale,
+  });
   const file = writeReport(report, config.abs(config.outputDir));
 
   console.log(formatReport(report));

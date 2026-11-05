@@ -154,11 +154,48 @@ export function validateJsonLd(text) {
  * @property {boolean} isRedirect  3xx; a 200 rewrite or a 404 rule is not.
  * @property {(pathname: string) => boolean} matches  Whether a link path hits
  *   this rule, ignoring a trailing slash on either side.
+ * @property {(search: URLSearchParams) => boolean} conditionsMet  Whether a
+ *   link with this query string meets the rule's conditions. Query-parameter
+ *   conditions, written between source and target, need exactly the listed
+ *   parameters and no others (each value must match unless it is a
+ *   :placeholder), as Netlify matches them. A visitor condition (Country,
+ *   Language, Role, Cookie), written after the status code, is never met, since
+ *   a link cannot carry it.
  */
+
+/** Netlify redirect conditions on the visitor rather than the URL. */
+const VISITOR_CONDITIONS = new Set(["Country", "Language", "Role", "Cookie"]);
 
 /** @param {string} pathname */
 function stripSlash(pathname) {
   return pathname.length > 1 ? pathname.replace(/\/+$/, "") : pathname;
+}
+
+/**
+ * A URL path as built file and directory names spell it: a link to
+ * `/files/Price%20list.pdf` names `dist/files/Price list.pdf`. Every
+ * comparison of a URL path with the build goes through this. Each segment is
+ * decoded on its own and keeps its place: one whose escape is malformed, or
+ * that would decode to a separator or a dot segment (`..%2F`), stays as
+ * written, so decoding can never lead a path out of `dist/`.
+ *
+ * @param {string} pathname
+ */
+export function decodePath(pathname) {
+  return pathname
+    .split("/")
+    .map((segment) => {
+      let decoded;
+      try {
+        decoded = decodeURIComponent(segment);
+      } catch {
+        return segment;
+      }
+      return /[/\\]/.test(decoded) || decoded === "." || decoded === ".."
+        ? segment
+        : decoded;
+    })
+    .join("/");
 }
 
 /**
@@ -179,26 +216,44 @@ export function parseRedirects(text, site = "https://withotto.app") {
     const tokens = line.split(/\s+/);
     const source = tokens[0];
     if (/^([a-z]+:)?\/\//i.test(source)) return;
-    // Query-parameter conditions (key=value) sit between source and target.
+    const pair = (/** @type {string} */ token) => {
+      const at = token.indexOf("=");
+      return /** @type {[string, string]} */ ([
+        token.slice(0, at),
+        token.slice(at + 1),
+      ]);
+    };
+    // Query-parameter conditions (key=value) sit between source and target,
+    // whatever their key: Netlify reads `/uk Country=gb /x/` as ?Country=gb.
     let i = 1;
+    /** @type {Array<[string, string]>} */
+    const query = [];
     while (
       i < tokens.length &&
       tokens[i].includes("=") &&
       !tokens[i].startsWith("/") &&
       !/^[a-z]+:\/\//i.test(tokens[i])
-    )
+    ) {
+      query.push(pair(tokens[i]));
       i += 1;
+    }
     const target = tokens[i];
     if (target === undefined) return;
     const statusToken = tokens[i + 1];
     const statusMatch = statusToken?.match(/^(\d{3})(!?)$/);
     const status = statusMatch ? Number(statusMatch[1]) : 301;
     const forced = statusMatch ? statusMatch[2] === "!" : false;
+    // Visitor conditions follow the status code, e.g. `302 Country=gb`.
+    const visitor = tokens
+      .slice(statusMatch ? i + 2 : i + 1)
+      .filter((token) => token.includes("="))
+      .map(pair)
+      .filter(([key]) => VISITOR_CONDITIONS.has(key));
 
     let targetPath = null;
     try {
       const url = new URL(target, origin);
-      if (url.origin === origin) targetPath = url.pathname;
+      if (url.origin === origin) targetPath = decodePath(url.pathname);
     } catch {
       targetPath = null;
     }
@@ -225,6 +280,15 @@ export function parseRedirects(text, site = "https://withotto.app") {
       forced,
       isRedirect: status >= 300 && status < 400,
       matches: (pathname) => pattern.test(stripSlash(pathname)),
+      conditionsMet: (search) =>
+        visitor.length === 0 &&
+        (query.length === 0 ||
+          ([...search.keys()].every((key) => query.some(([k]) => k === key)) &&
+            query.every(
+              ([key, value]) =>
+                search.has(key) &&
+                (value.startsWith(":") || search.get(key) === value),
+            ))),
     });
   });
   return rules;
@@ -327,13 +391,16 @@ function listRoutes(items) {
  * @param {string} distAbs
  * @param {string} indexFile Relative to dist.
  * @param {string} origin
- * @returns {{ urls: string[], files: string[], errors: SitemapError[] } | null}
- *   null when the index is missing.
+ * @returns {{ urls: string[], urlFiles: string[], files: string[], errors: SitemapError[] } | null}
+ *   null when the index is missing. `urlFiles[i]` is the file that listed
+ *   `urls[i]`.
  */
 function readSitemap(distAbs, indexFile, origin) {
   const first = path.join(distAbs, indexFile);
   if (!fs.existsSync(first)) return null;
   const urls = [];
+  /** @type {string[]} */
+  const urlFiles = [];
   const files = [];
   /** @type {SitemapError[]} */
   const errors = [];
@@ -380,7 +447,7 @@ function readSitemap(distAbs, indexFile, origin) {
         });
         return;
       }
-      const child = path.join(distAbs, ...url.pathname.split("/"));
+      const child = path.join(distAbs, ...decodePath(url.pathname).split("/"));
       if (!fs.existsSync(child) || !fs.statSync(child).isFile()) {
         errors.push({
           file,
@@ -394,9 +461,10 @@ function readSitemap(distAbs, indexFile, origin) {
     });
     $("url > loc").each((_, el) => {
       urls.push($(el).text().trim());
+      urlFiles.push(file);
     });
   }
-  return { urls, files, errors };
+  return { urls, urlFiles, files, errors };
 }
 
 /**
@@ -496,8 +564,12 @@ export function analyseSite(config, pageFilter = null) {
       return { urlPath, distFile: rel(path.join(distAbs, file)) };
     })
     .sort((a, b) => a.urlPath.localeCompare(b.urlPath));
+  // Paths Netlify serves as files, including any with no extension, which
+  // the route helpers would otherwise read as pages.
+  const filePaths = new Set(staticFiles.map((f) => f.urlPath));
 
-  // Effective redirects: 3xx rules that fire, i.e. forced or not shadowed.
+  // Every 3xx rule. Netlify decides shadowing per request path, so the link
+  // check below skips a non-forced rule only for a path that has a file.
   const effectiveRedirects = [];
   for (const rule of redirects.filter((r) => r.isRedirect)) {
     const shadowing = rule.forced
@@ -524,13 +596,13 @@ export function analyseSite(config, pageFilter = null) {
         message: `${config.redirectsFile} line ${rule.line} redirects ${rule.source} to ${rule.target}, but ${file.distFile} exists, so Netlify serves the file and the redirect never fires. If the file was retired, delete it from the source that copies it into ${config.distDir}/ (usually public/); if it is live, remove the redirect line; to redirect anyway, force it with "${rule.status}!".`,
       });
     }
-    if (shadowing.length === 0 && shadowingFiles.length === 0)
-      effectiveRedirects.push(rule);
+    effectiveRedirects.push(rule);
 
     if (
       rule.targetPath !== null &&
       !/[*:]/.test(rule.targetPath) &&
       !isFilePath(rule.targetPath, routes) &&
+      !filePaths.has(rule.targetPath) &&
       !routes.has(canonicalRoute(rule.targetPath))
     ) {
       add({
@@ -616,15 +688,24 @@ export function analyseSite(config, pageFilter = null) {
         return;
       }
       if (!/^https?:$/.test(url.protocol) || url.origin !== origin) return;
+      // Rules match the path as written; the build is compared decoded.
       const pathname = url.pathname;
+      const decoded = decodePath(pathname);
 
-      const target = pathToRoute(pathname, routes);
+      const target = pathToRoute(decoded, routes);
       if (target !== null && target !== page.route && !page.is404) {
         if (!incoming.has(target)) incoming.set(target, new Set());
         /** @type {Set<string>} */ (incoming.get(target)).add(page.route);
       }
 
-      const legacy = effectiveRedirects.find((r) => r.matches(pathname));
+      const isFile = filePaths.has(decoded);
+      const servedAsIs = isFile || (target !== null && routes.has(target));
+      const legacy = effectiveRedirects.find(
+        (r) =>
+          r.matches(pathname) &&
+          r.conditionsMet(url.searchParams) &&
+          (r.forced || !servedAsIs),
+      );
       if (legacy) {
         add({
           ...at(page, el),
@@ -637,7 +718,8 @@ export function analyseSite(config, pageFilter = null) {
       if (
         pathname !== "/" &&
         !pathname.endsWith("/") &&
-        !isFilePath(pathname, routes)
+        !isFilePath(pathname, routes) &&
+        !isFile
       ) {
         add({
           ...at(page, el),
@@ -701,7 +783,7 @@ export function analyseSite(config, pageFilter = null) {
         message: `Canonical ${head.canonical} has no trailing slash, so it names a URL that redirects. Use ${origin}${canonicalPath}/.`,
       });
     }
-    const target = pathToRoute(canonicalPath, routes);
+    const target = pathToRoute(decodePath(canonicalPath), routes);
     if (target === null || !routes.has(target)) {
       add({
         ...pageAt(page, { selector, snippet }),
@@ -865,8 +947,7 @@ export function analyseSite(config, pageFilter = null) {
         message: `${config.distDir}/${config.sitemapIndex} resolves to no page URLs, although the build has indexable pages, so search engines get an empty sitemap. Check the sitemap integration and its filter in the Astro config.`,
       });
     }
-    const sitemapFile = rel(sitemap.files[sitemap.files.length - 1]);
-    for (const loc of sitemap.urls) {
+    for (const [index, loc] of sitemap.urls.entries()) {
       let url;
       try {
         url = new URL(loc);
@@ -874,12 +955,14 @@ export function analyseSite(config, pageFilter = null) {
         url = null;
       }
       const route =
-        url && url.origin === origin ? pathToRoute(url.pathname, routes) : null;
+        url && url.origin === origin
+          ? pathToRoute(decodePath(url.pathname), routes)
+          : null;
       if (route !== null) sitemapRoutes.add(route);
       if (route === null || !routes.has(route)) {
         add({
           route: route ?? "/",
-          distFile: sitemapFile,
+          distFile: rel(sitemap.urlFiles[index]),
           source: "unknown",
           rule: "sitemap-url-missing",
           severity: "block",
