@@ -14,5 +14,5 @@ exclude = [
   "ico\\.org\\.uk",
   "unsplash\\.com",
   "pexels\\.com",
-  "linkedin\\.com/sharing/",
+  "^https?://(www\\.)?linkedin\\.com/sharing/",
 ]
