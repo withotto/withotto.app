@@ -163,7 +163,7 @@ jobs:
             --config.minimum-release-age=7200 \
             --config.trust-policy=no-downgrade \
             --config.trust-policy-exclude='semver@5.7.2 || 6.3.1' \
-            @lhci/cli@0.15.1
+            @lhci/cli@0.16.0
           echo "${dir}/node_modules/.bin" >> "$GITHUB_PATH"
 
       - name: Run Lighthouse
