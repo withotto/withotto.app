@@ -149,9 +149,10 @@ jobs:
 
       # Installed outside the checkout, with the repo's supply-chain floor
       # (5-day minimum release age, no trust downgrades) passed explicitly.
-      # semver 5.7.2 and 6.3.1 (transitive, via lighthouse) are published
-      # without provenance after versions that had it, which trips the trust
-      # check; they are long-established releases. Renovate tracks the
+      # chromium-bidi 157.0.8090-0 (transitive, via lighthouse and
+      # puppeteer-core) is published by Google's chrome-devtools-npm account
+      # without the provenance some earlier versions had, which trips the
+      # trust check. Renovate tracks the
       # @lhci/cli version below (renovate.json). Deliberately outside the
       # repo's lockfile (not a site dependency), hence the zizmor ignore.
       - name: Install Lighthouse CI
@@ -162,8 +163,8 @@ jobs:
           pnpm --dir "$dir" add \
             --config.minimum-release-age=7200 \
             --config.trust-policy=no-downgrade \
-            --config.trust-policy-exclude='semver@5.7.2 || 6.3.1' \
-            @lhci/cli@0.15.1
+            --config.trust-policy-exclude='chromium-bidi@157.0.8090-0' \
+            @lhci/cli@0.16.0
           echo "${dir}/node_modules/.bin" >> "$GITHUB_PATH"
 
       - name: Run Lighthouse
