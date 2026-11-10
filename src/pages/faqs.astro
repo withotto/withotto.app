@@ -86,7 +86,7 @@ const faqs: CategorisedFaqItem[] = [
         <p class="py-2">You can monitor Otto's performance through the With Otto portal:</p>
         <ul class="list-disc pl-5">
           <li><b>Daily reports:</b> See exactly what Otto reconciled and what he skipped</li>
-          <li><b>Confidence levels:</b> Otto shows how confident he is about each match, and by default he needs to be at least 90% confident before he reconciles</li>
+          <li><b>Otto's score:</b> Otto shows his score for each match, and by default it needs to be at least 90% before he reconciles</li>
           <li><b>Feedback system:</b> Tell Otto when he should have matched something he didn't, improving future performance</li>
           <li><b>Reconciliation history:</b> Review all Otto's work with links back to the transactions in Xero</li>
         </ul>
@@ -107,7 +107,7 @@ const faqs: CategorisedFaqItem[] = [
     answer: `
         <p class="py-2">SmartMatch is how Otto decides what to reconcile. Rather than working out whether a payment on the bank statement relates to an invoice or bill in Xero from the payee and reference details alone, SmartMatch looks at 12 months of previous reconciliations for each of your clients to learn how you have reconciled in the past.</p>
         <p class="py-2">With that data, Otto can find patterns in those past reconciliations, which reduces mistakes and lets him take on trickier matches.</p>
-        <p class="py-2">For each green match on the bank reconciliation page, Otto will use this training data to decide whether it's a match or non-match, and a confidence level from 0 to 100%. For example, he could be 90% sure something is not a match, or 50% sure something is a match. By default, we require Otto to be at least 90% sure the match is correct before he will reconcile.</p>
+        <p class="py-2">For each green match on the bank reconciliation page, Otto uses this training data to score how strongly it looks like the right match, from 0 to 100%. By default, his score needs to be at least 90% before he will reconcile.</p>
     `,
   },
   {
