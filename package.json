@@ -28,13 +28,13 @@
     "@fontsource-variable/rethink-sans": "5.3.0",
     "@iconify-json/hugeicons": "1.2.35",
     "@tailwindcss/typography": "0.5.20",
-    "@tailwindcss/vite": "4.3.4",
+    "@tailwindcss/vite": "4.3.5",
     "astro": "7.4.5",
     "astro-icon": "1.2.0",
     "astro-navbar": "2.4.0",
     "astro-seo": "1.2.0",
     "sharp": "0.35.5",
-    "tailwindcss": "4.3.4"
+    "tailwindcss": "4.3.5"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.14.0",
