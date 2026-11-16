@@ -1,7 +1,7 @@
 [tools]
 deno = "2.9.8"
 lychee = "0.24.2"
-node = "26.13.0"
+node = "26.13.1"
 pnpm = "12.18.0"
 
 [env]
