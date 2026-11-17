@@ -1,0 +1,211 @@
+---
+import CapturePageLayout from "@layouts/CapturePageLayout.astro";
+import CaptureHero from "@components/capture/CaptureHero.astro";
+import CaptureSection from "@components/capture/CaptureSection.astro";
+import CaptureTrialCta from "@components/capture/CaptureTrialCta.astro";
+import CapturePricing from "@components/capture/CapturePricing.astro";
+import PricingCalculator from "@components/capture/PricingCalculator.astro";
+import Screenshot from "@components/Screenshot.astro";
+import StepList from "@components/StepList.astro";
+import Step from "@components/Step.astro";
+import reviewBillImg from "@assets/capture/quickbooks/review-bill.png";
+import { bulletList, inlineLink, subheading } from "@lib/capture-styles";
+
+const description =
+  "Otto reads your clients' receipts and bills, suggests categories from each client's own history, and publishes bills and supplier credits to QuickBooks Online.";
+
+const breadcrumbs = [
+  { name: "With Otto", path: "/" },
+  { name: "Otto Capture", path: "/capture/" },
+  { name: "QuickBooks Online", path: "/capture/quickbooks/" },
+];
+---
+
+<CapturePageLayout
+  title="Receipt capture for QuickBooks Online"
+  description={description}
+  breadcrumbs={breadcrumbs}
+  softwareApplication>
+  <CaptureHero title="Receipt and bill capture for practices on QuickBooks Online">
+    Otto reads every line of the receipts and bills your clients photograph,
+    scan or forward, and suggests each category from how you've coded that
+    client's suppliers before.
+    <Fragment slot="after-cta">
+      <p>
+        You check each one, and Otto publishes it to the client's QuickBooks
+        Online company as a bill or supplier credit, with the original attached.
+        Capture publishes purchases to QuickBooks Online, not sales invoices.
+        Nothing reaches QuickBooks until someone in your practice has reviewed
+        it.
+      </p>
+    </Fragment>
+  </CaptureHero>
+
+  <CaptureSection
+    title="Built by a practice, for practices"
+    icon="hugeicons:building-03">
+    <p>
+      We run an accounting practice. We tried a lot of receipt capture tools,
+      and none had the mix of features and pricing that worked for our clients.
+      The small rough edges added up too, using them day in, day out.
+    </p>
+    <p>
+      So we built Otto Capture around the jobs that took our time. Clients send
+      documents without creating an account. And Otto reads every line and
+      suggests a category from that client's own history.
+    </p>
+  </CaptureSection>
+
+  <CaptureSection
+    title="What Otto does for your QuickBooks clients"
+    tone="soft"
+    icon="hugeicons:invoice-03">
+    <div class="space-y-4">
+      <h3 class={subheading}>Every line, not just the total</h3>
+      <p>
+        Otto reads the supplier, the dates, the totals and every line item on
+        each document, as standard. A receipt with five different purchases on
+        it reaches QuickBooks as a bill with five lines, each with its own
+        category and VAT code, where some tools charge extra for line items.
+      </p>
+    </div>
+
+    <div class="space-y-4 pt-8">
+      <h3 class={subheading}>Categories that learn each client's suppliers</h3>
+      <p>
+        Otto suggests a category for each line from how you've coded that
+        client's bills from the same supplier. He learns one client at a time,
+        from the bills you publish through Capture, including anything you
+        changed in review, so his suggestions draw on more of that client's
+        history as you go. For a supplier the client hasn't used before, he
+        suggests a category from the document alone, and you decide.
+      </p>
+    </div>
+
+    <div class="space-y-4 pt-8">
+      <h3 class={subheading}>Clients send documents without an account</h3>
+      <p>
+        Each client has their own email address, submission page and WhatsApp
+        invite link, and you choose which to give them. Whoever holds the
+        receipts just sends them. Nobody creates an account or installs
+        anything, and you don't register anyone in advance.
+      </p>
+      <p class="text-base text-default-soft">
+        Missing receipts isn't available for QuickBooks Online clients yet. If
+        you'd like it for them, tell us, because it helps us decide what to
+        build next.
+      </p>
+    </div>
+  </CaptureSection>
+
+  <CaptureSection title="How it works" icon="hugeicons:route-01">
+    <StepList>
+      <Step>
+        Your client sends a receipt or bill by email, through their submission
+        page, or on WhatsApp.
+      </Step>
+      <Step>
+        Otto reads it, matches the supplier to one of the client's QuickBooks
+        suppliers, and suggests a category and VAT code for each line.
+      </Step>
+      <Step>
+        Someone in your practice checks it and changes anything that needs it.
+      </Step>
+      <Step>
+        You click <strong>Publish</strong>, and Otto creates the bill or
+        supplier credit in the client's company, with the original document
+        attached.
+      </Step>
+    </StepList>
+    <Screenshot
+      src={reviewBillImg}
+      alt="A bill in review, each line with its own category and VAT code, ready to publish to QuickBooks Online"
+    />
+  </CaptureSection>
+
+  <CaptureSection
+    title="What lands in QuickBooks is what you checked"
+    tone="soft"
+    icon="hugeicons:document-validation">
+    <p>A bill in the client's books should match the document it came from.</p>
+    <ul class={bulletList}>
+      <li>
+        <strong>VAT read and checked line by line.</strong> Otto reads the VAT
+        code and amount on each line, and checks the lines add up to the
+        document's net, VAT and total. In review, a line whose VAT differs from
+        its rate shows the rate's figure beside it, and a bill whose lines don't
+        match its total is flagged before you publish. QuickBooks then records
+        the VAT you approved.
+      </li>
+      <li>
+        <strong>Foreign currency at the client's own rates.</strong> With
+        multi-currency on, a bill publishes in its own currency at the rate in
+        the company's own exchange rate table, so it's valued the way the
+        client's books value it. You can also convert a document to the amount
+        that cleared the bank.
+      </li>
+    </ul>
+  </CaptureSection>
+
+  <CaptureSection
+    title="Connecting a client's company"
+    icon="hugeicons:plug-socket">
+    <p>
+      You connect each client's QuickBooks Online company to Capture on its own,
+      so you can start with one client and add the rest when you're ready.
+      Capture brings across that company's suppliers, chart of accounts, VAT
+      codes and classes, so Otto's suggestions use that client's own lists from
+      the first document.
+    </p>
+    <p>
+      Capture uses the connection to create suppliers, bills and supplier
+      credits, and to attach the original documents. It adds a currency to the
+      company only when you choose to during review. The details are in{" "}
+      <a
+        href="https://support.withotto.app/capture/platforms/quickbooks/"
+        class={inlineLink}>
+        Otto Capture's QuickBooks Online guide
+      </a>
+      .
+    </p>
+  </CaptureSection>
+
+  <CaptureSection
+    title="What it costs"
+    tone="soft"
+    width="default"
+    icon="hugeicons:coins-01">
+    <p class="max-w-3xl">
+      Otto Capture is priced per client, per month, on three tiers. A client
+      with no published documents in a month costs nothing. Each client sits on
+      whichever tier is cheapest for what it published that month, and reaching
+      a tier's allowance doesn't tip it into a bigger bill.
+    </p>
+    <CapturePricing variant="compact">
+      <PricingCalculator />
+    </CapturePricing>
+    <p class="max-w-3xl pt-4">
+      Full pricing is on{" "}
+      <a href="/capture/#pricing" class={inlineLink}>
+        the Otto Capture page
+      </a>
+      .
+    </p>
+  </CaptureSection>
+
+  <CaptureTrialCta title="Try it on as many QuickBooks Online clients as you like">
+    <p>
+      The free 30-day trial has no limit on clients or documents, so connect as
+      many client companies as you like. We'd suggest putting Otto through his
+      paces: include the clients whose paperwork takes longest each month, and
+      send in a few weeks of their receipts and bills. Review them with every
+      line already read and a category suggested, then publish them to
+      QuickBooks.
+    </p>
+    <p>Otto Capture is available to UK accounting and bookkeeping practices.</p>
+    <Fragment slot="note">
+      Your clients can be on any mix of Xero, FreeAgent, and QuickBooks Online.
+      On QuickBooks Online, Otto publishes purchases.
+    </Fragment>
+  </CaptureTrialCta>
+</CapturePageLayout>

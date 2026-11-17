@@ -47,6 +47,7 @@ env:
     /capture/
     /capture/xero/
     /capture/freeagent/
+    /capture/quickbooks/
     /bank-reconciliation/
     /faqs/
     /blog/bank-rule-activity-report/
