@@ -165,7 +165,7 @@ jobs:
             --config.minimum-release-age=7200 \
             --config.trust-policy=no-downgrade \
             --config.trust-policy-exclude='chromium-bidi@157.0.8090-0' \
-            @lhci/cli@0.16.0
+            @lhci/cli@0.16.1
           echo "${dir}/node_modules/.bin" >> "$GITHUB_PATH"
 
       - name: Run Lighthouse
