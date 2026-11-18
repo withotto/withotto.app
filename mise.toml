@@ -11,4 +11,5 @@ _.path = ['./node_modules/.bin']
 # `mise install` points git at the tracked hooks in .githooks/, whose
 # post-checkout renders the shared rules into each new worktree. Not a pnpm
 # `prepare` script: the global pnpm config sets ignoreScripts, so it never runs.
+# This repo-level setting takes precedence over any global core.hooksPath.
 postinstall = "git config core.hooksPath .githooks || true"

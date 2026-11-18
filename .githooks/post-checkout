@@ -9,4 +9,5 @@
 case "$1" in "" | *[!0]*) exit 0 ;; esac
 s="$HOME/.claude/hooks/shared-rules-sync.sh"
 [ -x "$s" ] || exit 0
-"$s" --target "$(git rev-parse --show-toplevel)" </dev/null >&2 || true
+root=$(git rev-parse --show-toplevel) || exit 0
+"$s" --target "$root" </dev/null >&2 || true
