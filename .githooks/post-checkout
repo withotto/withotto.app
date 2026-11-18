@@ -1,0 +1,13 @@
+#!/bin/sh
+# Render the shared rules (.claude/rules/shared/) into a worktree that
+# `git worktree add` has just created, which git marks with a null previous
+# HEAD ($1). The user-level shared-rules hook only renders a worktree when a
+# session or subagent starts in it, so a worktree made with plain git and
+# worked on from another session would otherwise have none. Skipped where the
+# wrapper is not installed, and never fails the checkout.
+# All zeros: 40 for SHA-1, 64 for SHA-256.
+case "$1" in "" | *[!0]*) exit 0 ;; esac
+s="$HOME/.claude/hooks/shared-rules-sync.sh"
+[ -x "$s" ] || exit 0
+root=$(git rev-parse --show-toplevel) || exit 0
+"$s" --target "$root" </dev/null >&2 || true
