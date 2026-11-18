@@ -72,7 +72,7 @@ Use these aliases in imports. Do not write relative `../../` paths:
 
 | Task                  | Command                                                                                                                                                                   |
 | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Install deps          | `pnpm install`                                                                                                                                                            |
+| Install deps          | `mise install` (also points git at `.githooks/`), then `pnpm install`                                                                                                     |
 | Dev server            | `pnpm dev` (or `pnpm start`)                                                                                                                                              |
 | Dev server + Supabase | `pnpm dev:all`: starts the local Supabase stack, backgrounds Astro, then holds the terminal on `supabase functions serve` (hot reload, edge function logs). Needs Docker. |
 | Stop both             | `pnpm dev:stop`                                                                                                                                                           |
