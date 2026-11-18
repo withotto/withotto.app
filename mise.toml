@@ -12,4 +12,5 @@ _.path = ['./node_modules/.bin']
 # post-checkout renders the shared rules into each new worktree. Not a pnpm
 # `prepare` script: the global pnpm config sets ignoreScripts, so it never runs.
 # This repo-level setting takes precedence over any global core.hooksPath.
+# `|| true` keeps `mise install` working where the tree is not a git checkout.
 postinstall = "git config core.hooksPath .githooks || true"
