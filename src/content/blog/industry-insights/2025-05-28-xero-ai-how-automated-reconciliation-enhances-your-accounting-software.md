@@ -126,7 +126,7 @@ The integration between accounting software and AI continues to evolve rapidly. 
 
 **Highlighting time savings:** As systems record information about reconciliation patterns, they can start to recommend bank rules that are performing well for one client that might be relevant for others.
 
-**Missing documents:** Reconciliation bots view clients every day so could be well-placed to identify documents that clients may need to provide and deal with communicating with clients so that staff spend less time chasing up these missing receipts.
+**Missing documents:** Reconciliation bots view clients every day so could be well-placed to identify documents that clients may need to provide and deal with communicating with clients so that staff spend less time chasing up these missing receipts. We've since built a version of this into [Otto Capture for Xero](/capture/xero/). You upload a client's uncoded statement lines, and the client answers each payment with a receipt or a note, from one link with no login.
 
 ## Making the Decision: Is AI Reconciliation Right for Your Practice?
 
