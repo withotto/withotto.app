@@ -179,6 +179,41 @@ export const mixedLinesUsage = {
   measured: "2026-11-23",
 };
 
+// How many documents Otto Capture receives for every 100 it publishes,
+// measured across documents it received, leaving out any still in review.
+// For a competitor that charges per document received, its scenario prices
+// are for this many documents per 100 published, on the basis its data file's
+// `receivedBasis` names: everything that arrives, everything but identical
+// copies, or everything but copies of documents already sent. `measured` goes
+// through CheckedOn, so the claim-age rule asks for it to be measured again.
+export const receivedUsage = {
+  period: "from July to October 2026",
+  measured: "2026-11-23",
+  perHundredPublished: {
+    all: 119,
+    "without-copies": 113,
+    "without-near-duplicates": 108,
+  },
+} as const;
+
+export type ReceivedBasis = keyof typeof receivedUsage.perHundredPublished;
+export const receivedBases = Object.keys(receivedUsage.perHundredPublished) as [
+  ReceivedBasis,
+  ...ReceivedBasis[],
+];
+
+// The note under the scenarios for a competitor that charges per document
+// received: everything but the measured date, which the component renders.
+export function receivedNote(name: string, basis: ReceivedBasis): string {
+  const count = receivedUsage.perHundredPublished[basis];
+  const arrived = {
+    all: `about ${count} arrived for every 100 published. The extra documents were mostly copies of ones already sent, including the same file twice, or files with nothing to publish.`,
+    "without-copies": `about ${count} arrived for every 100 published, once identical copies were set aside. The extra documents were mostly copies of ones already sent, or files with nothing to publish.`,
+    "without-near-duplicates": `about ${count} arrived for every 100 published, once copies of documents already sent were set aside. The extra documents were mostly files with nothing to publish.`,
+  }[basis];
+  return `${name} charges for every document it receives, Otto Capture only for those it publishes. Across documents Otto Capture received ${receivedUsage.period}, ${arrived} So ${name}'s prices here are for ${count} documents for every 100 Otto Capture publishes.`;
+}
+
 // The value a competitor's data file gives a claim or a scenario price that
 // the competitor doesn't publish. Its source is the page that says so.
 export const NOT_PUBLISHED = "not published";

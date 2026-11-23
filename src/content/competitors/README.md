@@ -69,5 +69,6 @@ scenarios:
 - Where the competitor doesn't publish something, the value is `not published`, and `sourceUrl` and `quote` point to the page that says so. A price that isn't published needs no `plan`, `billing`, or `inputs`.
 - Scenario prices are for the scenario's clients at the volumes in `src/lib/compare.ts`, on the cheapest way the competitor's own published pricing offers to buy that usage. `billing` states any commitment.
 - A key in `facts` can't also be a key in `claims`.
+- For a competitor that charges per document received, set `receivedBasis` to `all`, `without-copies` or `without-near-duplicates`, following its `duplicates` claim, which it then needs. Its scenario prices are for more documents than Capture publishes: the published volume times `receivedUsage` in `src/lib/compare.ts` for that basis, divided by 100, rounded to a whole document, and recorded in `inputs`.
 - Every claim citing the same `sourceUrl` gives it the same `sourceName`, or the build fails.
 - `checked` moves on only when the source has been read again and still says what the claim says.

@@ -6,6 +6,7 @@ import {
   collectSources,
   competitorFacts,
   mixLabel,
+  receivedNote,
   formatCheckedDate,
   joinClaims,
   oldestChecked,
@@ -150,5 +151,20 @@ describe("mixLabel", () => {
       ]),
       "2 with nothing published, 1 publishing 10 documents a month, 3 publishing 30 documents a month",
     );
+  });
+});
+
+describe("receivedNote", () => {
+  it("states the same count for each basis in both places it appears", () => {
+    for (const [basis, count] of [
+      ["all", 119],
+      ["without-copies", 113],
+      ["without-near-duplicates", 108],
+    ] as const) {
+      const note = receivedNote("Example", basis);
+      assert.match(note, new RegExp(`about ${count} arrived for every 100`));
+      assert.match(note, new RegExp(`prices here are for ${count} documents`));
+      assert.ok(note.startsWith("Example charges for every document"), note);
+    }
   });
 });

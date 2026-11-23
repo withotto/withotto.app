@@ -6,6 +6,7 @@ import {
   competitorFacts,
   NOT_PUBLISHED,
   priceOptionKeys,
+  receivedBases,
   rowKeys,
   scenarioKeys,
 } from "@lib/compare";
@@ -85,6 +86,10 @@ const competitors = defineCollection({
       name: z.string().trim().min(1),
       // Listed by the links to comparisons once true.
       published: z.boolean(),
+      // Set only for a competitor that charges per document received: which
+      // duplicates its published terms say it doesn't charge for. Its scenario
+      // prices are then for the documents @lib/compare's receivedUsage gives.
+      receivedBasis: z.enum(receivedBases).optional(),
       // One claim per comparison row, keyed by the row.
       claims: z.partialRecord(z.enum(rowKeys), claim),
       // Facts a page states in prose that are not table rows, under keys of
@@ -109,6 +114,15 @@ const competitors = defineCollection({
             message: `"${key}" is already a claim; give the fact another key`,
           });
         }
+      }
+      // The basis must rest on the competitor's own terms for duplicates.
+      if (competitor.receivedBasis && !competitor.claims.duplicates) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["receivedBasis"],
+          message:
+            "receivedBasis needs a duplicates claim saying how the competitor treats duplicates",
+        });
       }
       // Links to one source must say the same thing wherever they appear.
       const { conflicts } = collectSources(competitorFacts(competitor));

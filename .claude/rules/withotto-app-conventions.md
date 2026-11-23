@@ -42,6 +42,7 @@ Each Otto Capture comparison page (`/capture/vs-<competitor>/`) compares Capture
 - **Every date goes through `CheckedOn`,** which renders a `time` element carrying `data-claim-checked`. That is what the SEO check's `claim-stale` rule reads (see Site Checks).
 - **Links to comparisons come from the collection.** `ComparisonLinks` lists each competitor whose data file sets `published: true`, and renders nothing, heading included, when there are none. A comparison page passes `current` to leave itself out.
 - **Evidence and drift checks live in the private content repo:** the dated copies of each source, the tool that captures them and renews `checked` dates, and the monthly drift run. This repo holds only the public facts.
+- **Capture's own usage figures** (`mixedLinesUsage` and `receivedUsage` in `src/lib/compare.ts`) are measured from Capture's production data with aggregate-only queries kept in the private content repo, never here. Their dates go through `CheckedOn`, so they are re-measured on the claim-age cycle. Discard reasons have been recorded in Capture since 10 November 2026; when re-measuring, check the near-duplicate estimate behind `without-near-duplicates` against them.
 - **Retiring a comparison** means deleting its page and its data file, with no redirect (see Redirects & Legacy URLs).
 
 ## Interactive Components: Astro Scripts

@@ -17,7 +17,13 @@ import CheckedOn from "@components/compare/CheckedOn.astro";
 import ScenarioPrice from "@components/compare/ScenarioPrice.astro";
 import { formatPounds, pricingTiers } from "@lib/capture";
 import { clientCost } from "@lib/capture-estimate";
-import { mixLabel, mixedLinesUsage, pricingScenarios } from "@lib/compare";
+import {
+  mixLabel,
+  mixedLinesUsage,
+  pricingScenarios,
+  receivedNote,
+  receivedUsage,
+} from "@lib/compare";
 import type { CollectionEntry } from "astro:content";
 
 interface Props {
@@ -25,7 +31,7 @@ interface Props {
 }
 
 const { competitor } = Astro.props;
-const { name, scenarios } = competitor.data;
+const { name, scenarios, receivedBasis } = competitor.data;
 
 const known = new Set<string>(pricingScenarios.map((scenario) => scenario.key));
 const unknown = Object.keys(scenarios).filter((key) => !known.has(key));
@@ -148,4 +154,10 @@ const whenWithout =
   <p class="mt-6 text-base text-default-soft">
     {`Every price excludes VAT and is for one month. Otto Capture's totals come from its pricing tiers, and include line items, which it extracts as standard. ${name}'s are the cheapest its own published pricing gives for the same clients, with no commitment and with one, on the plan and billing basis shown.`}
   </p>
+  {receivedBasis && (
+    <p class="mt-4 text-base text-default-soft">
+      {`${receivedNote(name, receivedBasis)} Measured on `}
+      <CheckedOn date={receivedUsage.measured} />.
+    </p>
+  )}
 </div>
