@@ -703,6 +703,79 @@ describe("JSON-LD", () => {
   });
 });
 
+describe("claim age", () => {
+  // Every fixture date is counted back from this "today".
+  const today = new Date("2026-06-30T12:00:00Z");
+  const claimConfig = (claimAge) => {
+    const { claimAge: _, ...config } = fixtureConfig("claim-age");
+    return claimAge ? { ...config, claimAge } : config;
+  };
+  const findings = analyseSite(
+    claimConfig({ warnDays: 45, blockDays: 90 }),
+    null,
+    { today },
+  );
+  const stale = withRule(findings, "claim-stale");
+  const on = (route) => stale.filter((f) => f.route === route);
+
+  it("warns on a claim checked 50 days ago, naming its date, age and route", () => {
+    const found = on("/warn/");
+    assert.deepEqual(summary(found), ["warn claim-stale /warn/"]);
+    assert.equal(found[0].selector, "body > main > p > time");
+    assert.match(found[0].snippet, /datetime="2026-05-11"/);
+    assert.match(found[0].message, /2026-05-11/);
+    assert.match(found[0].message, /50 days/);
+    assert.match(found[0].message, /\/warn\//);
+    assert.match(found[0].message, /re-check/i);
+  });
+
+  it("blocks a claim checked 91 days ago", () => {
+    const found = on("/block/");
+    assert.deepEqual(summary(found), ["block claim-stale /block/"]);
+    assert.match(found[0].message, /91 days/);
+  });
+
+  it("passes a claim checked exactly 45 days ago, and a recent one", () => {
+    assert.deepEqual(on("/boundary/"), []);
+    assert.deepEqual(on("/"), []);
+  });
+
+  it("blocks a claim date with no datetime, or one that is not a real date", () => {
+    assert.deepEqual(
+      summary([...on("/missing-datetime/"), ...on("/invalid-datetime/")]),
+      [
+        "block claim-stale /invalid-datetime/",
+        "block claim-stale /missing-datetime/",
+      ],
+    );
+    assert.match(on("/invalid-datetime/")[0].message, /2026-02-30/);
+  });
+
+  it("reports each stale date on a page separately", () => {
+    const found = on("/two-stale/");
+    assert.deepEqual(summary(found), [
+      "block claim-stale /two-stale/",
+      "warn claim-stale /two-stale/",
+    ]);
+    assert.notEqual(found[0].selector, found[1].selector);
+  });
+
+  it("reports nothing else", () => {
+    assert.deepEqual(summary(findings), [
+      "block claim-stale /block/",
+      "block claim-stale /invalid-datetime/",
+      "block claim-stale /missing-datetime/",
+      "block claim-stale /two-stale/",
+      "warn claim-stale /two-stale/",
+      "warn claim-stale /warn/",
+    ]);
+  });
+
+  it("skips the rule when the config has no claimAge", () => {
+    assert.deepEqual(analyseSite(claimConfig(null), null, { today }), []);
+  });
+});
+
 describe("page filter", () => {
   it("rejects a page filter naming a page that was not built", () => {
     assert.throws(

@@ -47,6 +47,11 @@ export default {
   // (astro preview defaults to 4321) or collides with `dev:all`.
   previewPort: 4391,
 
+  // A claim on a published page (a `data-claim-checked` date) warns once its
+  // checked date is more than warnDays old and blocks past blockDays, so a
+  // competitor fact is re-checked against its source before it goes stale.
+  claimAge: { warnDays: 45, blockDays: 90 },
+
   exclusions: {
     // Routes no check reports on. Empty today.
     routes: [],
