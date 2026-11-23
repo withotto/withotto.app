@@ -142,7 +142,7 @@ jobs:
 
       # mise rather than actions/setup-node: the same pinned action and
       # Renovate-tracked Node and pnpm versions (mise.toml) as checks.yml.
-      - uses: jdx/mise-action@d5574b52816a478f9d4e6529a3f6ff17a8a36785 # v5.2.8
+      - uses: jdx/mise-action@236a21c3b91f5db6d4e174b348674a0f0caac06d # v5.2.9
         with:
           # Pinned as in checks.yml; Renovate keeps it current.
           version: 2026.9.14
