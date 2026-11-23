@@ -4,6 +4,8 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import {
   collectSources,
+  competitorFacts,
+  mixLabel,
   formatCheckedDate,
   joinClaims,
   oldestChecked,
@@ -113,5 +115,40 @@ describe("collectSources", () => {
       { ...claim("£20", "2026-11-20"), sourceName: "Example prices" },
     ]);
     assert.deepEqual(conflicts, ["https://example.test/pricing/"]);
+  });
+});
+
+describe("competitorFacts", () => {
+  it("gathers claims, prose facts and every scenario price option", () => {
+    const facts = competitorFacts({
+      claims: { platforms: claim("Xero", "2026-11-14") },
+      facts: { "former-name": claim("Formerly Example Ltd", "2026-11-15") },
+      scenarios: {
+        "clients-10": {
+          monthly: {
+            ...claim("not published", "2026-11-16"),
+            value: "not published",
+          },
+          committed: { ...claim("100", "2026-11-17"), value: 100 },
+        },
+      },
+    });
+    assert.deepEqual(
+      facts.map((fact) => fact.checked),
+      ["2026-11-14", "2026-11-15", "2026-11-16", "2026-11-17"],
+    );
+  });
+});
+
+describe("mixLabel", () => {
+  it("describes each group of clients by what it publishes", () => {
+    assert.equal(
+      mixLabel([
+        { clients: 2, documents: 0 },
+        { clients: 1, documents: 10 },
+        { clients: 3, documents: 30 },
+      ]),
+      "2 with nothing published, 1 publishing 10 documents a month, 3 publishing 30 documents a month",
+    );
   });
 });

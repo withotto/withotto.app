@@ -5,13 +5,11 @@
 //
 // A competitor's facts live in `src/content/competitors/<slug>.yaml`, whose
 // schema in `src/content.config.ts` accepts only the row and scenario keys
-// defined here. Capture's scenario totals come from `estimate()` in
+// defined here. Capture's scenario totals come from `clientCost()` in
 // `@lib/capture-estimate`, called by the scenarios component, never from here.
 //
-// Pure functions over plain data, with only type imports: `pnpm test:site`
+// Pure functions over plain data, with no runtime imports: `pnpm test:site`
 // runs this file directly under Node, which can't resolve `@lib` at runtime.
-
-import type { Rows } from "@lib/capture-estimate";
 
 export interface ComparisonRow {
   // Stable key, used as the claim's key in a competitor's data file.
@@ -83,36 +81,53 @@ export const rowKeys = comparisonRows.map((row) => row.key) as [
   ...RowKey[],
 ];
 
+// A group of clients that each publish the same number of documents a month.
+export interface ClientGroup {
+  clients: number;
+  documents: number;
+}
+
 export interface PricingScenario {
   // Stable key, used as the scenario's key in a competitor's data file.
   key: string;
   label: string;
-  clients: number;
-  // How many clients publish nothing, and how many sit on Medium and Large, as
-  // the pricing calculator takes them. The rest are on Small.
-  rows: Rows;
+  groups: readonly ClientGroup[];
 }
 
-// Starting points for the first brief to confirm: 10, 25 and 50 clients, each
-// spread across the three tiers with some publishing nothing that month.
+// Practices priced at stated, exact volumes, the same on every comparison
+// page and chosen without reference to anyone's prices. Provisional, for the
+// first brief to confirm.
 export const pricingScenarios = [
   {
     key: "clients-10",
     label: "10 clients",
-    clients: 10,
-    rows: { none: 2, medium: 2, large: 1 },
+    groups: [
+      { clients: 2, documents: 0 },
+      { clients: 4, documents: 10 },
+      { clients: 3, documents: 30 },
+      { clients: 1, documents: 70 },
+    ],
   },
   {
     key: "clients-25",
     label: "25 clients",
-    clients: 25,
-    rows: { none: 5, medium: 5, large: 2 },
+    groups: [
+      { clients: 4, documents: 0 },
+      { clients: 11, documents: 10 },
+      { clients: 7, documents: 30 },
+      { clients: 3, documents: 70 },
+    ],
   },
   {
     key: "clients-50",
     label: "50 clients",
-    clients: 50,
-    rows: { none: 10, medium: 10, large: 5 },
+    groups: [
+      { clients: 8, documents: 0 },
+      { clients: 21, documents: 10 },
+      { clients: 14, documents: 30 },
+      { clients: 5, documents: 70 },
+      { clients: 2, documents: 150 },
+    ],
   },
 ] as const satisfies readonly PricingScenario[];
 
@@ -120,6 +135,33 @@ export type ScenarioKey = (typeof pricingScenarios)[number]["key"];
 export const scenarioKeys = pricingScenarios.map(
   (scenario) => scenario.key,
 ) as [ScenarioKey, ...ScenarioKey[]];
+
+// "2 with nothing published, 4 publishing 10 documents a month, …".
+export function mixLabel(groups: readonly ClientGroup[]): string {
+  return groups
+    .map((group) =>
+      group.documents === 0
+        ? `${group.clients} with nothing published`
+        : `${group.clients} publishing ${group.documents} documents a month`,
+    )
+    .join(", ");
+}
+
+// The prices a competitor's data file can give for one scenario: on the
+// cheapest option with no commitment, and on the cheapest that needs one (an
+// annual plan, or credits bought in advance), each without and with line items.
+export const priceOptions = [
+  { key: "monthly", commitment: false, lineItems: false },
+  { key: "monthly-with-line-items", commitment: false, lineItems: true },
+  { key: "committed", commitment: true, lineItems: false },
+  { key: "committed-with-line-items", commitment: true, lineItems: true },
+] as const;
+
+export type PriceOptionKey = (typeof priceOptions)[number]["key"];
+export const priceOptionKeys = priceOptions.map((option) => option.key) as [
+  PriceOptionKey,
+  ...PriceOptionKey[],
+];
 
 // The value a competitor's data file gives a claim or a scenario price that
 // the competitor doesn't publish. Its source is the page that says so.
@@ -146,9 +188,23 @@ export interface CompetitorScenarioPrice extends Sourced {
   // Pounds a month, excluding VAT, or NOT_PUBLISHED.
   value: number | typeof NOT_PUBLISHED;
   plan?: string;
+  // How it is billed, including any commitment, e.g. "Annual plan, paid
+  // monthly".
   billing?: string;
   // What was entered in the competitor's own calculator for this scenario.
   inputs?: Record<string, string | number>;
+}
+
+export type ScenarioPrices = Partial<
+  Record<PriceOptionKey, CompetitorScenarioPrice>
+>;
+
+// Whether a claim or price is stated, published as unavailable, or missing.
+export function claimStatus(
+  claim: { value: string | number } | null | undefined,
+): ClaimStatus {
+  if (claim === null || claim === undefined) return "not-stated";
+  return claim.value === NOT_PUBLISHED ? "not-published" : "stated";
 }
 
 export type ClaimStatus = "stated" | "not-published" | "not-stated";
@@ -171,13 +227,7 @@ export function joinClaims<
 ): { joined: JoinedRow<R, C>[]; unknown: string[] } {
   const joined = rows.map((row) => {
     const claim = claims[row.key] ?? null;
-    const status: ClaimStatus =
-      claim === null
-        ? "not-stated"
-        : claim.value === NOT_PUBLISHED
-          ? "not-published"
-          : "stated";
-    return { row, claim, status };
+    return { row, claim, status: claimStatus(claim) };
   });
   const known = new Set(rows.map((row) => row.key));
   const unknown = Object.keys(claims).filter((key) => !known.has(key));
@@ -216,15 +266,19 @@ export function collectSources(items: readonly Sourced[]): {
   return { sources: [...byUrl.values()], conflicts: [...conflicts] };
 }
 
-// Every claim and scenario price in a competitor's data file, for
+// Every claim, prose fact and scenario price in a competitor's data file, for
 // `collectSources`.
 export function competitorFacts(data: {
   claims: Partial<Record<string, Sourced>>;
-  scenarios: Partial<Record<string, Sourced>>;
+  facts: Partial<Record<string, Sourced>>;
+  scenarios: Partial<Record<string, Partial<Record<string, Sourced>>>>;
 }): Sourced[] {
   return [
     ...Object.values(data.claims),
-    ...Object.values(data.scenarios),
+    ...Object.values(data.facts),
+    ...Object.values(data.scenarios).flatMap((prices) =>
+      Object.values(prices ?? {}),
+    ),
   ].filter((fact): fact is Sourced => fact !== undefined);
 }
 

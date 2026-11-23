@@ -5,6 +5,7 @@ import { describe, it } from "node:test";
 import { pricingTiers } from "./capture.ts";
 import {
   allocateSquares,
+  clientCost,
   clientsLabel,
   DESKTOP_SQUARES,
   displayRows,
@@ -253,5 +254,35 @@ describe("formatCount and sliderFill", () => {
     assert.equal(sliderFill(5, 20), "25%");
     assert.equal(sliderFill(0, 20), "0%");
     assert.equal(sliderFill(0, 0), "0%");
+  });
+});
+
+describe("clientCost", () => {
+  // Pounds for one client's month, from the public tier cards: £9 for 50, £15
+  // for 125, £29 for 350, and 18p, 12p and 8p for each document over each.
+  const cost = (documents: number) => clientCost(pricingTiers, documents);
+
+  it("charges nothing for a client with nothing published", () => {
+    assert.equal(cost(0), 0);
+  });
+
+  it("charges a tier's price for documents within its allowance", () => {
+    assert.equal(cost(20), 9);
+    assert.equal(cost(50), 9);
+    assert.equal(cost(125), 15);
+  });
+
+  it("charges per document over an allowance while that stays cheaper", () => {
+    assert.equal(cost(70), 12.6);
+    assert.equal(cost(150), 18);
+  });
+
+  it("moves to the next tier once that is cheaper", () => {
+    assert.equal(cost(110), 15);
+    assert.equal(cost(300), 29);
+  });
+
+  it("charges the Large rate for documents beyond its allowance", () => {
+    assert.equal(cost(400), 33);
   });
 });

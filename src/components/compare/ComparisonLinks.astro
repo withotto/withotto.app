@@ -31,7 +31,7 @@ const competitors = (
       {competitors.map((entry) => (
         <li>
           <a href={comparisonRoute(entry.id)} class={inlineLink}>
-            Otto Capture and {entry.data.name} compared
+            {`Otto Capture vs ${entry.data.name}`}
           </a>
         </li>
       ))}

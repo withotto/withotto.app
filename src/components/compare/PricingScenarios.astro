@@ -1,17 +1,22 @@
 ---
 // The pricing scenarios: for each scenario in `pricingScenarios`, the client
-// mix, Capture's monthly total from the pricing calculator's own `estimate()`,
-// and the competitor's figure with its plan, billing basis and source. A
-// scenario the competitor doesn't publish reads "Not published", and one its
-// data file leaves out reads "Not stated".
+// mix at stated volumes, Capture's exact monthly total from `clientCost()`,
+// and the competitor's cheapest price with no commitment and its cheapest
+// with one, each with its plan, billing basis and source.
+//
+// A pair of radio buttons switches the competitor's prices between without
+// and with line items. It is plain CSS (`group-has-[…:checked]`), so it works
+// without JavaScript, and both sets of prices stay in the page for the
+// claim-age check. Capture's totals don't change, since it extracts line items
+// as standard.
 //
 // Each scenario is its own captioned table, so a phone stacks them as separate
-// blocks with both totals labelled; from `md` they sit side by side. The
-// surrounding section belongs to the page.
-import SourceLink from "@components/compare/SourceLink.astro";
-import { documentRangeLabel, formatPounds, pricingTiers } from "@lib/capture";
-import { clientsLabel, estimate } from "@lib/capture-estimate";
-import { joinClaims, pricingScenarios } from "@lib/compare";
+// blocks; from `md` they sit side by side. The surrounding section belongs to
+// the page.
+import ScenarioPrice from "@components/compare/ScenarioPrice.astro";
+import { formatPounds, pricingTiers } from "@lib/capture";
+import { clientCost } from "@lib/capture-estimate";
+import { mixLabel, pricingScenarios } from "@lib/compare";
 import type { CollectionEntry } from "astro:content";
 
 interface Props {
@@ -21,48 +26,77 @@ interface Props {
 const { competitor } = Astro.props;
 const { name, scenarios } = competitor.data;
 
-const { joined, unknown } = joinClaims(pricingScenarios, scenarios);
+const known = new Set<string>(pricingScenarios.map((scenario) => scenario.key));
+const unknown = Object.keys(scenarios).filter((key) => !known.has(key));
 if (unknown.length > 0) {
   throw new Error(
     `${competitor.id}.yaml has prices for scenarios that don't exist: ${unknown.join(", ")}`,
   );
 }
 
-// "2 with no documents published, 5 with 1 to 50 documents a month, …", in
-// the calculator's own words, leaving out any tier with no clients.
-function mixLabel(scenario: (typeof pricingScenarios)[number]): string {
-  const { counts } = estimate(pricingTiers, scenario.clients, scenario.rows);
-  const parts = [
-    { count: counts.none, label: "no documents published" },
-    ...(["small", "medium", "large"] as const).map((row, index) => ({
-      count: counts[row],
-      label: documentRangeLabel(pricingTiers, index),
-    })),
-  ];
-  return parts
-    .filter((part) => part.count > 0)
-    .map((part) => `${part.count} with ${part.label}`)
-    .join(", ");
-}
+const cards = pricingScenarios.map((scenario) => {
+  const pence = scenario.groups.reduce(
+    (sum, group) =>
+      sum +
+      group.clients *
+        Math.round(clientCost(pricingTiers, group.documents) * 100),
+    0,
+  );
+  return {
+    scenario,
+    mix: mixLabel(scenario.groups),
+    capture: pence / 100,
+    prices: scenarios[scenario.key] ?? {},
+  };
+});
 
-const cards = joined.map(({ row: scenario, claim: price, status }) => ({
-  scenario,
-  price,
-  status,
-  mix: mixLabel(scenario),
-  capture: estimate(pricingTiers, scenario.clients, scenario.rows).total,
-}));
-
+const withId = "compare-line-items-with";
 const cell = "px-4 py-3 align-top";
+const radio =
+  "size-4 accent-primary-strong focus-visible:ring-2 focus-visible:ring-primary-strong focus-visible:ring-offset-2 focus-visible:outline-none";
+// Shown when "with line items" is chosen, and the reverse. Written out in
+// full, with the radio's id, because Tailwind only generates classes it finds
+// whole in the source.
+const whenWith =
+  "hidden group-has-[#compare-line-items-with:checked]/prices:block";
+const whenWithout =
+  "group-has-[#compare-line-items-with:checked]/prices:hidden";
 ---
 
-<div>
+<div class="group/prices">
+  <fieldset class="mb-8">
+    <legend class="text-base font-semibold text-default">
+      {`Show ${name}'s prices`}
+    </legend>
+    <div class="mt-3 flex flex-wrap gap-x-6 gap-y-2 text-base">
+      <label class="flex items-center gap-2">
+        <input
+          type="radio"
+          name="compare-line-items"
+          value="without"
+          checked
+          class={radio}
+        />
+        Without line items
+      </label>
+      <label class="flex items-center gap-2">
+        <input
+          type="radio"
+          name="compare-line-items"
+          value="with"
+          id={withId}
+          class={radio}
+        />
+        With line items
+      </label>
+    </div>
+  </fieldset>
   <div class="grid gap-6 md:grid-cols-3">
-    {cards.map(({ scenario, price, status, mix, capture }) => (
-      <table class="w-full table-fixed border-collapse self-start rounded-xl bg-white text-left text-base shadow-sm max-md:hyphens-auto wrap-break-word">
+    {cards.map(({ scenario, mix, capture, prices }) => (
+      <table class="w-full table-fixed self-start border-collapse rounded-xl bg-white text-left text-base wrap-break-word shadow-sm max-md:hyphens-auto">
         <caption class="px-4 pb-3 text-left">
           <span class="block text-lg font-semibold text-primary-strong">
-            {clientsLabel(scenario.clients)}
+            {scenario.label}
           </span>
           <span class="mt-1 block text-sm text-default-soft">{mix}</span>
         </caption>
@@ -76,35 +110,30 @@ const cell = "px-4 py-3 align-top";
               month
             </td>
           </tr>
-          <tr>
+          <tr class="border-b border-muted-strong">
             <th scope="row" class:list={[cell, "font-semibold"]}>
-              {name}
+              {`${name}, no commitment`}
             </th>
             <td class={cell}>
-              {price === null ? (
-                <span class="text-default-soft">Not stated</span>
-              ) : (
-                <>
-                  {status === "not-published" ? (
-                    <p>Not published</p>
-                  ) : (
-                    <>
-                      <p>
-                        <span class="font-semibold">
-                          {formatPounds(price.value as number)}
-                        </span>{" "}
-                        per month
-                      </p>
-                      <p class="mt-1 text-sm">
-                        {price.plan}, {price.billing}
-                      </p>
-                    </>
-                  )}
-                  <p class="mt-2 text-sm text-default-soft">
-                    <SourceLink source={price} />
-                  </p>
-                </>
-              )}
+              <div class={whenWithout}>
+                <ScenarioPrice price={prices.monthly} />
+              </div>
+              <div class={whenWith}>
+                <ScenarioPrice price={prices["monthly-with-line-items"]} />
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row" class:list={[cell, "font-semibold"]}>
+              {`${name}, with a commitment`}
+            </th>
+            <td class={cell}>
+              <div class={whenWithout}>
+                <ScenarioPrice price={prices.committed} />
+              </div>
+              <div class={whenWith}>
+                <ScenarioPrice price={prices["committed-with-line-items"]} />
+              </div>
             </td>
           </tr>
         </tbody>
@@ -112,8 +141,6 @@ const cell = "px-4 py-3 align-top";
     ))}
   </div>
   <p class="mt-6 text-base text-default-soft">
-    Every price excludes VAT and is for one month. Otto Capture's totals come
-    from its pricing tiers. {name}'s are the figures its own published pricing
-    gives, on the plan and billing basis shown.
+    {`Every price excludes VAT and is for one month. Otto Capture's totals come from its pricing tiers, and include line items, which it extracts as standard. ${name}'s are the cheapest its own published pricing gives for the same clients, with no commitment and with one, on the plan and billing basis shown.`}
   </p>
 </div>

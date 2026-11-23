@@ -5,6 +5,7 @@ import {
   collectSources,
   competitorFacts,
   NOT_PUBLISHED,
+  priceOptionKeys,
   rowKeys,
   scenarioKeys,
 } from "@lib/compare";
@@ -50,10 +51,10 @@ const claim = z.strictObject({
   ...sourced,
 });
 
-// A price the competitor's calculator gave for one of the scenarios in
+// A price the competitor's own pricing gives for one of the scenarios in
 // @lib/compare, in pounds a month excluding VAT. A price needs its plan, its
-// billing basis and the inputs entered, so the page can state its basis and
-// the evidence tool can enter them again.
+// billing basis (with any commitment) and the inputs entered, so the page can
+// state its basis and the evidence tool can enter them again.
 const scenarioPrice = z
   .strictObject({
     value: z.union([z.number().nonnegative(), z.literal(NOT_PUBLISHED)]),
@@ -84,11 +85,32 @@ const competitors = defineCollection({
       name: z.string().trim().min(1),
       // Listed by the links to comparisons once true.
       published: z.boolean(),
+      // One claim per comparison row, keyed by the row.
       claims: z.partialRecord(z.enum(rowKeys), claim),
-      scenarios: z.partialRecord(z.enum(scenarioKeys), scenarioPrice),
+      // Facts a page states in prose that are not table rows, under keys of
+      // the data file's own choosing.
+      facts: z
+        .record(z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/), claim)
+        .default({}),
+      // Up to four prices per scenario: with no commitment and with one, each
+      // without and with line items.
+      scenarios: z.partialRecord(
+        z.enum(scenarioKeys),
+        z.partialRecord(z.enum(priceOptionKeys), scenarioPrice),
+      ),
     })
-    // Links to one source must say the same thing wherever they appear.
     .superRefine((competitor, ctx) => {
+      // A page's Claim finds a key in either map, so it may be in only one.
+      for (const key of Object.keys(competitor.facts)) {
+        if (key in competitor.claims) {
+          ctx.addIssue({
+            code: "custom",
+            path: ["facts", key],
+            message: `"${key}" is already a claim; give the fact another key`,
+          });
+        }
+      }
+      // Links to one source must say the same thing wherever they appear.
       const { conflicts } = collectSources(competitorFacts(competitor));
       for (const url of conflicts) {
         ctx.addIssue({

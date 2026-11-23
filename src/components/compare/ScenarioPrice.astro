@@ -1,0 +1,39 @@
+---
+// One competitor price in a pricing scenario: the monthly figure with its plan,
+// billing basis and source, "Not published" with the page that says so, or
+// "Not stated" when the data file gives none.
+import SourceLink from "@components/compare/SourceLink.astro";
+import { formatPounds } from "@lib/capture";
+import { claimStatus } from "@lib/compare";
+import type { CompetitorScenarioPrice } from "@lib/compare";
+
+interface Props {
+  price: CompetitorScenarioPrice | undefined;
+}
+
+const { price } = Astro.props;
+const status = claimStatus(price);
+---
+
+{price === undefined ? (
+  <span class="text-default-soft">Not stated</span>
+) : (
+  <>
+    {status === "not-published" ? (
+      <p>Not published</p>
+    ) : (
+      <>
+        <p>
+          <span class="font-semibold">
+            {formatPounds(price.value as number)}
+          </span>{" "}
+          per month
+        </p>
+        <p class="mt-1 text-sm">{`${price.plan}, ${price.billing}`}</p>
+      </>
+    )}
+    <p class="mt-2 text-sm text-default-soft">
+      <SourceLink source={price} />
+    </p>
+  </>
+)}
