@@ -9,6 +9,7 @@ import Link from "@components/ui/link.astro";
 import CapturePricing from "@components/capture/CapturePricing.astro";
 import PricingCalculator from "@components/capture/PricingCalculator.astro";
 import { inlineLink } from "@lib/capture-styles";
+import { trialReferrerPolicy, trialUrl } from "@lib/capture";
 import { Icon } from "astro-icon/components";
 import captureImg from "@assets/capture/step-01-capture.png";
 import reviewImg from "@assets/capture/step-03-review.png";
@@ -231,7 +232,8 @@ const heroCta =
         </p>
         <div class="flex justify-center">
           <Link
-            href="https://capture.withotto.app/register/"
+            href={trialUrl}
+            referrerpolicy={trialReferrerPolicy(trialUrl)}
             size="lg"
             class={heroCta}>
             Start your free trial
@@ -704,7 +706,10 @@ const heroCta =
           <p>
             Otto Capture is free to trial for 30 days. After the trial, the
             prices above apply.{" "}
-            <a href="https://capture.withotto.app/register/" class={inlineLink}>
+            <a
+              href={trialUrl}
+              referrerpolicy={trialReferrerPolicy(trialUrl)}
+              class={inlineLink}>
               Start your free trial
             </a>{" "}
             to begin.
@@ -752,7 +757,8 @@ const heroCta =
           </p>
           <div class="mt-8 flex justify-center">
             <Link
-              href="https://capture.withotto.app/register/"
+              href={trialUrl}
+              referrerpolicy={trialReferrerPolicy(trialUrl)}
               size="lg"
               class={heroCta}>
               Start your free trial

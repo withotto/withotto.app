@@ -3,7 +3,7 @@
 // `CaptureTrialCta`: the standard primary `lg` Link with the arrow and no lift
 // (the lifted style is reserved for /capture/'s two hero buttons).
 import Link from "@components/ui/link.astro";
-import { trialLabel, trialUrl } from "@lib/capture";
+import { trialLabel, trialReferrerPolicy, trialUrl } from "@lib/capture";
 import { Icon } from "astro-icon/components";
 
 interface Props {
@@ -14,7 +14,7 @@ interface Props {
 const { href = trialUrl, label = trialLabel } = Astro.props;
 ---
 
-<Link href={href} size="lg">
+<Link href={href} size="lg" referrerpolicy={trialReferrerPolicy(href)}>
   {label}
   <Icon name="hugeicons:arrow-right-01" class="size-5" />
 </Link>

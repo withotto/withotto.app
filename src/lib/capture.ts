@@ -5,6 +5,22 @@
 export const trialUrl = "https://capture.withotto.app/register/";
 export const trialLabel = "Start your free trial";
 
+// Browsers send only the origin on a cross-origin click by default, so
+// Capture's signup records every website visitor as "withotto.app" and nothing
+// more. This policy sends the full address of the page the visitor clicked
+// from, so Capture can record which page led to a trial. Capture keeps the
+// scheme, host and path and drops any query string. Set it only on links into
+// Capture (`trialReferrerPolicy` below), never site-wide, so other sites we
+// link to still get the origin alone.
+const captureOrigin = "https://capture.withotto.app/";
+const referrerPolicy = "no-referrer-when-downgrade";
+
+export function trialReferrerPolicy(
+  href: string,
+): typeof referrerPolicy | undefined {
+  return href.startsWith(captureOrigin) ? referrerPolicy : undefined;
+}
+
 // What a tier's price is for. A practice pays it for each client; a business
 // doing its own books pays the same price, so its page says "per month".
 export type PriceUnit = "client" | "business";

@@ -21,6 +21,7 @@ tags:
 
 import Screenshot from "@components/Screenshot.astro";
 import clientPagePhone from "@assets/blog/how-to-get-clients-to-send-receipts/client-page-phone.png";
+import { trialReferrerPolicy, trialUrl } from "@lib/capture";
 
 The bookkeeping is ready to go, and then it stalls, because a handful of receipts are still in a client's glovebox, a coat pocket, or the bin. A missing receipt usually starts as a purchase the client meant to send in and didn't. You find out at month end, when the payment is on the bank statement with nothing behind it.
 
@@ -107,4 +108,4 @@ A few practical points:
 
 Routine receipts reach Capture without accounts too: by email to the client's own address, through their own submission page, or by WhatsApp.
 
-The steps for each platform are on [receipt capture for Xero](/capture/xero/) and [receipt capture for FreeAgent](/capture/freeagent/), and in full in the [step-by-step guide to missing receipts](https://support.withotto.app/capture/missing-receipts/). If a list the client answers in their own time sounds like it would take some of the chasing out of your month, [start your free trial of Otto Capture](https://capture.withotto.app/register/). The trial lasts 30 days.
+The steps for each platform are on [receipt capture for Xero](/capture/xero/) and [receipt capture for FreeAgent](/capture/freeagent/), and in full in the [step-by-step guide to missing receipts](https://support.withotto.app/capture/missing-receipts/). If a list the client answers in their own time sounds like it would take some of the chasing out of your month, <a href={trialUrl} referrerpolicy={trialReferrerPolicy(trialUrl)}>start your free trial of Otto Capture</a>. The trial lasts 30 days.
