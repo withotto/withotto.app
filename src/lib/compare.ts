@@ -52,6 +52,12 @@ export const comparisonRows = [
     capture: "Extracted as standard",
   },
   {
+    key: "duplicates",
+    label: "Duplicate documents",
+    capture:
+      "Spots an identical file sent twice and sets it aside. Only published documents are charged, so a duplicate you discard costs nothing.",
+  },
+  {
     key: "coding",
     label: "Nominal code suggestions",
     capture:
@@ -162,6 +168,16 @@ export const priceOptionKeys = priceOptions.map((option) => option.key) as [
   PriceOptionKey,
   ...PriceOptionKey[],
 ];
+
+// How often a document's lines need different nominal codes or tax rates,
+// measured across documents published through Capture. Shown beside the
+// line-items toggle, with `measured` going through CheckedOn so the claim-age
+// rule asks for it to be measured again on the same cycle as competitor claims.
+export const mixedLinesUsage = {
+  share: "About 1 in 12",
+  period: "between June and November 2026",
+  measured: "2026-11-23",
+};
 
 // The value a competitor's data file gives a claim or a scenario price that
 // the competitor doesn't publish. Its source is the page that says so.

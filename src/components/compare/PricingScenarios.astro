@@ -13,10 +13,11 @@
 // Each scenario is its own captioned table, so a phone stacks them as separate
 // blocks; from `md` they sit side by side. The surrounding section belongs to
 // the page.
+import CheckedOn from "@components/compare/CheckedOn.astro";
 import ScenarioPrice from "@components/compare/ScenarioPrice.astro";
 import { formatPounds, pricingTiers } from "@lib/capture";
 import { clientCost } from "@lib/capture-estimate";
-import { mixLabel, pricingScenarios } from "@lib/compare";
+import { mixLabel, mixedLinesUsage, pricingScenarios } from "@lib/compare";
 import type { CollectionEntry } from "astro:content";
 
 interface Props {
@@ -90,6 +91,10 @@ const whenWithout =
         With line items
       </label>
     </div>
+    <p class="mt-3 text-sm text-default-soft">
+      {`${mixedLinesUsage.share} documents published through Otto Capture ${mixedLinesUsage.period} had lines that needed different nominal codes or tax rates. Measured on `}
+      <CheckedOn date={mixedLinesUsage.measured} />.
+    </p>
   </fieldset>
   <div class="grid gap-6 md:grid-cols-3">
     {cards.map(({ scenario, mix, capture, prices }) => (
