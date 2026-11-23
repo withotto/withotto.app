@@ -1,0 +1,27 @@
+---
+// One competitor claim stated inline in a page's prose: the claim's value,
+// then its source and checked date in brackets. Every fact about a competitor
+// in prose goes through here, so it is sourced, dated and seen by the
+// `claim-stale` rule like the table's. A key the data file has no claim for
+// fails the build: prose never states an unsourced fact about a competitor.
+import SourceLink from "@components/compare/SourceLink.astro";
+import type { RowKey } from "@lib/compare";
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  competitor: CollectionEntry<"competitors">;
+  claim: RowKey;
+}
+
+const { competitor, claim: key } = Astro.props;
+const claim = competitor.data.claims[key];
+if (claim === undefined) {
+  throw new Error(
+    `${competitor.id}.yaml has no "${key}" claim, so a page can't state it.`,
+  );
+}
+---
+
+<span>
+  {claim.value} (<SourceLink source={claim} />)
+</span>

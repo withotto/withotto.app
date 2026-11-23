@@ -1,7 +1,13 @@
 import { defineCollection } from "astro:content";
 import { glob } from "astro/loaders";
 import { z } from "astro/zod";
-import { NOT_PUBLISHED, rowKeys, scenarioKeys } from "@lib/compare";
+import {
+  collectSources,
+  competitorFacts,
+  NOT_PUBLISHED,
+  rowKeys,
+  scenarioKeys,
+} from "@lib/compare";
 
 const blog = defineCollection({
   loader: glob({ pattern: "**/[^_]*.{md,mdx}", base: "./src/content/blog" }),
@@ -34,6 +40,7 @@ const checkedDate = z.union([
 // on that page that back it. See src/content/competitors/README.md.
 const sourced = {
   sourceUrl: z.url(),
+  sourceName: z.string().trim().min(1),
   checked: checkedDate,
   quote: z.string().trim().min(1),
 };
@@ -72,13 +79,24 @@ const scenarioPrice = z
 // and scenario prices accept only the keys @lib/compare defines.
 const competitors = defineCollection({
   loader: glob({ pattern: "*.yaml", base: "./src/content/competitors" }),
-  schema: z.strictObject({
-    name: z.string().trim().min(1),
-    // Listed by the links to comparisons once true.
-    published: z.boolean(),
-    claims: z.partialRecord(z.enum(rowKeys), claim),
-    scenarios: z.partialRecord(z.enum(scenarioKeys), scenarioPrice),
-  }),
+  schema: z
+    .strictObject({
+      name: z.string().trim().min(1),
+      // Listed by the links to comparisons once true.
+      published: z.boolean(),
+      claims: z.partialRecord(z.enum(rowKeys), claim),
+      scenarios: z.partialRecord(z.enum(scenarioKeys), scenarioPrice),
+    })
+    // Links to one source must say the same thing wherever they appear.
+    .superRefine((competitor, ctx) => {
+      const { conflicts } = collectSources(competitorFacts(competitor));
+      for (const url of conflicts) {
+        ctx.addIssue({
+          code: "custom",
+          message: `${url} is cited under more than one sourceName; give it the same one everywhere`,
+        });
+      }
+    }),
 });
 
 export const collections = { blog, competitors };

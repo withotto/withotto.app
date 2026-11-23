@@ -1,0 +1,119 @@
+---
+// The pricing scenarios: for each scenario in `pricingScenarios`, the client
+// mix, Capture's monthly total from the pricing calculator's own `estimate()`,
+// and the competitor's figure with its plan, billing basis and source. A
+// scenario the competitor doesn't publish reads "Not published", and one its
+// data file leaves out reads "Not stated".
+//
+// Each scenario is its own captioned table, so a phone stacks them as separate
+// blocks with both totals labelled; from `md` they sit side by side. The
+// surrounding section belongs to the page.
+import SourceLink from "@components/compare/SourceLink.astro";
+import { documentRangeLabel, formatPounds, pricingTiers } from "@lib/capture";
+import { clientsLabel, estimate } from "@lib/capture-estimate";
+import { joinClaims, pricingScenarios } from "@lib/compare";
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  competitor: CollectionEntry<"competitors">;
+}
+
+const { competitor } = Astro.props;
+const { name, scenarios } = competitor.data;
+
+const { joined, unknown } = joinClaims(pricingScenarios, scenarios);
+if (unknown.length > 0) {
+  throw new Error(
+    `${competitor.id}.yaml has prices for scenarios that don't exist: ${unknown.join(", ")}`,
+  );
+}
+
+// "2 with no documents published, 5 with 1 to 50 documents a month, …", in
+// the calculator's own words, leaving out any tier with no clients.
+function mixLabel(scenario: (typeof pricingScenarios)[number]): string {
+  const { counts } = estimate(pricingTiers, scenario.clients, scenario.rows);
+  const parts = [
+    { count: counts.none, label: "no documents published" },
+    ...(["small", "medium", "large"] as const).map((row, index) => ({
+      count: counts[row],
+      label: documentRangeLabel(pricingTiers, index),
+    })),
+  ];
+  return parts
+    .filter((part) => part.count > 0)
+    .map((part) => `${part.count} with ${part.label}`)
+    .join(", ");
+}
+
+const cards = joined.map(({ row: scenario, claim: price, status }) => ({
+  scenario,
+  price,
+  status,
+  mix: mixLabel(scenario),
+  capture: estimate(pricingTiers, scenario.clients, scenario.rows).total,
+}));
+
+const cell = "px-4 py-3 align-top";
+---
+
+<div>
+  <div class="grid gap-6 md:grid-cols-3">
+    {cards.map(({ scenario, price, status, mix, capture }) => (
+      <table class="w-full table-fixed border-collapse self-start rounded-xl bg-white text-left text-base shadow-sm max-md:hyphens-auto wrap-break-word">
+        <caption class="px-4 pb-3 text-left">
+          <span class="block text-lg font-semibold text-primary-strong">
+            {clientsLabel(scenario.clients)}
+          </span>
+          <span class="mt-1 block text-sm text-default-soft">{mix}</span>
+        </caption>
+        <tbody>
+          <tr class="border-b border-muted-strong">
+            <th scope="row" class:list={[cell, "w-2/5 font-semibold"]}>
+              Otto Capture
+            </th>
+            <td class={cell}>
+              <span class="font-semibold">{formatPounds(capture)}</span> per
+              month
+            </td>
+          </tr>
+          <tr>
+            <th scope="row" class:list={[cell, "font-semibold"]}>
+              {name}
+            </th>
+            <td class={cell}>
+              {price === null ? (
+                <span class="text-default-soft">Not stated</span>
+              ) : (
+                <>
+                  {status === "not-published" ? (
+                    <p>Not published</p>
+                  ) : (
+                    <>
+                      <p>
+                        <span class="font-semibold">
+                          {formatPounds(price.value as number)}
+                        </span>{" "}
+                        per month
+                      </p>
+                      <p class="mt-1 text-sm">
+                        {price.plan}, {price.billing}
+                      </p>
+                    </>
+                  )}
+                  <p class="mt-2 text-sm text-default-soft">
+                    <SourceLink source={price} />
+                  </p>
+                </>
+              )}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    ))}
+  </div>
+  <p class="mt-6 text-base text-default-soft">
+    Every price excludes VAT and is for one month. Otto Capture's totals come
+    from its pricing tiers. {name}'s are the figures its own published pricing
+    gives, on the plan and billing basis shown.
+  </p>
+</div>

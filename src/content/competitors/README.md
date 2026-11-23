@@ -6,7 +6,7 @@ Each file here holds the facts one Otto Capture comparison page states about a c
 
 If something here is wrong or out of date, tell us by email at support@withotto.app, or open a pull request that changes the file. Either way, a correction needs:
 
-- **a source:** the URL of the competitor's own published page that shows the correct fact, such as its pricing page, pricing calculator, help centre, terms, release notes or official app store listing;
+- **a source:** the URL of the competitor's own published page that shows the correct fact, such as its pricing page, pricing calculator, help centre, terms, release notes, or official app store listing;
 - **a quote:** the words on that page that back the fact.
 
 We check the page before changing anything here. A correction with no published source can't change the page.
@@ -24,6 +24,7 @@ claims:
   line-items:
     value: Extracted on every plan
     sourceUrl: https://example.com/pricing/
+    sourceName: Example pricing page # what the link to the source says
     checked: 2026-11-14 # the day the source was read
     quote: Line items are included on every plan.
 
@@ -36,10 +37,12 @@ scenarios:
     inputs: # what was entered in the competitor's calculator
       clients: 10
     sourceUrl: https://example.com/pricing/
+    sourceName: Example pricing page
     checked: 2026-11-14
     quote: £100 per month
 ```
 
 - A row with no claim shows "Not stated" on the page. Nothing is guessed.
-- Where the competitor doesn't publish something, the value is `not published`, and `sourceUrl` and `quote` point to the page that says so. A scenario that isn't published needs no `plan`, `billing` or `inputs`.
+- Where the competitor doesn't publish something, the value is `not published`, and `sourceUrl` and `quote` point to the page that says so. A scenario that isn't published needs no `plan`, `billing`, or `inputs`.
+- Every claim citing the same `sourceUrl` gives it the same `sourceName`, or the build fails.
 - `checked` moves on only when the source has been read again and still says what the claim says.

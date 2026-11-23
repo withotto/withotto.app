@@ -96,4 +96,27 @@ describe("validateConfig", () => {
       );
     }
   });
+
+  it("accepts a config without repoUrl and rejects one that isn't a GitHub repo", async () => {
+    const { default: good } = await import(
+      path.join(repoRoot, "checks.config.mjs")
+    );
+    const { repoUrl, ...without } = good;
+    assert.equal(repoUrl, "https://github.com/withotto/withotto.app");
+    assert.deepEqual(validateConfig(without), []);
+    for (const bad of [
+      "",
+      "https://github.com/withotto/withotto.app/",
+      "https://gitlab.com/withotto/withotto.app",
+      42,
+    ]) {
+      assert.deepEqual(
+        validateConfig({ ...without, repoUrl: bad }),
+        [
+          'repoUrl must be a GitHub repository URL with no trailing slash, e.g. "https://github.com/owner/repo"',
+        ],
+        JSON.stringify(bad),
+      );
+    }
+  });
 });

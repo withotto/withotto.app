@@ -52,6 +52,11 @@ export default {
   // competitor fact is re-checked against its source before it goes stale.
   claimAge: { warnDays: 45, blockDays: 90 },
 
+  // This site's repo. The link check reads its blob/main/ URLs (the competitor
+  // data files the comparison pages link to) from the working tree, so a PR
+  // adding a file passes before the file is on main.
+  repoUrl: "https://github.com/withotto/withotto.app",
+
   exclusions: {
     // Routes no check reports on. Empty today.
     routes: [],

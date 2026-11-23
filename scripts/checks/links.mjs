@@ -1,6 +1,7 @@
 /**
  * `pnpm check:links`: lychee over the built pages, with links to the site's
- * own origin checked against `dist/` instead of production.
+ * own origin checked against `dist/` instead of production, and links to
+ * files in the site's own GitHub repo checked against the working tree.
  *
  * Every page carries absolute links to itself (canonical, og:url). Checked
  * against production, a page that isn't deployed yet fails on its own
@@ -13,33 +14,42 @@ import { loadConfig } from "./lib/config.mjs";
 import { runMain } from "./lib/run.mjs";
 
 /**
- * lychee `--remap` arguments sending the site's own URLs to the build.
+ * lychee `--remap` arguments sending the site's own URLs to the build, and,
+ * when `repo` is given, the repo's GitHub `blob/main/` URLs to the working
+ * tree, so a link to a file this change adds passes before it is on `main`.
  * Rules apply in order, so `/404/`, which Netlify serves from `404.html`,
  * comes before the general rule.
  *
  * @param {string} site The production origin, e.g. "https://withotto.app".
  * @param {string} distDir Absolute path to the build.
+ * @param {{ url: string, root: string } | null} [repo] The repo's GitHub URL,
+ *   e.g. "https://github.com/withotto/withotto.app", and its absolute root.
  * @returns {string[]}
  */
-export function remapArgs(site, distDir) {
-  const origin = site
-    .replace(/\/+$/, "")
-    .replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+export function remapArgs(site, distDir, repo = null) {
+  const escape = (/** @type {string} */ text) =>
+    text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const origin = escape(site.replace(/\/+$/, ""));
   // Encoded, so a path with spaces stays one URL in lychee's
   // whitespace-separated rule.
   const dist = pathToFileURL(distDir + path.sep).href;
-  return [
+  const args = [
     "--remap",
     `^${origin}/404/$ ${dist}404.html`,
     "--remap",
     `^${origin}/(.*)$ ${dist}$1`,
   ];
+  if (repo) {
+    const root = pathToFileURL(repo.root + path.sep).href;
+    args.push("--remap", `^${escape(repo.url)}/blob/main/(.*)$ ${root}$1`);
+  }
+  return args;
 }
 
 /**
  * The whole lychee command line for the built site.
  *
- * @param {{ site: string, distDir: string }} config
+ * @param {{ site: string, distDir: string, repoUrl?: string, root?: string }} config
  * @param {string} distDir Absolute path to the build.
  * @returns {string[]}
  */
@@ -52,7 +62,11 @@ export function lycheeArgs(config, distDir) {
     // is looked for in the directory rather than its page.
     "--index-files",
     "index.html",
-    ...remapArgs(config.site, distDir),
+    ...remapArgs(
+      config.site,
+      distDir,
+      config.repoUrl ? { url: config.repoUrl, root: config.root ?? "." } : null,
+    ),
   ];
 }
 

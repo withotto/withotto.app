@@ -1,0 +1,17 @@
+---
+// A checked date, as every comparison component shows one. The
+// `data-claim-checked` attribute is what the SEO check's `claim-stale` rule
+// reads from the built page, so every competitor date goes through here.
+import { formatCheckedDate } from "@lib/compare";
+
+interface Props {
+  // YYYY-MM-DD.
+  date: string;
+}
+
+const { date } = Astro.props;
+---
+
+<time datetime={date} data-claim-checked>
+  {formatCheckedDate(date)}
+</time>

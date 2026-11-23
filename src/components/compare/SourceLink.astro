@@ -1,0 +1,19 @@
+---
+// A competitor fact's source: the source's name as the link, then the date it
+// was checked. The date sits outside the link, so every link to one source
+// says the same thing.
+import CheckedOn from "@components/compare/CheckedOn.astro";
+import { inlineLink } from "@lib/capture-styles";
+import type { Sourced } from "@lib/compare";
+
+interface Props {
+  source: Pick<Sourced, "sourceUrl" | "sourceName" | "checked">;
+}
+
+const { source } = Astro.props;
+---
+
+<a href={source.sourceUrl} class={inlineLink}>
+  {source.sourceName}
+</a>
+, checked <CheckedOn date={source.checked} />

@@ -29,13 +29,13 @@ export const comparisonRows = [
     key: "platforms",
     label: "Accounting platforms",
     capture:
-      "Xero, FreeAgent and QuickBooks Online (purchases only on QuickBooks Online)",
+      "Xero, FreeAgent, and QuickBooks Online (purchases only on QuickBooks Online)",
   },
   {
     key: "published-documents",
     label: "Documents it publishes",
     capture:
-      "Bills, purchase credit notes, sales invoices and sales credit notes to Xero and FreeAgent. Bills and supplier credits to QuickBooks Online.",
+      "Bills, purchase credit notes, sales invoices, and sales credit notes to Xero and FreeAgent. Bills and supplier credits to QuickBooks Online.",
   },
   {
     key: "pricing",
@@ -63,7 +63,7 @@ export const comparisonRows = [
     key: "client-submission",
     label: "How clients send documents",
     capture:
-      "By email, through a web submission page or by WhatsApp. Clients need no account.",
+      "By email, through a web submission page, or by WhatsApp. Clients need no account.",
   },
   {
     key: "missing-receipts",
@@ -129,6 +129,9 @@ export const NOT_PUBLISHED = "not published";
 // run can find it again.
 export interface Sourced {
   sourceUrl: string;
+  // What the link to the source says, e.g. "Example pricing page". Every claim
+  // citing one URL gives it the same name.
+  sourceName: string;
   // YYYY-MM-DD, the day the source was read.
   checked: string;
   // Text on the source page that backs the value.
@@ -179,6 +182,61 @@ export function joinClaims<
   const known = new Set(rows.map((row) => row.key));
   const unknown = Object.keys(claims).filter((key) => !known.has(key));
   return { joined, unknown };
+}
+
+export interface Source {
+  url: string;
+  name: string;
+  // The oldest checked date of the claims that cite it.
+  checked: string;
+}
+
+// Every source a set of claims cites, once each, in the order first cited. A
+// URL cited under two names is returned in `conflicts`, since links to one
+// place must say the same thing.
+export function collectSources(items: readonly Sourced[]): {
+  sources: Source[];
+  conflicts: string[];
+} {
+  const byUrl = new Map<string, Source>();
+  const conflicts = new Set<string>();
+  for (const item of items) {
+    const source = byUrl.get(item.sourceUrl);
+    if (source === undefined) {
+      byUrl.set(item.sourceUrl, {
+        url: item.sourceUrl,
+        name: item.sourceName,
+        checked: item.checked,
+      });
+      continue;
+    }
+    if (source.name !== item.sourceName) conflicts.add(item.sourceUrl);
+    if (item.checked < source.checked) source.checked = item.checked;
+  }
+  return { sources: [...byUrl.values()], conflicts: [...conflicts] };
+}
+
+// Every claim and scenario price in a competitor's data file, for
+// `collectSources`.
+export function competitorFacts(data: {
+  claims: Partial<Record<string, Sourced>>;
+  scenarios: Partial<Record<string, Sourced>>;
+}): Sourced[] {
+  return [
+    ...Object.values(data.claims),
+    ...Object.values(data.scenarios),
+  ].filter((fact): fact is Sourced => fact !== undefined);
+}
+
+// The page a competitor's data file feeds, from the file's name.
+export function comparisonRoute(id: string): string {
+  return `/capture/vs-${id}/`;
+}
+
+// The competitor's data file on GitHub, where a correction can be proposed.
+const repoBlob = "https://github.com/withotto/withotto.app/blob/main";
+export function dataFileUrl(id: string): string {
+  return `${repoBlob}/src/content/competitors/${id}.yaml`;
 }
 
 // The earliest of a set of YYYY-MM-DD dates, which sort as text.

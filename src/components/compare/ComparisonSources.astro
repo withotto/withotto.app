@@ -1,0 +1,34 @@
+---
+// Every source a competitor's data file cites, once each, with the oldest
+// checked date of the claims that cite it: an index of the source links in
+// the table, the scenarios and the prose. The surrounding section belongs to
+// the page.
+import SourceLink from "@components/compare/SourceLink.astro";
+import { bulletList } from "@lib/capture-styles";
+import { collectSources, competitorFacts } from "@lib/compare";
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  competitor: CollectionEntry<"competitors">;
+}
+
+const { competitor } = Astro.props;
+// The collection's schema already rejects a source cited under two names.
+const { sources } = collectSources(competitorFacts(competitor.data));
+---
+
+{sources.length > 0 && (
+  <ul class:list={[bulletList, "text-base"]}>
+    {sources.map((source) => (
+      <li>
+        <SourceLink
+          source={{
+            sourceUrl: source.url,
+            sourceName: source.name,
+            checked: source.checked,
+          }}
+        />
+      </li>
+    ))}
+  </ul>
+)}

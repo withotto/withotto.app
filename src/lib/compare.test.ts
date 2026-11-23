@@ -3,6 +3,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import {
+  collectSources,
   formatCheckedDate,
   joinClaims,
   oldestChecked,
@@ -14,6 +15,7 @@ function claim(value: string, checked: string): CompetitorClaim {
   return {
     value,
     sourceUrl: "https://example.test/pricing/",
+    sourceName: "Example pricing page",
     checked,
     quote: value,
   };
@@ -73,5 +75,43 @@ describe("formatCheckedDate", () => {
 
   it("drops a leading zero from the day", () => {
     assert.equal(formatCheckedDate("2026-12-02"), "2 December 2026");
+  });
+});
+
+describe("collectSources", () => {
+  const help = {
+    sourceUrl: "https://example.test/help/",
+    sourceName: "Example help centre",
+    checked: "2026-11-30",
+    quote: "Works with Xero.",
+  };
+
+  it("lists each source once, in first-seen order, at its oldest checked date", () => {
+    const { sources, conflicts } = collectSources([
+      claim("£10", "2026-11-20"),
+      help,
+      claim("not published", "2026-11-14"),
+    ]);
+    assert.deepEqual(sources, [
+      {
+        url: "https://example.test/pricing/",
+        name: "Example pricing page",
+        checked: "2026-11-14",
+      },
+      {
+        url: "https://example.test/help/",
+        name: "Example help centre",
+        checked: "2026-11-30",
+      },
+    ]);
+    assert.deepEqual(conflicts, []);
+  });
+
+  it("reports a source given two different names", () => {
+    const { conflicts } = collectSources([
+      claim("£10", "2026-11-20"),
+      { ...claim("£20", "2026-11-20"), sourceName: "Example prices" },
+    ]);
+    assert.deepEqual(conflicts, ["https://example.test/pricing/"]);
   });
 });
