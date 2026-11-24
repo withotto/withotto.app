@@ -912,6 +912,15 @@ export function analyseSite(
         });
         return;
       }
+      if (checked > todayMs) {
+        add({
+          ...at(page, el),
+          rule: "claim-stale",
+          severity: "block",
+          message: `A claim on ${page.route} was checked on ${datetime}, which is after today, so its age cannot be checked. Correct the checked date in the data the page is built from (for a comparison page, the competitor's data file) to the day the source was read.`,
+        });
+        return;
+      }
       const age = Math.round((todayMs - checked) / DAY_MS);
       if (age <= warnDays) return;
       const severity = age > blockDays ? "block" : "warn";

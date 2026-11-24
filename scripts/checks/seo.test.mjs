@@ -729,6 +729,19 @@ describe("claim age", () => {
     assert.match(found[0].message, /re-check/i);
   });
 
+  it("warns, not blocks, on a claim checked exactly 90 days ago", () => {
+    assert.deepEqual(summary(on("/block-boundary/")), [
+      "warn claim-stale /block-boundary/",
+    ]);
+  });
+
+  it("blocks a claim dated after today, since its age can't be checked", () => {
+    const found = on("/future/");
+    assert.deepEqual(summary(found), ["block claim-stale /future/"]);
+    assert.match(found[0].message, /2026-07-15/);
+    assert.match(found[0].message, /after today/);
+  });
+
   it("blocks a claim checked 91 days ago", () => {
     const found = on("/block/");
     assert.deepEqual(summary(found), ["block claim-stale /block/"]);
@@ -763,9 +776,11 @@ describe("claim age", () => {
   it("reports nothing else", () => {
     assert.deepEqual(summary(findings), [
       "block claim-stale /block/",
+      "block claim-stale /future/",
       "block claim-stale /invalid-datetime/",
       "block claim-stale /missing-datetime/",
       "block claim-stale /two-stale/",
+      "warn claim-stale /block-boundary/",
       "warn claim-stale /two-stale/",
       "warn claim-stale /warn/",
     ]);
