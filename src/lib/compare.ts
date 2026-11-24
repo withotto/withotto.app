@@ -3,13 +3,16 @@
 // Capture's side of each, the pricing scenarios both tools are priced at, and
 // the helpers that join a competitor's data file to them.
 //
-// A competitor's facts live in `src/content/competitors/<slug>.yaml`, whose
-// schema in `src/content.config.ts` accepts only the row and scenario keys
-// defined here. Capture's scenario totals come from `clientCost()` in
-// `@lib/capture-estimate`, called by the scenarios component, never from here.
+// A competitor's facts live in `src/content/competitors/<slug>.yaml`, checked
+// by `competitorSchema` below (loaded by `src/content.config.ts`), which
+// accepts only the row, scenario and price keys defined here. Capture's
+// scenario totals come from `clientCost()` in `@lib/capture-estimate`, passed
+// in by the scenarios component, never computed from figures here.
 //
-// Pure functions over plain data, with no runtime imports: `pnpm test:site`
-// runs this file directly under Node, which can't resolve `@lib` at runtime.
+// Its only runtime import is `astro/zod`, a package Node resolves: `pnpm
+// test:site` runs this file directly under Node, which can't resolve `@lib`.
+
+import { z } from "astro/zod";
 
 export interface ComparisonRow {
   // Stable key, used as the claim's key in a competitor's data file.
@@ -155,21 +158,40 @@ export function mixLabel(groups: readonly ClientGroup[]): string {
     .join(", ");
 }
 
-// The prices a competitor's data file can give for one scenario: on the
-// cheapest option with no commitment, and on the cheapest that needs one (an
-// annual plan, or credits bought in advance), each without and with line items.
-export const priceOptions = [
-  { key: "monthly", commitment: false, lineItems: false },
-  { key: "monthly-with-line-items", commitment: false, lineItems: true },
-  { key: "committed", commitment: true, lineItems: false },
-  { key: "committed-with-line-items", commitment: true, lineItems: true },
+// "1x0, 5x10, 3x30, 1x70": the volumes a competitor price was read for, as
+// its data file records them, so a change to a scenario can't leave a price
+// read for the old volumes on the page.
+export function volumesLabel(groups: readonly ClientGroup[]): string {
+  return groups
+    .map((group) => `${group.clients}x${group.documents}`)
+    .join(", ");
+}
+
+// Capture's monthly total for a scenario, in pounds, from a client's cost at
+// each volume (`clientCost()`), summed in whole pence.
+export function captureTotal(
+  scenario: { groups: readonly ClientGroup[] },
+  costOf: (documents: number) => number,
+): number {
+  const pence = scenario.groups.reduce(
+    (sum, group) =>
+      sum + group.clients * Math.round(costOf(group.documents) * 100),
+    0,
+  );
+  return pence / 100;
+}
+
+// The prices a competitor's data file can give for one scenario: the cheapest
+// with no commitment, and the cheapest that needs one (an annual plan, or
+// credits bought in advance), each without and with line items.
+export const priceOptionKeys = [
+  "monthly",
+  "monthly-with-line-items",
+  "committed",
+  "committed-with-line-items",
 ] as const;
 
-export type PriceOptionKey = (typeof priceOptions)[number]["key"];
-export const priceOptionKeys = priceOptions.map((option) => option.key) as [
-  PriceOptionKey,
-  ...PriceOptionKey[],
-];
+export type PriceOptionKey = (typeof priceOptionKeys)[number];
 
 // How often a document's lines need different nominal codes or tax rates,
 // measured across documents published through Capture. Shown beside the
@@ -220,36 +242,161 @@ export function receivedNote(name: string, basis: ReceivedBasis): string {
 // the competitor doesn't publish. Its source is the page that says so.
 export const NOT_PUBLISHED = "not published";
 
+// The day a source was read. YAML reads a bare 2026-11-14 as a date, so take
+// either that or the same text, and keep it as YYYY-MM-DD text throughout.
+const checkedDate = z.union([
+  z.date().transform((date) => date.toISOString().slice(0, 10)),
+  z.iso.date(),
+]);
+
 // What every competitor fact carries, so a reader can check it and the drift
-// run can find it again.
-export interface Sourced {
-  sourceUrl: string;
-  // What the link to the source says, e.g. "Example pricing page". Every claim
-  // citing one URL gives it the same name.
-  sourceName: string;
-  // YYYY-MM-DD, the day the source was read.
-  checked: string;
-  // Text on the source page that backs the value.
-  quote: string;
-}
+// run can find it again: where it was read (an https page, since the URL
+// becomes a link on the page), what the link says, when, and the words on
+// that page that back it. See src/content/competitors/README.md.
+const sourced = {
+  sourceUrl: z.url({ protocol: /^https$/ }),
+  sourceName: z.string().trim().min(1),
+  checked: checkedDate,
+  quote: z.string().trim().min(1),
+};
 
-export interface CompetitorClaim extends Sourced {
-  value: string;
-}
+const claimSchema = z.strictObject({
+  value: z.string().trim().min(1),
+  ...sourced,
+});
 
-export interface CompetitorScenarioPrice extends Sourced {
-  // Pounds a month, excluding VAT, or NOT_PUBLISHED.
-  value: number | typeof NOT_PUBLISHED;
-  plan?: string;
-  // How it is billed, including any commitment, e.g. "Annual plan, paid
-  // monthly".
-  billing?: string;
-  // What was entered in the competitor's own calculator for this scenario.
-  inputs?: Record<string, string | number>;
-}
+// A price the competitor's own pricing gives for one of the scenarios above,
+// in pounds a month excluding VAT. A price needs its plan, its billing basis
+// (with any commitment), the inputs entered, and the scenario volumes it was
+// read for (`volumesLabel`), so the page can state its basis, the evidence
+// tool can enter them again, and a change to the scenario fails the build.
+// For a competitor with a receivedBasis it also records the received ratio it
+// was read for.
+const scenarioPriceSchema = z
+  .strictObject({
+    value: z.union([z.number().nonnegative(), z.literal(NOT_PUBLISHED)]),
+    plan: z.string().trim().min(1).optional(),
+    billing: z.string().trim().min(1).optional(),
+    inputs: z.record(z.string(), z.union([z.string(), z.number()])).optional(),
+    volumes: z.string().trim().min(1).optional(),
+    receivedPerHundred: z.number().int().positive().optional(),
+    ...sourced,
+  })
+  .superRefine((price, ctx) => {
+    if (price.value === NOT_PUBLISHED) return;
+    for (const field of ["plan", "billing", "inputs", "volumes"] as const) {
+      if (price[field] === undefined) {
+        ctx.addIssue({
+          code: "custom",
+          path: [field],
+          message: `${field} is required when value is a price`,
+        });
+      }
+    }
+  });
 
-export type ScenarioPrices = Partial<
-  Record<PriceOptionKey, CompetitorScenarioPrice>
+// One competitor's data file, rendered by /capture/vs-<file name>/.
+export const competitorSchema = z
+  .strictObject({
+    name: z.string().trim().min(1),
+    // Listed by the links to comparisons once true.
+    published: z.boolean(),
+    // Set only for a competitor that charges per document received: which
+    // duplicates its published terms say it doesn't charge for. Its prices
+    // are then for the documents receivedUsage gives on that basis.
+    receivedBasis: z.enum(receivedBases).optional(),
+    // One claim per comparison row, keyed by the row.
+    claims: z.partialRecord(z.enum(rowKeys), claimSchema),
+    // Facts a page states in prose that are not table rows, under keys of the
+    // data file's own choosing.
+    facts: z
+      .record(z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/), claimSchema)
+      .default({}),
+    // Up to four prices per scenario: with no commitment and with one, each
+    // without and with line items.
+    scenarios: z.partialRecord(
+      z.enum(scenarioKeys),
+      z.partialRecord(z.enum(priceOptionKeys), scenarioPriceSchema),
+    ),
+  })
+  .superRefine((competitor, ctx) => {
+    // A page's Claim finds a key in either map, so it may be in only one.
+    for (const key of Object.keys(competitor.facts)) {
+      if (key in competitor.claims) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["facts", key],
+          message: `"${key}" is already a claim; give the fact another key`,
+        });
+      }
+    }
+
+    // The received note says the competitor charges per document received
+    // and how it treats duplicates: both must rest on its own published terms.
+    if (competitor.receivedBasis) {
+      for (const key of ["pricing", "duplicates"] as const) {
+        if (!competitor.claims[key]) {
+          ctx.addIssue({
+            code: "custom",
+            path: ["receivedBasis"],
+            message: `receivedBasis needs a ${key} claim, since the page's note about documents received rests on it`,
+          });
+        }
+      }
+    }
+
+    // A price must have been read for the scenario as it stands now.
+    const expectedReceived = competitor.receivedBasis
+      ? receivedUsage.perHundredPublished[competitor.receivedBasis]
+      : undefined;
+    for (const scenario of pricingScenarios) {
+      const prices = competitor.scenarios[scenario.key] ?? {};
+      const volumes = volumesLabel(scenario.groups);
+      for (const [option, price] of Object.entries(prices)) {
+        if (!price || price.value === NOT_PUBLISHED) continue;
+        const path = ["scenarios", scenario.key, option];
+        if (price.volumes !== undefined && price.volumes !== volumes) {
+          ctx.addIssue({
+            code: "custom",
+            path: [...path, "volumes"],
+            message: `this price was read for ${price.volumes}, but ${scenario.key} is now ${volumes}; read it again for the current volumes`,
+          });
+        }
+        if (expectedReceived === undefined) {
+          if (price.receivedPerHundred !== undefined) {
+            ctx.addIssue({
+              code: "custom",
+              path: [...path, "receivedPerHundred"],
+              message:
+                "receivedPerHundred is only for a competitor with a receivedBasis",
+            });
+          }
+        } else if (price.receivedPerHundred !== expectedReceived) {
+          ctx.addIssue({
+            code: "custom",
+            path: [...path, "receivedPerHundred"],
+            message: `this price was read for ${price.receivedPerHundred ?? "no"} documents received per 100 published, but the ${competitor.receivedBasis} basis is now ${expectedReceived}; read it again`,
+          });
+        }
+      }
+    }
+
+    // Links to one source must say the same thing wherever they appear.
+    const { conflicts } = collectSources(competitorFacts(competitor));
+    for (const url of conflicts) {
+      ctx.addIssue({
+        code: "custom",
+        message: `${url} is cited under more than one sourceName; give it the same one everywhere`,
+      });
+    }
+  });
+
+export type CompetitorData = z.output<typeof competitorSchema>;
+export type CompetitorClaim = z.output<typeof claimSchema>;
+export type CompetitorScenarioPrice = z.output<typeof scenarioPriceSchema>;
+export type Sourced = Pick<
+  CompetitorClaim,
+  "sourceUrl" | "sourceName" | "checked" | "quote"
 >;
 
 // Whether a claim or price is stated, published as unavailable, or missing.

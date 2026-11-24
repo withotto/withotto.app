@@ -18,6 +18,7 @@ import ScenarioPrice from "@components/compare/ScenarioPrice.astro";
 import { formatPounds, pricingTiers } from "@lib/capture";
 import { clientCost } from "@lib/capture-estimate";
 import {
+  captureTotal,
   mixLabel,
   mixedLinesUsage,
   pricingScenarios,
@@ -41,21 +42,14 @@ if (unknown.length > 0) {
   );
 }
 
-const cards = pricingScenarios.map((scenario) => {
-  const pence = scenario.groups.reduce(
-    (sum, group) =>
-      sum +
-      group.clients *
-        Math.round(clientCost(pricingTiers, group.documents) * 100),
-    0,
-  );
-  return {
-    scenario,
-    mix: mixLabel(scenario.groups),
-    capture: pence / 100,
-    prices: scenarios[scenario.key] ?? {},
-  };
-});
+const cards = pricingScenarios.map((scenario) => ({
+  scenario,
+  mix: mixLabel(scenario.groups),
+  capture: captureTotal(scenario, (documents) =>
+    clientCost(pricingTiers, documents),
+  ),
+  prices: scenarios[scenario.key] ?? {},
+}));
 
 const withId = "compare-line-items-with";
 const cell = "px-4 py-3 align-top";

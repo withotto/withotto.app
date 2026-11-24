@@ -2,11 +2,17 @@
 // the `@lib` alias (see `capture.test.ts`).
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
+import { pricingTiers } from "./capture.ts";
+import { clientCost } from "./capture-estimate.ts";
 import {
+  captureTotal,
   collectSources,
+  competitorSchema,
   competitorFacts,
   mixLabel,
+  pricingScenarios,
   receivedNote,
+  volumesLabel,
   formatCheckedDate,
   joinClaims,
   oldestChecked,
@@ -166,5 +172,134 @@ describe("receivedNote", () => {
       assert.match(note, new RegExp(`prices here are for ${count} documents`));
       assert.ok(note.startsWith("Example charges for every document"), note);
     }
+  });
+});
+
+describe("captureTotal", () => {
+  it("prices each scenario from Capture's tiers, in whole pence", () => {
+    const totals = pricingScenarios.map((scenario) =>
+      captureTotal(scenario, (documents) =>
+        clientCost(pricingTiers, documents),
+      ),
+    );
+    assert.deepEqual(totals, [84.6, 217.8, 441]);
+  });
+});
+
+describe("competitorSchema", () => {
+  // A fictional competitor's data file, as YAML would load it.
+  const source = {
+    sourceUrl: "https://example.test/pricing/",
+    sourceName: "Example pricing page",
+    checked: new Date("2026-11-14T00:00:00Z"),
+  };
+  const tenClients = pricingScenarios[0];
+  const valid = () => ({
+    name: "Example",
+    published: false,
+    claims: {
+      pricing: {
+        value: "Per document received",
+        quote: "Pay per document",
+        ...source,
+      },
+      duplicates: {
+        value: "Duplicates are charged",
+        quote: "Every upload counts",
+        ...source,
+      },
+    },
+    facts: {
+      "former-name": {
+        value: "Formerly Sample Ltd",
+        quote: "Formerly Sample",
+        ...source,
+      },
+    },
+    receivedBasis: "all",
+    scenarios: {
+      "clients-10": {
+        monthly: {
+          value: 120,
+          plan: "Practice",
+          billing: "Monthly",
+          inputs: { documents: 140 },
+          volumes: volumesLabel(tenClients.groups),
+          receivedPerHundred: 119,
+          quote: "£120 a month",
+          ...source,
+        },
+        committed: { value: "not published", quote: "Contact us", ...source },
+      },
+    },
+  });
+  const issues = (data: unknown) => {
+    const result = competitorSchema.safeParse(data);
+    return result.success
+      ? []
+      : result.error.issues.map((issue) => issue.message);
+  };
+
+  it("accepts a complete file, and reads a YAML date as YYYY-MM-DD text", () => {
+    const result = competitorSchema.safeParse(valid());
+    assert.ok(result.success, JSON.stringify(result.error?.issues));
+    assert.equal(result.data.claims.pricing?.checked, "2026-11-14");
+  });
+
+  it("rejects a source URL that isn't https", () => {
+    for (const url of [
+      "javascript:alert(1)",
+      "data:text/html,x",
+      "http://example.test/",
+    ]) {
+      const data = valid();
+      data.claims.pricing.sourceUrl = url;
+      assert.notDeepEqual(issues(data), [], url);
+    }
+  });
+
+  it("rejects a price without its plan", () => {
+    const data = valid();
+    delete (data.scenarios["clients-10"].monthly as { plan?: string }).plan;
+    assert.ok(issues(data).some((m) => m.includes("plan is required")));
+  });
+
+  it("rejects a fact under a key that is already a claim", () => {
+    const data = valid();
+    (data.facts as Record<string, unknown>).pricing = data.facts["former-name"];
+    assert.ok(issues(data).some((m) => m.includes("already a claim")));
+  });
+
+  it("rejects one source URL under two names", () => {
+    const data = valid();
+    data.claims.duplicates.sourceName = "Example prices";
+    assert.ok(issues(data).some((m) => m.includes("more than one sourceName")));
+  });
+
+  it("rejects receivedBasis without the duplicates and pricing claims it rests on", () => {
+    for (const key of ["duplicates", "pricing"] as const) {
+      const data = valid();
+      delete (data.claims as Record<string, unknown>)[key];
+      assert.ok(
+        issues(data).some((m) => m.includes(`${key} claim`)),
+        key,
+      );
+    }
+  });
+
+  it("rejects a price read for different volumes than the scenario's", () => {
+    const data = valid();
+    data.scenarios["clients-10"].monthly.volumes = "2x0, 4x10, 3x30, 1x70";
+    assert.ok(issues(data).some((m) => m.includes("read it again")));
+  });
+
+  it("rejects a price read for a different received ratio, or with none needed", () => {
+    const changed = valid();
+    changed.scenarios["clients-10"].monthly.receivedPerHundred = 113;
+    assert.ok(issues(changed).some((m) => m.includes("read it again")));
+
+    const notNeeded = valid() as Record<string, unknown>;
+    delete notNeeded.receivedBasis;
+    assert.ok(issues(notNeeded).some((m) => m.includes("receivedPerHundred")));
   });
 });
