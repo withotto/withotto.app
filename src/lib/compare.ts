@@ -101,15 +101,17 @@ export interface PricingScenario {
 }
 
 // Practices priced at stated, exact volumes, the same on every comparison
-// page and chosen without reference to anyone's prices. Provisional, for the
-// first brief to confirm.
+// page and chosen without reference to anyone's prices. One client in ten
+// publishes nothing, a deliberately cautious share so the scenarios never
+// overstate what "no documents, no charge" saves. Provisional while more
+// practices are asked how their clients' volumes vary.
 export const pricingScenarios = [
   {
     key: "clients-10",
     label: "10 clients",
     groups: [
-      { clients: 2, documents: 0 },
-      { clients: 4, documents: 10 },
+      { clients: 1, documents: 0 },
+      { clients: 5, documents: 10 },
       { clients: 3, documents: 30 },
       { clients: 1, documents: 70 },
     ],
@@ -118,8 +120,8 @@ export const pricingScenarios = [
     key: "clients-25",
     label: "25 clients",
     groups: [
-      { clients: 4, documents: 0 },
-      { clients: 11, documents: 10 },
+      { clients: 2, documents: 0 },
+      { clients: 13, documents: 10 },
       { clients: 7, documents: 30 },
       { clients: 3, documents: 70 },
     ],
@@ -128,8 +130,8 @@ export const pricingScenarios = [
     key: "clients-50",
     label: "50 clients",
     groups: [
-      { clients: 8, documents: 0 },
-      { clients: 21, documents: 10 },
+      { clients: 5, documents: 0 },
+      { clients: 24, documents: 10 },
       { clients: 14, documents: 30 },
       { clients: 5, documents: 70 },
       { clients: 2, documents: 150 },
