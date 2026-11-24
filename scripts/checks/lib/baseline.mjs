@@ -16,6 +16,8 @@ import * as prettier from "prettier";
  *   baselined group is new debt, and a page leaving it lets prune shrink the
  *   count.
  * - Warnings are never baselined, since they never fail a run.
+ * - Rules in NEVER_BASELINED are never baselined either: their findings clear
+ *   only when the thing they report is fixed.
  * - The file holds rule IDs, routes, component names and group names only.
  *
  * Removing entries (prune) needs no approval, since it only shrinks the
@@ -37,6 +39,13 @@ import * as prettier from "prettier";
 export const BASELINE_SCHEMA_VERSION = 1;
 
 export class BaselineError extends Error {}
+
+/**
+ * Block rules a baseline can never cover. `claim-stale` clears only when the
+ * claim is re-checked against its source, so a baseline entry for it would
+ * keep a stale claim on a page with the checks passing.
+ */
+export const NEVER_BASELINED = new Set(["claim-stale"]);
 
 /**
  * The key a finding or entry is counted under. A component takes precedence
@@ -99,6 +108,11 @@ export function parseBaseline(data) {
     }
     if (locations.length !== 1) {
       fail(`${at} needs exactly one of "component", "group" or "route"`);
+    }
+    if (NEVER_BASELINED.has(entry.rule)) {
+      fail(
+        `${at} is for ${entry.rule}, which is never baselined: fix what it reports instead`,
+      );
     }
     if (!Number.isInteger(entry.count) || entry.count < 1) {
       fail(`${at}.count must be a positive integer`);
@@ -195,7 +209,9 @@ export function applyBaseline(findings, baseline, { checks, complete }) {
     if (finding.severity === "warn") status.set(finding, "warn");
   }
   for (const [key, tally] of byKey) {
-    const within = tally.count <= (allowed.get(key) ?? 0);
+    const within =
+      !NEVER_BASELINED.has(tally.findings[0].rule) &&
+      tally.count <= (allowed.get(key) ?? 0);
     for (const finding of tally.findings)
       status.set(finding, within ? "baselined" : "new");
   }
@@ -251,7 +267,9 @@ export function entriesFor(findings) {
   /** @type {Map<string, BaselineEntry>} */
   const entries = new Map();
   for (const finding of findings) {
-    if (finding.severity !== "block") continue;
+    if (finding.severity !== "block" || NEVER_BASELINED.has(finding.rule)) {
+      continue;
+    }
     const key = baselineKey(finding);
     const existing = entries.get(key);
     if (existing) {
