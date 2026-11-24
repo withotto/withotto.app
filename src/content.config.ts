@@ -1,6 +1,7 @@
 import { defineCollection } from "astro:content";
 import { glob } from "astro/loaders";
 import { z } from "astro/zod";
+import { competitorSchema } from "@lib/compare";
 
 const blog = defineCollection({
   loader: glob({ pattern: "**/[^_]*.{md,mdx}", base: "./src/content/blog" }),
@@ -22,4 +23,12 @@ const blog = defineCollection({
     }),
 });
 
-export const collections = { blog };
+// One YAML file per competitor, rendered by /capture/vs-<file name>/. The
+// schema lives with the comparison model in @lib/compare, where test:site can
+// test it.
+const competitors = defineCollection({
+  loader: glob({ pattern: "*.yaml", base: "./src/content/competitors" }),
+  schema: competitorSchema,
+});
+
+export const collections = { blog, competitors };

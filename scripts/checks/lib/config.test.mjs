@@ -71,4 +71,54 @@ describe("validateConfig", () => {
     assert.deepEqual(validateConfig(good), []);
     assert.match(validateConfig(undefined)[0], /export default/);
   });
+
+  it("accepts a config without claimAge and rejects a malformed one", async () => {
+    const { default: good } = await import(
+      path.join(repoRoot, "checks.config.mjs")
+    );
+    const { claimAge, ...without } = good;
+    assert.deepEqual(claimAge, { warnDays: 45, blockDays: 90 });
+    assert.deepEqual(validateConfig(without), []);
+    for (const bad of [
+      { warnDays: 0, blockDays: 90 },
+      { warnDays: 45, blockDays: 90.5 },
+      { warnDays: "45", blockDays: 90 },
+      { warnDays: 90, blockDays: 90 },
+      { blockDays: 90 },
+      null,
+    ]) {
+      assert.deepEqual(
+        validateConfig({ ...without, claimAge: bad }),
+        [
+          "claimAge must be { warnDays, blockDays }, positive whole numbers of days with warnDays below blockDays",
+        ],
+        JSON.stringify(bad),
+      );
+    }
+  });
+
+  it("accepts a config without repoUrl and rejects one that isn't a GitHub repo", async () => {
+    const { default: good } = await import(
+      path.join(repoRoot, "checks.config.mjs")
+    );
+    const { repoUrl, ...without } = good;
+    assert.equal(repoUrl, "https://github.com/withotto/withotto.app");
+    assert.deepEqual(validateConfig(without), []);
+    for (const bad of [
+      "",
+      "https://github.com/withotto/withotto.app/",
+      "https://gitlab.com/withotto/withotto.app",
+      "https://github.com/withotto/withotto.app?tab=readme",
+      "https://github.com/withotto/withotto.app#readme",
+      42,
+    ]) {
+      assert.deepEqual(
+        validateConfig({ ...without, repoUrl: bad }),
+        [
+          'repoUrl must be a GitHub repository URL with no trailing slash, query or fragment, e.g. "https://github.com/owner/repo"',
+        ],
+        JSON.stringify(bad),
+      );
+    }
+  });
 });

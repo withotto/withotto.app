@@ -1,0 +1,40 @@
+---
+// Links to every published comparison, generated from the competitors
+// collection: an entry appears once its data file sets `published: true`, and
+// disappears when its page and data file are deleted. Renders nothing,
+// heading included, when there is nothing to list. `current` leaves out the
+// page it sits on.
+import CaptureSection from "@components/capture/CaptureSection.astro";
+import { bulletList, inlineLink } from "@lib/capture-styles";
+import { comparisonRoute } from "@lib/compare";
+import { getCollection } from "astro:content";
+
+interface Props {
+  // The section's H2.
+  title: string;
+  // The competitor id of the page this sits on, if any.
+  current?: string;
+}
+
+const { title, current } = Astro.props;
+const competitors = (
+  await getCollection(
+    "competitors",
+    (entry) => entry.data.published && entry.id !== current,
+  )
+).sort((a, b) => a.data.name.localeCompare(b.data.name));
+---
+
+{competitors.length > 0 && (
+  <CaptureSection title={title}>
+    <ul class={bulletList}>
+      {competitors.map((entry) => (
+        <li>
+          <a href={comparisonRoute(entry.id)} class={inlineLink}>
+            {`Otto Capture vs ${entry.data.name}`}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </CaptureSection>
+)}

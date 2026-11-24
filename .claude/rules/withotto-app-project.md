@@ -1,6 +1,6 @@
 # Project: withotto.app (v2)
 
-**Last Updated:** 2026-10-23
+**Last Updated:** 2026-11-23
 
 ## Overview
 
@@ -39,11 +39,12 @@ No test framework and no ESLint. The quality gate is `format:check` plus the `ch
 ├── src/
 │   ├── pages/          # Routes (.astro + .mdx). [slug].astro for dynamic pages.
 │   ├── layouts/        # RootLayout, Layout, CapturePageLayout, LandingLayout, MdLayout
-│   ├── components/     # Reusable .astro components (capture/, home/, navbar/, faq/, ui/, brand-kit/)
+│   ├── components/     # Reusable .astro components (capture/, compare/, home/, navbar/, faq/, ui/, brand-kit/)
 │   ├── content/        # Content collections — schema in src/content.config.ts
-│   │   └── blog/       # Subfolders: industry-insights/, product-updates/
+│   │   ├── blog/       # Subfolders: industry-insights/, product-updates/
+│   │   └── competitors/ # One YAML file per competitor, for the comparison pages
 │   ├── assets/         # Images referenced from content/components (blog/, capture/, testimonials/)
-│   ├── lib/            # Capture pricing and estimate (tested by test:site), JSON-LD builders
+│   ├── lib/            # Capture pricing and estimate, the comparison model (tested by test:site), JSON-LD builders
 │   ├── utils/          # Pure TS helpers (blog.ts)
 │   ├── types/          # Shared TS types
 │   └── styles/         # global.css — Tailwind 4 @theme brand tokens

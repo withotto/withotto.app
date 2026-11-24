@@ -1,0 +1,27 @@
+---
+// The invitation to correct a comparison: by email, or by a pull request
+// against the competitor's data file in the public repo. It promises no
+// response time. It speaks to the competitor as well as the reader. The surrounding section belongs to the page.
+import { inlineLink } from "@lib/capture-styles";
+import { dataFileUrl } from "@lib/compare";
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  competitor: CollectionEntry<"competitors">;
+}
+
+const { competitor } = Astro.props;
+const { name } = competitor.data;
+---
+
+<p>
+  {`Work at ${name}, or spotted a mistake? Email `}
+  <a href="mailto:support@withotto.app" class={inlineLink}>
+    support@withotto.app
+  </a>
+  {" or open a pull request against "}
+  <a
+    href={dataFileUrl(competitor)}
+    class={inlineLink}>{`the ${name} data file on GitHub`}</a>
+  {`. We change a detail when ${name}'s own published pages show it.`}
+</p>

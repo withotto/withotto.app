@@ -164,6 +164,24 @@ export function estimate(
   };
 }
 
+// What one client costs in a month in which it published `documents`, in
+// pounds: the cheapest of the tiers, each at its price plus its per-document
+// rate for every document over its allowance, and nothing for a client that
+// published nothing. Worked in pence, so the result has no float error. Unlike
+// `estimate()`, which charges each client a whole tier, this is exact for any
+// volume, so the comparison pages can price clients at a stated volume.
+export function clientCost(tiers: PricingTier[], documents: number): number {
+  if (documents <= 0) return 0;
+  const pence = Math.min(
+    ...tiers.map(
+      (tier) =>
+        Math.round(tier.price * 100) +
+        Math.max(0, documents - tier.allowance) * tier.extraDocumentPence,
+    ),
+  );
+  return pence / 100;
+}
+
 // One square per client up to `cap` squares; above it, each square stands for
 // the fewest whole clients that keep the grid within the cap.
 export function gridLayout(

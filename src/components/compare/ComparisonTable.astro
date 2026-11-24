@@ -1,0 +1,95 @@
+---
+// The comparison table: every row in `comparisonRows`, Capture's side beside
+// the competitor's claim, each claim with its source and checked date. A row
+// with no claim reads "Not stated", and a claim the competitor doesn't publish
+// reads "Not published" with a link to the page that says so. The line under
+// the table gives the oldest checked date of the claims in it.
+//
+// Fixed columns that wrap their text, so a phone shows the whole table with no
+// sideways scroll. The surrounding section belongs to the page.
+import CheckedOn from "@components/compare/CheckedOn.astro";
+import SourceLink from "@components/compare/SourceLink.astro";
+import {
+  claimText,
+  comparisonRows,
+  dataFilePath,
+  joinClaims,
+  oldestChecked,
+} from "@lib/compare";
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  competitor: CollectionEntry<"competitors">;
+}
+
+const { competitor } = Astro.props;
+const { name, claims } = competitor.data;
+
+const { joined, unknown } = joinClaims(comparisonRows, claims);
+if (unknown.length > 0) {
+  throw new Error(
+    `${dataFilePath(competitor)} has claims for rows that don't exist: ${unknown.join(", ")}`,
+  );
+}
+const oldest = oldestChecked(
+  joined.flatMap((entry) => (entry.claim ? [entry.claim.checked] : [])),
+);
+
+const cell = "px-2 py-4 align-top md:px-5";
+---
+
+<div>
+  <table class="w-full table-fixed border-collapse text-left text-sm max-md:hyphens-auto wrap-break-word md:text-base">
+    <caption class="pb-4 text-left text-base text-default-soft">
+      {`Otto Capture and ${name}, feature by feature.`}
+    </caption>
+    <colgroup>
+      <col class="w-[32%]" />
+      <col class="w-[34%]" />
+      <col class="w-[34%]" />
+    </colgroup>
+    <thead>
+      <tr class="border-b-2 border-primary-strong">
+        <td class={cell}></td>
+        <th
+          scope="col"
+          class:list={[cell, "font-semibold text-primary-strong"]}>
+          Otto Capture
+        </th>
+        <th
+          scope="col"
+          class:list={[cell, "font-semibold text-primary-strong"]}>
+          {name}
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      {joined.map(({ row, claim }) => (
+        <tr class="border-b border-muted-strong">
+          <th scope="row" class:list={[cell, "font-semibold text-default"]}>
+            {row.label}
+          </th>
+          <td class={cell}>{row.capture}</td>
+          <td class={cell}>
+            {claim === null ? (
+              <span class="text-default-soft">Not stated</span>
+            ) : (
+              <>
+                <p>{claimText(claim)}</p>
+                <p class="mt-2 text-sm text-default-soft">
+                  <SourceLink source={claim} />
+                </p>
+              </>
+            )}
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+  {oldest && (
+    <p class="mt-4 text-base text-default-soft">
+      Every {name} detail in this table was checked on or after{" "}
+      <CheckedOn date={oldest} />.
+    </p>
+  )}
+</div>

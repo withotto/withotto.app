@@ -21,6 +21,12 @@ import { pathToFileURL } from "node:url";
  * @property {string[]} blockedHosts
  * @property {number} previewPort
  * @property {{ routes: string[] }} exclusions
+ * @property {{ warnDays: number, blockDays: number }} [claimAge]  Days after a
+ *   claim's checked date (a `data-claim-checked` element) before the SEO check
+ *   warns, then blocks. Without it the rule is skipped.
+ * @property {string} [repoUrl]  The site's GitHub repo, e.g.
+ *   "https://github.com/owner/repo". The link check sends its `blob/main/`
+ *   URLs to the working tree. Without it they are checked online.
  */
 
 /**
@@ -110,6 +116,29 @@ export function validateConfig(config) {
     !c.exclusions.routes.every((r) => typeof r === "string")
   ) {
     problems.push("exclusions.routes must be an array of routes");
+  }
+  if (
+    c.repoUrl !== undefined &&
+    !(
+      typeof c.repoUrl === "string" &&
+      /^https:\/\/github\.com\/[^/\s?#]+\/[^/\s?#]+$/.test(c.repoUrl)
+    )
+  ) {
+    problems.push(
+      'repoUrl must be a GitHub repository URL with no trailing slash, query or fragment, e.g. "https://github.com/owner/repo"',
+    );
+  }
+  if (c.claimAge !== undefined) {
+    const days = (/** @type {unknown} */ n) => Number.isInteger(n) && n > 0;
+    if (
+      !days(c.claimAge?.warnDays) ||
+      !days(c.claimAge?.blockDays) ||
+      c.claimAge.warnDays >= c.claimAge.blockDays
+    ) {
+      problems.push(
+        "claimAge must be { warnDays, blockDays }, positive whole numbers of days with warnDays below blockDays",
+      );
+    }
   }
   return problems;
 }

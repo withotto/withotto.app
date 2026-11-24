@@ -369,3 +369,53 @@ describe("reading and writing", () => {
     );
   });
 });
+
+describe("rules that are never baselined", () => {
+  const stale = (overrides = {}) =>
+    finding({
+      rule: "claim-stale",
+      route: "/capture/vs-example/",
+      selector: "time",
+      ...overrides,
+    });
+
+  it("blocks a claim-stale finding even with a matching baseline entry", () => {
+    const result = applyBaseline(
+      mergeFindings([stale()]),
+      baseline([
+        {
+          check: "seo",
+          rule: "claim-stale",
+          route: "/capture/vs-example/",
+          count: 1,
+        },
+      ]),
+      scope,
+    );
+    assert.deepEqual(statuses(result), ["new"]);
+  });
+
+  it("never writes a claim-stale finding to the baseline", () => {
+    assert.deepEqual(entriesFor(mergeFindings([stale(), finding()])), [
+      { check: "seo", rule: "h1-count", route: "/", count: 1 },
+    ]);
+  });
+
+  it("fails a baseline file that holds a claim-stale entry", () => {
+    assert.throws(
+      () =>
+        parseBaseline(
+          baseline([
+            {
+              check: "seo",
+              rule: "claim-stale",
+              route: "/capture/vs-example/",
+              count: 1,
+            },
+          ]),
+        ),
+      (error) =>
+        error instanceof BaselineError && /claim-stale/.test(error.message),
+    );
+  });
+});

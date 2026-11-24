@@ -1,0 +1,30 @@
+---
+// One competitor claim stated inline in a page's prose: the claim's value,
+// then its source and checked date in brackets. Every fact about a competitor
+// in prose goes through here, so it is sourced, dated and seen by the
+// `claim-stale` rule like the table's. A key the data file has no claim for
+// fails the build: prose never states an unsourced fact about a competitor.
+// The key is a comparison row's, or one from the data file's prose-only
+// `facts`; the schema keeps the two sets of keys apart.
+import SourceLink from "@components/compare/SourceLink.astro";
+import { claimText, dataFilePath } from "@lib/compare";
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  competitor: CollectionEntry<"competitors">;
+  claim: string;
+}
+
+const { competitor, claim: key } = Astro.props;
+const { claims, facts } = competitor.data;
+const claim = claims[key as keyof typeof claims] ?? facts[key];
+if (claim === undefined) {
+  throw new Error(
+    `${dataFilePath(competitor)} has no "${key}" claim or fact, so a page can't state it.`,
+  );
+}
+---
+
+<span>
+  {claimText(claim)} (<SourceLink source={claim} />)
+</span>

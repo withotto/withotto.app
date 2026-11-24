@@ -1,8 +1,9 @@
 /**
  * SEO check over the built site. Reads every HTML page in `dist/`, plus the
  * sitemap and `_redirects`, and reports titles and descriptions, canonicals,
- * heading structure, JSON-LD, orphan pages, internal link form and links to
- * legacy redirects.
+ * heading structure, JSON-LD, orphan pages, internal link form, links to
+ * legacy redirects and, when the config sets `claimAge`, claim dates
+ * (`data-claim-checked`) that have gone unchecked too long.
  *
  * The analysis always covers the whole site, because uniqueness and orphans
  * need every page; `--page` only limits what `finishRun` reports, and must
@@ -30,6 +31,26 @@ const CHECK = "seo";
 const TITLE_RANGE = [30, 60];
 const DESCRIPTION_RANGE = [70, 160];
 const SNIPPET_LENGTH = 200;
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+/**
+ * Midnight UTC of a `YYYY-MM-DD` date, or null when the text is not a real
+ * calendar date in that form.
+ *
+ * @param {string | undefined} text
+ */
+function parseDay(text) {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(text ?? "");
+  if (!match) return null;
+  const [year, month, day] = match.slice(1).map(Number);
+  const ms = Date.UTC(year, month - 1, day);
+  const date = new Date(ms);
+  return date.getUTCFullYear() === year &&
+    date.getUTCMonth() === month - 1 &&
+    date.getUTCDate() === day
+    ? ms
+    : null;
+}
 
 /** @param {string | undefined | null} text */
 function clean(text) {
@@ -473,9 +494,15 @@ function readSitemap(distAbs, indexFile, origin) {
  * @param {Awaited<ReturnType<typeof loadConfig>>} config
  * @param {string[] | null} [pageFilter] The run's `--page` routes. They only
  *   have to exist; findings still cover every page.
+ * @param {{ today?: Date }} [options] `today` sets the date claim ages are
+ *   counted to (its UTC calendar date), so tests are deterministic.
  * @returns {import("./lib/findings.mjs").Finding[]}
  */
-export function analyseSite(config, pageFilter = null) {
+export function analyseSite(
+  config,
+  pageFilter = null,
+  { today = new Date() } = {},
+) {
   const distAbs = config.abs(config.distDir);
   const origin = new URL(config.site).origin;
   const roots = config.componentRoots ?? [];
@@ -677,6 +704,7 @@ export function analyseSite(config, pageFilter = null) {
     checkCanonical(page);
     checkHeadings(page);
     checkJsonLd(page);
+    checkClaimAge(page);
 
     $("a[href]").each((_, el) => {
       const href = ($(el).attr("href") ?? "").trim();
@@ -858,6 +886,49 @@ export function analyseSite(config, pageFilter = null) {
         rule: "jsonld-invalid",
         severity: "block",
         message: `JSON-LD block ${i + 1} of ${blocks.length} ${problems.join("; ")}. Every block must parse as JSON and give each item an "@context" (usually "https://schema.org") and an "@type"; an array of such items or a "@graph" is fine.`,
+      });
+    });
+  }
+
+  /** @param {typeof pages[number]} page */
+  function checkClaimAge(page) {
+    if (!config.claimAge) return;
+    const { warnDays, blockDays } = config.claimAge;
+    const todayMs = Date.UTC(
+      today.getUTCFullYear(),
+      today.getUTCMonth(),
+      today.getUTCDate(),
+    );
+    const { $ } = page;
+    $("[data-claim-checked]").each((_, el) => {
+      const datetime = $(el).attr("datetime");
+      const checked = parseDay(datetime);
+      if (checked === null) {
+        add({
+          ...at(page, el),
+          rule: "claim-stale",
+          severity: "block",
+          message: `A claim date on ${page.route} has ${datetime === undefined ? "no datetime attribute" : `datetime "${datetime}", which is not a real YYYY-MM-DD date`}, so its age cannot be checked. Give the checked date in the data the page is built from as YYYY-MM-DD, so it renders as <time datetime="YYYY-MM-DD" data-claim-checked>.`,
+        });
+        return;
+      }
+      if (checked > todayMs) {
+        add({
+          ...at(page, el),
+          rule: "claim-stale",
+          severity: "block",
+          message: `A claim on ${page.route} was checked on ${datetime}, which is after today, so its age cannot be checked. Correct the checked date in the data the page is built from (for a comparison page, the competitor's data file) to the day the source was read. For Otto Capture's own usage figures, correct "measured" in src/lib/compare.ts to the day they were measured.`,
+        });
+        return;
+      }
+      const age = Math.round((todayMs - checked) / DAY_MS);
+      if (age <= warnDays) return;
+      const severity = age > blockDays ? "block" : "warn";
+      add({
+        ...at(page, el),
+        rule: "claim-stale",
+        severity,
+        message: `A claim on ${page.route} was last checked on ${datetime}, ${age} days ago, past the ${severity === "block" ? `${blockDays}-day limit, so the checks block until it is re-checked` : `${warnDays}-day limit (the checks block after ${blockDays} days)`}. Re-check the claim against its source, correct it if it has changed, and renew its checked date in the data the page is built from (for a comparison page, the competitor's data file). For Otto Capture's own usage figures, measure them again, then update the figures and "measured" in src/lib/compare.ts.`,
       });
     });
   }
