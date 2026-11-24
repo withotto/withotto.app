@@ -9,7 +9,13 @@
 // sideways scroll. The surrounding section belongs to the page.
 import CheckedOn from "@components/compare/CheckedOn.astro";
 import SourceLink from "@components/compare/SourceLink.astro";
-import { comparisonRows, joinClaims, oldestChecked } from "@lib/compare";
+import {
+  claimText,
+  comparisonRows,
+  dataFilePath,
+  joinClaims,
+  oldestChecked,
+} from "@lib/compare";
 import type { CollectionEntry } from "astro:content";
 
 interface Props {
@@ -22,7 +28,7 @@ const { name, claims } = competitor.data;
 const { joined, unknown } = joinClaims(comparisonRows, claims);
 if (unknown.length > 0) {
   throw new Error(
-    `${competitor.id}.yaml has claims for rows that don't exist: ${unknown.join(", ")}`,
+    `${dataFilePath(competitor)} has claims for rows that don't exist: ${unknown.join(", ")}`,
   );
 }
 const oldest = oldestChecked(
@@ -58,7 +64,7 @@ const cell = "px-2 py-4 align-top md:px-5";
       </tr>
     </thead>
     <tbody>
-      {joined.map(({ row, claim, status }) => (
+      {joined.map(({ row, claim }) => (
         <tr class="border-b border-muted-strong">
           <th scope="row" class:list={[cell, "font-semibold text-default"]}>
             {row.label}
@@ -69,9 +75,7 @@ const cell = "px-2 py-4 align-top md:px-5";
               <span class="text-default-soft">Not stated</span>
             ) : (
               <>
-                <p>
-                  {status === "not-published" ? "Not published" : claim.value}
-                </p>
+                <p>{claimText(claim)}</p>
                 <p class="mt-2 text-sm text-default-soft">
                   <SourceLink source={claim} />
                 </p>

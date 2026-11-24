@@ -285,4 +285,12 @@ describe("clientCost", () => {
   it("charges the Large rate for documents beyond its allowance", () => {
     assert.equal(cost(400), 33);
   });
+  it("works in whole pence for a price whose pounds aren't exact in binary", () => {
+    // 0.57 * 100 is 56.99999999999999 in floating point.
+    const tiers = [
+      { name: "Test", price: 0.57, allowance: 10, extraDocumentPence: 7 },
+    ];
+    assert.equal(clientCost(tiers, 10), 0.57);
+    assert.equal(clientCost(tiers, 11), 0.64);
+  });
 });

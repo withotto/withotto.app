@@ -175,7 +175,7 @@ export function clientCost(tiers: PricingTier[], documents: number): number {
   const pence = Math.min(
     ...tiers.map(
       (tier) =>
-        tier.price * 100 +
+        Math.round(tier.price * 100) +
         Math.max(0, documents - tier.allowance) * tier.extraDocumentPence,
     ),
   );

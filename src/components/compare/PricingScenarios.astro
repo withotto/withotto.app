@@ -19,6 +19,7 @@ import { formatPounds, pricingTiers } from "@lib/capture";
 import { clientCost } from "@lib/capture-estimate";
 import {
   captureTotal,
+  dataFilePath,
   mixLabel,
   mixedLinesUsage,
   pricingScenarios,
@@ -38,7 +39,7 @@ const known = new Set<string>(pricingScenarios.map((scenario) => scenario.key));
 const unknown = Object.keys(scenarios).filter((key) => !known.has(key));
 if (unknown.length > 0) {
   throw new Error(
-    `${competitor.id}.yaml has prices for scenarios that don't exist: ${unknown.join(", ")}`,
+    `${dataFilePath(competitor)} has prices for scenarios that don't exist: ${unknown.join(", ")}`,
   );
 }
 

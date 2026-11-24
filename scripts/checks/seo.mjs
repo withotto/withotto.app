@@ -917,7 +917,7 @@ export function analyseSite(
           ...at(page, el),
           rule: "claim-stale",
           severity: "block",
-          message: `A claim on ${page.route} was checked on ${datetime}, which is after today, so its age cannot be checked. Correct the checked date in the data the page is built from (for a comparison page, the competitor's data file) to the day the source was read.`,
+          message: `A claim on ${page.route} was checked on ${datetime}, which is after today, so its age cannot be checked. Correct the checked date in the data the page is built from (for a comparison page, the competitor's data file, or "measured" in src/lib/compare.ts for Otto Capture's own usage figures) to the day the source was read.`,
         });
         return;
       }
@@ -928,7 +928,7 @@ export function analyseSite(
         ...at(page, el),
         rule: "claim-stale",
         severity,
-        message: `A claim on ${page.route} was last checked on ${datetime}, ${age} days ago, past the ${severity === "block" ? `${blockDays}-day limit, so the checks block until it is re-checked` : `${warnDays}-day limit (the checks block after ${blockDays} days)`}. Re-check the claim against its source, correct it if it has changed, and renew its checked date in the data the page is built from (for a comparison page, the competitor's data file).`,
+        message: `A claim on ${page.route} was last checked on ${datetime}, ${age} days ago, past the ${severity === "block" ? `${blockDays}-day limit, so the checks block until it is re-checked` : `${warnDays}-day limit (the checks block after ${blockDays} days)`}. Re-check the claim against its source, correct it if it has changed, and renew its checked date in the data the page is built from (for a comparison page, the competitor's data file, or "measured" in src/lib/compare.ts for Otto Capture's own usage figures).`,
       });
     });
   }

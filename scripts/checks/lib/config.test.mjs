@@ -108,12 +108,14 @@ describe("validateConfig", () => {
       "",
       "https://github.com/withotto/withotto.app/",
       "https://gitlab.com/withotto/withotto.app",
+      "https://github.com/withotto/withotto.app?tab=readme",
+      "https://github.com/withotto/withotto.app#readme",
       42,
     ]) {
       assert.deepEqual(
         validateConfig({ ...without, repoUrl: bad }),
         [
-          'repoUrl must be a GitHub repository URL with no trailing slash, e.g. "https://github.com/owner/repo"',
+          'repoUrl must be a GitHub repository URL with no trailing slash, query or fragment, e.g. "https://github.com/owner/repo"',
         ],
         JSON.stringify(bad),
       );

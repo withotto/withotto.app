@@ -121,11 +121,11 @@ export function validateConfig(config) {
     c.repoUrl !== undefined &&
     !(
       typeof c.repoUrl === "string" &&
-      /^https:\/\/github\.com\/[^/\s]+\/[^/\s]+$/.test(c.repoUrl)
+      /^https:\/\/github\.com\/[^/\s?#]+\/[^/\s?#]+$/.test(c.repoUrl)
     )
   ) {
     problems.push(
-      'repoUrl must be a GitHub repository URL with no trailing slash, e.g. "https://github.com/owner/repo"',
+      'repoUrl must be a GitHub repository URL with no trailing slash, query or fragment, e.g. "https://github.com/owner/repo"',
     );
   }
   if (c.claimAge !== undefined) {

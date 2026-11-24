@@ -242,12 +242,15 @@ export function receivedNote(name: string, basis: ReceivedBasis): string {
 // the competitor doesn't publish. Its source is the page that says so.
 export const NOT_PUBLISHED = "not published";
 
-// The day a source was read. YAML reads a bare 2026-11-14 as a date, so take
-// either that or the same text, and keep it as YYYY-MM-DD text throughout.
-const checkedDate = z.union([
-  z.date().transform((date) => date.toISOString().slice(0, 10)),
-  z.iso.date(),
-]);
+// The day a source was read, as quoted YYYY-MM-DD text. YAML reads a bare
+// 2026-11-14 as a date, and turns an impossible one such as 2026-11-31 into
+// the next month's before the schema sees it, so a bare date is refused.
+const checkedDate = z.iso.date({
+  error: (issue) =>
+    issue.input instanceof Date
+      ? 'write the date in quotes, as in "2026-11-14": unquoted, YAML turns an impossible date such as 2026-11-31 into the next month\'s'
+      : undefined,
+});
 
 // What every competitor fact carries, so a reader can check it and the drift
 // run can find it again: where it was read (an https page, since the URL
@@ -266,7 +269,8 @@ const claimSchema = z.strictObject({
 });
 
 // A price the competitor's own pricing gives for one of the scenarios above,
-// in pounds a month excluding VAT. A price needs its plan, its billing basis
+// in pounds a month excluding VAT, in whole pence so the page shows exactly
+// the amount in the file. A price needs its plan, its billing basis
 // (with any commitment), the inputs entered, and the scenario volumes it was
 // read for (`volumesLabel`), so the page can state its basis, the evidence
 // tool can enter them again, and a change to the scenario fails the build.
@@ -274,7 +278,13 @@ const claimSchema = z.strictObject({
 // was read for.
 const scenarioPriceSchema = z
   .strictObject({
-    value: z.union([z.number().nonnegative(), z.literal(NOT_PUBLISHED)]),
+    value: z.union([
+      z
+        .number()
+        .nonnegative()
+        .multipleOf(0.01, { error: "a price is in whole pence" }),
+      z.literal(NOT_PUBLISHED),
+    ]),
     plan: z.string().trim().min(1).optional(),
     billing: z.string().trim().min(1).optional(),
     inputs: z.record(z.string(), z.union([z.string(), z.number()])).optional(),
@@ -285,7 +295,11 @@ const scenarioPriceSchema = z
   .superRefine((price, ctx) => {
     if (price.value === NOT_PUBLISHED) return;
     for (const field of ["plan", "billing", "inputs", "volumes"] as const) {
-      if (price[field] === undefined) {
+      const value = price[field];
+      const empty =
+        value === undefined ||
+        (typeof value === "object" && Object.keys(value).length === 0);
+      if (empty) {
         ctx.addIssue({
           code: "custom",
           path: [field],
@@ -332,14 +346,15 @@ export const competitorSchema = z
     }
 
     // The received note says the competitor charges per document received
-    // and how it treats duplicates: both must rest on its own published terms.
+    // and how it treats duplicates: both must rest on its own published terms,
+    // so a claim the competitor doesn't publish can't support it.
     if (competitor.receivedBasis) {
       for (const key of ["pricing", "duplicates"] as const) {
-        if (!competitor.claims[key]) {
+        if (claimStatus(competitor.claims[key]) !== "stated") {
           ctx.addIssue({
             code: "custom",
             path: ["receivedBasis"],
-            message: `receivedBasis needs a ${key} claim, since the page's note about documents received rests on it`,
+            message: `receivedBasis needs a stated ${key} claim, since the page's note about documents received rests on it`,
           });
         }
       }
@@ -353,8 +368,20 @@ export const competitorSchema = z
       const prices = competitor.scenarios[scenario.key] ?? {};
       const volumes = volumesLabel(scenario.groups);
       for (const [option, price] of Object.entries(prices)) {
-        if (!price || price.value === NOT_PUBLISHED) continue;
+        if (!price) continue;
         const path = ["scenarios", scenario.key, option];
+        if (
+          expectedReceived === undefined &&
+          price.receivedPerHundred !== undefined
+        ) {
+          ctx.addIssue({
+            code: "custom",
+            path: [...path, "receivedPerHundred"],
+            message:
+              "receivedPerHundred is only for a competitor with a receivedBasis",
+          });
+        }
+        if (price.value === NOT_PUBLISHED) continue;
         if (price.volumes !== undefined && price.volumes !== volumes) {
           ctx.addIssue({
             code: "custom",
@@ -362,16 +389,10 @@ export const competitorSchema = z
             message: `this price was read for ${price.volumes}, but ${scenario.key} is now ${volumes}; read it again for the current volumes`,
           });
         }
-        if (expectedReceived === undefined) {
-          if (price.receivedPerHundred !== undefined) {
-            ctx.addIssue({
-              code: "custom",
-              path: [...path, "receivedPerHundred"],
-              message:
-                "receivedPerHundred is only for a competitor with a receivedBasis",
-            });
-          }
-        } else if (price.receivedPerHundred !== expectedReceived) {
+        if (
+          expectedReceived !== undefined &&
+          price.receivedPerHundred !== expectedReceived
+        ) {
           ctx.addIssue({
             code: "custom",
             path: [...path, "receivedPerHundred"],
@@ -408,6 +429,12 @@ export function claimStatus(
 }
 
 export type ClaimStatus = "stated" | "not-published" | "not-stated";
+
+// The words a page shows for a claim: its value, or "Not published" for one
+// the competitor doesn't publish, never the data file's lower-case marker.
+export function claimText(claim: { value: string }): string {
+  return claim.value === NOT_PUBLISHED ? "Not published" : claim.value;
+}
 
 export interface JoinedRow<R, C> {
   row: R;
@@ -487,10 +514,16 @@ export function comparisonRoute(id: string): string {
   return `/capture/vs-${id}/`;
 }
 
+// The competitor's data file, from the repo's root: the path the collection
+// read it from, so an error or a link names the file as it is.
+export function dataFilePath(entry: { id: string; filePath?: string }): string {
+  return entry.filePath ?? `src/content/competitors/${entry.id}.yaml`;
+}
+
 // The competitor's data file on GitHub, where a correction can be proposed.
 const repoBlob = "https://github.com/withotto/withotto.app/blob/main";
-export function dataFileUrl(id: string): string {
-  return `${repoBlob}/src/content/competitors/${id}.yaml`;
+export function dataFileUrl(entry: { id: string; filePath?: string }): string {
+  return `${repoBlob}/${dataFilePath(entry)}`;
 }
 
 // The earliest of a set of YYYY-MM-DD dates, which sort as text.

@@ -7,6 +7,7 @@
 // The key is a comparison row's, or one from the data file's prose-only
 // `facts`; the schema keeps the two sets of keys apart.
 import SourceLink from "@components/compare/SourceLink.astro";
+import { claimText, dataFilePath } from "@lib/compare";
 import type { CollectionEntry } from "astro:content";
 
 interface Props {
@@ -19,11 +20,11 @@ const { claims, facts } = competitor.data;
 const claim = claims[key as keyof typeof claims] ?? facts[key];
 if (claim === undefined) {
   throw new Error(
-    `${competitor.id}.yaml has no "${key}" claim or fact, so a page can't state it.`,
+    `${dataFilePath(competitor)} has no "${key}" claim or fact, so a page can't state it.`,
   );
 }
 ---
 
 <span>
-  {claim.value} (<SourceLink source={claim} />)
+  {claimText(claim)} (<SourceLink source={claim} />)
 </span>

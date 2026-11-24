@@ -17,6 +17,10 @@ import { runMain } from "./lib/run.mjs";
  * lychee `--remap` arguments sending the site's own URLs to the build, and,
  * when `repo` is given, the repo's GitHub `blob/main/` URLs to the working
  * tree, so a link to a file this change adds passes before it is on `main`.
+ * Only a path of plain characters is sent there: lychee resolves `..` and
+ * `%2E%2E` segments before remapping, but a segment such as `..%2F` would
+ * decode on disk into a path outside the repo, so anything percent-encoded is
+ * left for lychee to check on GitHub.
  * Rules apply in order, so `/404/`, which Netlify serves from `404.html`,
  * comes before the general rule.
  *
@@ -41,7 +45,10 @@ export function remapArgs(site, distDir, repo = null) {
   ];
   if (repo) {
     const root = pathToFileURL(repo.root + path.sep).href;
-    args.push("--remap", `^${escape(repo.url)}/blob/main/(.*)$ ${root}$1`);
+    args.push(
+      "--remap",
+      `^${escape(repo.url)}/blob/main/([A-Za-z0-9._/-]+)$ ${root}$1`,
+    );
   }
   return args;
 }

@@ -6,9 +6,12 @@ import { pricingTiers } from "./capture.ts";
 import { clientCost } from "./capture-estimate.ts";
 import {
   captureTotal,
+  claimText,
   collectSources,
   competitorSchema,
   competitorFacts,
+  dataFilePath,
+  dataFileUrl,
   mixLabel,
   pricingScenarios,
   receivedNote,
@@ -191,9 +194,8 @@ describe("competitorSchema", () => {
   const source = {
     sourceUrl: "https://example.test/pricing/",
     sourceName: "Example pricing page",
-    checked: new Date("2026-11-14T00:00:00Z"),
+    checked: "2026-11-14",
   };
-  const tenClients = pricingScenarios[0];
   const valid = () => ({
     name: "Example",
     published: false,
@@ -223,8 +225,9 @@ describe("competitorSchema", () => {
           value: 120,
           plan: "Practice",
           billing: "Monthly",
-          inputs: { documents: 140 },
-          volumes: volumesLabel(tenClients.groups),
+          // 210 published at 119 received per 100 published.
+          inputs: { documents: 250 },
+          volumes: "1x0, 5x10, 3x30, 1x70",
           receivedPerHundred: 119,
           quote: "£120 a month",
           ...source,
@@ -240,10 +243,36 @@ describe("competitorSchema", () => {
       : result.error.issues.map((issue) => issue.message);
   };
 
-  it("accepts a complete file, and reads a YAML date as YYYY-MM-DD text", () => {
+  it("accepts a complete file", () => {
     const result = competitorSchema.safeParse(valid());
     assert.ok(result.success, JSON.stringify(result.error?.issues));
     assert.equal(result.data.claims.pricing?.checked, "2026-11-14");
+  });
+
+  it("rejects an unquoted checked date, which YAML reads as a date, and an impossible one", () => {
+    // YAML reads an unquoted 2026-11-31 as 1 December, so only quoted text
+    // can be checked against the calendar.
+    const unquoted = valid() as { claims: { pricing: { checked: unknown } } };
+    unquoted.claims.pricing.checked = new Date("2026-11-14T00:00:00Z");
+    assert.ok(issues(unquoted).some((m) => m.includes("in quotes")));
+
+    const impossible = valid();
+    impossible.claims.pricing.checked = "2026-11-31";
+    assert.notDeepEqual(issues(impossible), []);
+  });
+
+  it("rejects a price in fractions of a penny", () => {
+    const data = valid();
+    data.scenarios["clients-10"].monthly.value = 120.125;
+    assert.ok(issues(data).some((m) => m.includes("whole pence")));
+    data.scenarios["clients-10"].monthly.value = 120.13;
+    assert.deepEqual(issues(data), []);
+  });
+
+  it("rejects a price with no inputs recorded", () => {
+    const data = valid();
+    data.scenarios["clients-10"].monthly.inputs = {} as { documents: number };
+    assert.ok(issues(data).some((m) => m.includes("inputs is required")));
   });
 
   it("rejects a source URL that isn't https", () => {
@@ -276,12 +305,19 @@ describe("competitorSchema", () => {
     assert.ok(issues(data).some((m) => m.includes("more than one sourceName")));
   });
 
-  it("rejects receivedBasis without the duplicates and pricing claims it rests on", () => {
+  it("rejects receivedBasis without stated duplicates and pricing claims to rest on", () => {
     for (const key of ["duplicates", "pricing"] as const) {
-      const data = valid();
-      delete (data.claims as Record<string, unknown>)[key];
+      const missing = valid();
+      delete (missing.claims as Record<string, unknown>)[key];
       assert.ok(
-        issues(data).some((m) => m.includes(`${key} claim`)),
+        issues(missing).some((m) => m.includes(`stated ${key} claim`)),
+        key,
+      );
+
+      const notPublished = valid();
+      notPublished.claims[key].value = "not published";
+      assert.ok(
+        issues(notPublished).some((m) => m.includes(`stated ${key} claim`)),
         key,
       );
     }
@@ -301,5 +337,54 @@ describe("competitorSchema", () => {
     const notNeeded = valid() as Record<string, unknown>;
     delete notNeeded.receivedBasis;
     assert.ok(issues(notNeeded).some((m) => m.includes("receivedPerHundred")));
+  });
+
+  it("rejects a received ratio on a price that isn't published, without a receivedBasis", () => {
+    const data = valid() as ReturnType<typeof valid> & {
+      receivedBasis?: string;
+    };
+    delete data.receivedBasis;
+    delete (
+      data.scenarios["clients-10"].monthly as { receivedPerHundred?: number }
+    ).receivedPerHundred;
+    assert.deepEqual(issues(data), []);
+    (
+      data.scenarios["clients-10"].committed as { receivedPerHundred?: number }
+    ).receivedPerHundred = 119;
+    assert.ok(issues(data).some((m) => m.includes("receivedPerHundred")));
+  });
+});
+
+describe("volumesLabel", () => {
+  it("lists each group as clients x documents", () => {
+    assert.equal(
+      volumesLabel([
+        { clients: 1, documents: 0 },
+        { clients: 5, documents: 10 },
+      ]),
+      "1x0, 5x10",
+    );
+  });
+});
+
+describe("claimText", () => {
+  it("shows a stated value as it is, and the not-published marker as Not published", () => {
+    assert.equal(claimText({ value: "Yes" }), "Yes");
+    assert.equal(claimText({ value: "not published" }), "Not published");
+  });
+});
+
+describe("dataFilePath and dataFileUrl", () => {
+  it("name the file the collection read, falling back to the id's YAML file", () => {
+    const read = {
+      id: "example",
+      filePath: "src/content/competitors/example.yaml",
+    };
+    assert.equal(dataFilePath(read), "src/content/competitors/example.yaml");
+    assert.equal(dataFilePath({ id: "example" }), read.filePath);
+    assert.equal(
+      dataFileUrl(read),
+      "https://github.com/withotto/withotto.app/blob/main/src/content/competitors/example.yaml",
+    );
   });
 });

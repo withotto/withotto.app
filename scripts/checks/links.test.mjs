@@ -48,7 +48,7 @@ describe("remapArgs with the site's repo", () => {
   it("points the repo's blob/main/ URLs at the working tree", () => {
     assert.equal(
       rule,
-      "^https://github\\.com/example/site/blob/main/(.*)$ file:///work/My%20Site/$1",
+      "^https://github\\.com/example/site/blob/main/([A-Za-z0-9._/-]+)$ file:///work/My%20Site/$1",
     );
     assert.equal(args[args.indexOf(rule) - 1], "--remap");
   });
@@ -58,6 +58,21 @@ describe("remapArgs with the site's repo", () => {
       "https://github.com/example/other/blob/main/README.md",
       "https://github.com/example/site-fork/blob/main/README.md",
       "https://github.com/example/site/blob/dev/README.md",
+    ]) {
+      assert.equal(pattern.test(url), false, url);
+    }
+  });
+
+  it("leaves a percent-encoded path to lychee, so it can't decode out of the repo", () => {
+    assert.equal(
+      pattern.test(
+        "https://github.com/example/site/blob/main/src/content/competitors/example.yaml",
+      ),
+      true,
+    );
+    for (const url of [
+      "https://github.com/example/site/blob/main/%2E%2E%2Foutside.txt",
+      "https://github.com/example/site/blob/main/a%20b.yaml",
     ]) {
       assert.equal(pattern.test(url), false, url);
     }
